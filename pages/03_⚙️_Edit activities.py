@@ -8,7 +8,7 @@ if "assistants" not in st.session_state:
         st.session_state["assistants"] = edit_functions.getAssistants()
 
 if not "selectedID" in st.session_state:
-        st.session_state["selectedID"] = st.session_state["assistants"].keys[0]
+        st.session_state["selectedID"] = list(st.session_state["assistants"].keys())[0]
 
 st.write("# activities parameters")
 
@@ -30,9 +30,12 @@ with col1 :
             else :
                 t = "secondary"
             
-            if st.button(label = asdict[id]["name"], type=t, use_container_width=True):
+            if st.button(label = asdict[id]["name"], type=t, use_container_width=True, key=id):
                 st.session_state["selectedID"] = id
                 st.rerun()
+    
+    if st.button("delete selected activity",type="primary"):
+        edit_functions.delAssistant(st.session_state["assistants"][st.session_state["selectedID"]])
 
 with col2 :
     st.write("### Selected activity")

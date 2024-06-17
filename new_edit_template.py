@@ -15,23 +15,27 @@ openai_client = OpenAI()
 
 def loadTemplate(assistant):
 
-    new = assistant == {}
+    new = (assistant == {})
 
     if "initialized" not in st.session_state :
         st.session_state["initialized"] = False
 
-    if assistant!={} and not new :
+    title = "Create a new activity"
+    if not new :
         oldprompt = assistant["instructions"]
         vals = ef.extractVals(oldprompt)
+        title = "Modify your activity"
+        
+    st.title(title)
 
     #Name
-        name = st.text_input("Activity's new name", value = "" if new else assistant["name"], placeholder = "New name...")
+    name = st.text_input("Activity's new name", value = "" if new else assistant["name"], placeholder = "New name...")
 
     #Course
-        course = st.text_input("Course's name", value = "" if new else vals["courseName"], placeholder = "New course name...")
+    course = st.text_input("Course's name", value = "" if new else vals["courseName"], placeholder = "New course name...")
 
     #Description
-        desc = st.text_input("Modify the description or enter a new one", value = "" if new else assistant["description"], placeholder = "New description...")
+    desc = st.text_input("Modify the description or enter a new one", value = "" if new else assistant["description"], placeholder = "New description...")
     
     #Questions
     if not st.session_state["initialized"] :
@@ -42,7 +46,7 @@ def loadTemplate(assistant):
             st.session_state["nbQuestions"] = vals["nbQuestions"]
             st.session_state["questions"] = vals["questions"]
 
-    add,remove = st.columns([.5,1])
+    add,remove = st.columns([.3,1])
     with add:
         if st.button("➕ add a question") :
             st.session_state["nbQuestions"] = st.session_state["nbQuestions"]+1
