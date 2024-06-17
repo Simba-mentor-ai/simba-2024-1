@@ -162,9 +162,6 @@ this action is irreversible, you will not be able recover it if you press the 'c
             #delete linked vector store if present
             if "file_search" in dir(assistant["tool_resources"]) and len(assistant["tool_resources"].file_search.vector_store_ids)>0:
                 vid = assistant["tool_resources"].file_search.vector_store_ids[0]
-                files = openai_client.beta.vector_stores.files.list(vector_store_id=vid)
-                for f in files :
-                    openai_client.beta.vector_stores.files.delete(file_id=f.id)
                 openai_client.beta.vector_stores.delete(vector_store_id=vid)
 
             openai_client.beta.assistants.delete(assistant["id"])
