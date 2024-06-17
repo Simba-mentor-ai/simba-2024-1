@@ -32,6 +32,7 @@ with col1 :
             
             if st.button(label = asdict[id]["name"], type=t, use_container_width=True, key=id):
                 st.session_state["selectedID"] = id
+                st.session_state["initialized"] = False
                 st.rerun()
     
     if st.button("delete selected activity",type="primary"):
