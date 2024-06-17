@@ -117,7 +117,7 @@ def loadTemplate(assistant):
                 limits= ef.limitsgen(limit)
             )
             if new :
-                openai_client.beta.assistants.create(name = name, description = desc, instructions = instructions)
+                openai_client.beta.assistants.create(name = name, description = desc, instructions = instructions, tools=[{"type": "file_search"}], model="gpt-4-turbo")
                 st.session_state["assistants"] = ef.getAssistants()
                 st.session_state["initialized"] = False
                 success("The new activity have been successfully created")
