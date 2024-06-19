@@ -55,12 +55,29 @@ def loadTemplate(assistant):
         if st.button("➖ remove a question") and st.session_state["nbQuestions"]>1:
             st.session_state["nbQuestions"] = st.session_state["nbQuestions"]-1
 
+    
     for i in range(1,st.session_state["nbQuestions"]+1):
+        question, delete = st.columns([0.8,0.2])
         if i-1 < len(st.session_state["questions"]):
-            st.session_state["questions"][i-1] = st.text_input(f"Question {i}", placeholder="enter the question statement", key=f"question{i}", value=st.session_state["questions"][i-1])
+            with question :
+                st.session_state["questions"][i-1] = st.text_input(f"Question {i}", placeholder="enter the question statement", key=f"question{i}", value=st.session_state["questions"][i-1])
+            if st.session_state["nbQuestions"]>1:
+                with delete :
+                    st.container(height=13, border=False)
+                    if st.button("❌",key="del"+str(i)):
+                        st.session_state["nbQuestions"]=st.session_state["nbQuestions"]-1
+                        del st.session_state["questions"][i-1]
+                        st.rerun()
         else :
-            st.session_state["questions"].append("")
-            st.session_state["questions"][i-1] = st.text_input(f"Question {i}", placeholder="enter the question statement", key=f"question{i}")
+            with question :
+                st.session_state["questions"].append("")
+                st.session_state["questions"][i-1] = st.text_input(f"Question {i}", placeholder="enter the question statement", key=f"question{i}")
+            if st.session_state["nbQuestions"]>1:
+                with delete :
+                    if st.button("❌"):
+                        st.session_state["nbQuestions"]=st.session_state["nbQuestions"]-1
+                        del st.session_state["questions"][i-1]
+                        st.rerun()
     
     #prompt
     newprompt = PromptTemplate.from_template(ef.full_template)
@@ -99,12 +116,34 @@ def loadTemplate(assistant):
     if "files" not in st.session_state or not st.session_state["initialized"]:
         st.session_state["files"] = []
 
+    vfiles = []
+    st.write("### Activity files")
+    if "file_search" in dir(assistant["tool_resources"]) and len(assistant["tool_resources"].file_search.vector_store_ids)>0:
+        st.write("Current files :")
+
+        vid = assistant["tool_resources"].file_search.vector_store_ids[0]
+        vfiles = openai_client.beta.vector_stores.files.list(vid)
+        for vf in vfiles :
+            delete, fname = st.columns([0.05,0.95])
+            file = openai_client.files.retrieve(vf.id)
+            with fname :
+                st.write(file.filename)
+            with delete :
+                if st.button("❌",key="del"+str(vf.id)):
+                    fdeleteStatus = st.status("Deleting the file")
+                    openai_client.beta.vector_stores.files.delete(file_id=vf.id, vector_store_id=vid)
+                    openai_client.files.delete(file_id=vf.id)
+                    fdeleteStatus.update(label="Deleted!",state="complete")
+                
+    else :
+        st.write("No files have been added yet.")
+
+
     file = st.file_uploader("Drop a file you want to add here", type=accepted_extensions)
 
     if st.button("Add file"):
         
         # Upload a file to OpenAI
-        # LA piste !!! client.beta.assistants.files.list(assistant_id)
         if file :
             if new :
                 st.session_state["files"].append(file)
