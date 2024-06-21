@@ -19,7 +19,18 @@ db = firestore.Client(credentials=creds, project=GCP_PROJECT)
 
 def disable_activity_threads(activity_id):
     users_db = db.collection('courses').document(str(COURSE_ID)).collection('users')
-    snap_user_db = users_db.get()
+    users = users_db.get()
+    for user in users :
+        threads = user.collection('activity_threads').document(activity_id).get()
+        if threads.exists:
+            dic = threads.to_dict()
+            for i in range(len(dic["threads"])):
+                if dic["threads"][i]["active"] :
+                    dic["threads"][i]["active"] = False
+
+            user.collection('activity_threads').document(activity_id).set(dic)
+
+
 
 def get_activity_thread(activity_id):
     user_id = st.session_state['username']

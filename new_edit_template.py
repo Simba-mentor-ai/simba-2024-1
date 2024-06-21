@@ -2,8 +2,7 @@ from openai import OpenAI
 import streamlit as st
 from langchain_core.prompts import PromptTemplate
 import edit_functions as ef
-import re
-import time
+import chatbot_helper
 from datetime import datetime, date
 
 attitudes = ["friendly","informal","formal"]
@@ -231,8 +230,10 @@ def loadTemplate(assistant):
                     success("The new activity have been successfully created")
 
                 else :
-                    openai_client.beta.assistants.update(assistant["id"], name = name, description = desc, instructions = instructions)
-                    success("The activity have been successfully updated")
+                    warning_edit(assistant,name,desc,instructions)
+                    # openai_client.beta.assistants.update(assistant["id"], name = name, description = desc, instructions = instructions)
+                    # chatbot_helper.disable_activity_threads(assistant["id"])
+                    # success("The activity have been successfully updated")
                 
                 
 
@@ -250,3 +251,13 @@ def error(line):
     st.write(line)
     if st.button("ok"):
         st.rerun() 
+
+@st.experimental_dialog("warning")
+def warning_edit(assistant,name,desc,instructions):
+    st.write("Editing this activity will reset it for all students, If students are working with the current activity, they will have to start the activity over. If you want to keep it as it is, we recommend you create a new activity")
+    if st.button("cancel"):
+        st.rerun()
+    if st.button("ok"):
+        openai_client.beta.assistants.update(assistant["id"], name = name, description = desc, instructions = instructions)
+        chatbot_helper.disable_activity_threads(assistant["id"])
+        success("The activity have been successfully updated")
