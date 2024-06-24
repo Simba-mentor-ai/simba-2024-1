@@ -21,14 +21,25 @@ def disable_activity_threads(activity_id):
     users_db = db.collection('courses').document(str(COURSE_ID)).collection('users')
     users = users_db.get()
     for user in users :
-        threads = user.collection('activity_threads').document(activity_id).get()
+        threads = users_db.document(user.id).collection('activity_threads').document(activity_id).get()
+        print(user.id)
         if threads.exists:
+            print("threads exists")
             dic = threads.to_dict()
-            for i in range(len(dic["threads"])):
-                if dic["threads"][i]["active"] :
-                    dic["threads"][i]["active"] = False
+            print(dic)
+            newdic = dic.copy()
+            if "threads" in dic:
+                for i in range(len(dic["threads"])):
+                    if dic["threads"][i]["active"] :
+                        newdic["threads"][i]["active"] = False
+                        print("found one")
+            elif "thread_id" in dic:
+                newdic = {"threads" : [{"id" : dic["thread_id"], "active" : False}]}
+            else :
+                newdic = {"threads" : []}
 
-            user.collection('activity_threads').document(activity_id).set(dic)
+            print(dic)
+            users_db.document(user.id).collection('activity_threads').document(activity_id).set(newdic)
 
 
 
@@ -39,14 +50,15 @@ def get_activity_thread(activity_id):
     user_db = users_db.document(str(user_id))
 
     # Get thread_id from Firebase
-    ua_threads = user_db.collection('activity_threads').document(activity_id).get()
+    ua_doc_threads = user_db.collection('activity_threads').document(activity_id)
+    ua_threads = ua_doc_threads.get()
 
     tid = 0
     # If the document does not exists, create it with a new thread
     if not ua_threads.exists:
         thread = openai_client.beta.threads.create()
-        ua_threads.set({'threads': [{'id':thread.id, 'active' : True}]})
         create_message("Hola!", thread.id, activity_id)
+        ua_doc_threads.set({'threads': [{'id':thread.id, 'active' : True}]})
         tid = thread.id
 
     else :
@@ -55,7 +67,8 @@ def get_activity_thread(activity_id):
         if 'threads' not in dic.keys():
             old_id = dic['thread_id']
             thread = openai_client.beta.threads.create()
-            ua_threads.set({'threads': [{'id':old_id, 'active' : False},{'id':thread.id, 'active' : True}]})
+            create_message("Hola!", thread.id, activity_id)
+            ua_doc_threads.set({'threads': [{'id':old_id, 'active' : False},{'id':thread.id, 'active' : True}]})
             tid = thread.id
 
         # If current, just retrieve the active thread id
@@ -69,8 +82,9 @@ def get_activity_thread(activity_id):
             if tid == 0:
                 threads = dic['threads']
                 thread = openai_client.beta.threads.create()
+                create_message("Hola!", thread.id, activity_id)
                 threads.append({'id' : thread.id, 'active' : True})
-                ua_threads.set({'threads' : threads})
+                ua_doc_threads.set({'threads' : threads})
                 tid = thread.id
 
     return tid
@@ -99,8 +113,6 @@ def get_messages(thread_id):
     
     clean_messages = []
     for message in messages.data[1:]:
-        # print(message)
-        # print(message.content[0].text.annotations)
         new_message = {
             "role": message.role if message.role == "user" else "model",
             "content": message.content[0].text.value

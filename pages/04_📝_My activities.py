@@ -26,7 +26,7 @@ if "selected activity" not in st.session_state :
 
 st.write("# Activity")
 
-st.selectbox("Select your activity", options=names, index=None, placeholder="select an activity...", on_change=selectActivity(), key="SelectedName")
+st.selectbox("Select the activity you want to work on", options=names, index=None, placeholder="select an activity...", on_change=selectActivity(), key="SelectedName")
 
 activityContainer = st.container()
 with activityContainer:

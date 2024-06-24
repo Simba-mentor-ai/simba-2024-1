@@ -3,14 +3,13 @@ import streamlit as st
 from langchain_core.prompts import PromptTemplate
 import edit_functions as ef
 import chatbot_helper
+import time
 from datetime import datetime, date
 
 attitudes = ["friendly","informal","formal"]
 teachtypes = ["socratic","other"]
 accepted_extensions = [".c",".cs",".cpp",".doc",".docx",".html",".java",".json",".md",".pdf",".php",".pptx",".py",".rb",".tex",".txt",".css",".js",".sh",".ts"]
 openai_client = OpenAI()
-
-
 
 
 def loadTemplate(assistant):
@@ -140,7 +139,7 @@ def loadTemplate(assistant):
 
     file = st.file_uploader("Drop a file you want to add here", type=accepted_extensions)
 
-    if st.button("Add file"):
+    if st.button("Upload files"):
         
         # Upload a file to OpenAI
         if file :
@@ -234,8 +233,6 @@ def loadTemplate(assistant):
                     # openai_client.beta.assistants.update(assistant["id"], name = name, description = desc, instructions = instructions)
                     # chatbot_helper.disable_activity_threads(assistant["id"])
                     # success("The activity have been successfully updated")
-                
-                
 
 
 @st.experimental_dialog("Success")
@@ -255,9 +252,15 @@ def error(line):
 @st.experimental_dialog("warning")
 def warning_edit(assistant,name,desc,instructions):
     st.write("Editing this activity will reset it for all students, If students are working with the current activity, they will have to start the activity over. If you want to keep it as it is, we recommend you create a new activity")
-    if st.button("cancel"):
-        st.rerun()
-    if st.button("ok"):
-        openai_client.beta.assistants.update(assistant["id"], name = name, description = desc, instructions = instructions)
-        chatbot_helper.disable_activity_threads(assistant["id"])
-        success("The activity have been successfully updated")
+    cancel,ok = st.columns([1,0.5])
+    with cancel :
+        if st.button("cancel"):
+            st.rerun()
+    with ok :
+        if st.button("ok"):
+            status = st.status("Updating the activity")
+            openai_client.beta.assistants.update(assistant["id"], name = name, description = desc, instructions = instructions)
+            chatbot_helper.disable_activity_threads(assistant["id"])
+            status.update(label="Activity successfully updated!",state='complete')
+            time.sleep(1)
+            st.rerun()
