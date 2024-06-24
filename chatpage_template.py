@@ -1,12 +1,14 @@
 import streamlit as st
 import logging
 import sys
-
+import gettext
 import chatbot_helper
 # import chatbot_eval as ce
 from traces_helper import save_navigation
 # from trulens_eval import Tru
 # from streamlit_js_eval import streamlit_js_eval
+
+_ = gettext.gettext
 
 put_all_messages = False
 means = False
@@ -80,7 +82,7 @@ def load_template(activity_id, assistant_id, title):
         with chatContainer:
             intro_placeholder = st.empty()
             if "messages" not in st.session_state:
-                intro_placeholder.markdown("Cargando chatbot...")
+                intro_placeholder.markdown(_("Loading chatbot..."))
 
             elif len(st.session_state.messages)==0:
                 intro_placeholder.markdown("")
@@ -91,7 +93,7 @@ def load_template(activity_id, assistant_id, title):
                 with st.chat_message(message["role"], avatar=avatar):
                     st.markdown(message["content"])
 
-        prompt = st.chat_input("What is up?", on_submit=disable, disabled=st.session_state["text_disabled"])
+        prompt = st.chat_input(_("What is up?"), on_submit=disable, disabled=st.session_state["text_disabled"])
         if prompt and thread_id is not None:
             disable()
             with chatContainer:
@@ -102,7 +104,7 @@ def load_template(activity_id, assistant_id, title):
 
                 logging.info('Creating message in thread...')
                 with st.status("..."):
-                    st.write("Espera un momento, estoy pensando en una respuesta...")
+                    st.write(_("Please, wait a moment, I'm thinking about my answer..."))
                     response_message = chatbot_helper.create_message(prompt, thread_id, assistant_id)        
                     logging.info(f'Response message: {response_message}')
 

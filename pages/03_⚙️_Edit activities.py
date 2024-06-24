@@ -1,6 +1,9 @@
 import streamlit as st
 import edit_functions
 import new_edit_template
+import gettext
+
+_ = gettext.gettext
 
 st.set_page_config(layout="wide")
 
@@ -10,18 +13,18 @@ if "assistants" not in st.session_state:
 if not "selectedID" in st.session_state:
         st.session_state["selectedID"] = list(st.session_state["assistants"].keys())[0]
 
-st.write("# activities parameters")
+st.write(_("# activities parameters"))
 
 col1, col2 = st.columns([0.2,0.8])
 
 with col1 :
-    st.write("### activities")
+    st.write(_("### activities"))
 
     asdict = st.session_state["assistants"]
 
     with st.container(border=True, height=500):
 
-        if st.button("↺ refresh activities list"):
+        if st.button(_("↺ refresh activities list")):
             st.session_state["assistants"] = edit_functions.getAssistants() 
         
         for id in asdict :
@@ -35,13 +38,13 @@ with col1 :
                 st.session_state["initialized"] = False
                 st.rerun()
     
-    if st.button("delete selected activity",type="primary"):
+    if st.button(_("delete selected activity"),type="primary"):
         edit_functions.delAssistant(st.session_state["assistants"][st.session_state["selectedID"]])
 
 with col2 :
-    st.write("### Selected activity")
+    st.write(_("### Selected activity"))
 
     if st.session_state["selectedID"] == 0:
-        st.write("Please select an activity")
+        st.write(_("Please select an activity"))
     else :
         new_edit_template.loadTemplate(st.session_state["assistants"][st.session_state["selectedID"]])

@@ -6,7 +6,9 @@ from auth_helper import get_auth_status
 import streamlit as st
 import edit_functions
 import chatpage_template
+import gettext
 
+_ = gettext.gettext
 
 st.set_page_config(layout="wide")
 
@@ -24,9 +26,9 @@ def selectActivity() :
 if "selected activity" not in st.session_state :
     st.session_state["selected activity"] = ""
 
-st.write("# Activity")
+st.write(_("# Activity"))
 
-st.selectbox("Select the activity you want to work on", options=names, index=None, placeholder="select an activity...", on_change=selectActivity(), key="SelectedName")
+st.selectbox(_("Select the activity you want to work on"), options=names, index=None, placeholder=_("select an activity..."), on_change=selectActivity(), key="SelectedName")
 
 activityContainer = st.container()
 with activityContainer:

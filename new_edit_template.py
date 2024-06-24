@@ -4,7 +4,10 @@ from langchain_core.prompts import PromptTemplate
 import edit_functions as ef
 import chatbot_helper
 import time
+import gettext
 from datetime import datetime, date
+
+_ = gettext.gettext
 
 attitudes = ["friendly","informal","formal"]
 teachtypes = ["socratic","other"]
@@ -19,25 +22,25 @@ def loadTemplate(assistant):
     if "initialized" not in st.session_state :
         st.session_state["initialized"] = False
 
-    title = "Create a new activity"
+    title = _("Create a new activity")
     if not new :
         oldprompt = assistant["instructions"]
         vals = ef.extractVals(oldprompt)
-        title = "Modify your activity"
+        title = _("Modify your activity")
         
     st.title(title)
 
     #Name
-    name = st.text_input("Activity's new name", value = "" if new else assistant["name"], placeholder = "New name...")
+    name = st.text_input(_("Activity's new name"), value = "" if new else assistant["name"], placeholder = _("New name..."))
 
     #Course
-    course = st.text_input("Course's name", value = "" if new else vals["courseName"], placeholder = "New course name...")
+    course = st.text_input(_("Course's name"), value = "" if new else vals["courseName"], placeholder = _("New course name..."))
 
     #Description
-    desc = st.text_input("Modify the description or enter a new one", value = "" if new else assistant["description"], placeholder = "New description...")
+    desc = st.text_input(_("Modify the description or enter a new one"), value = "" if new else assistant["description"], placeholder = _("New description..."))
     
     #Questions
-    if not new and not st.session_state["initialized"] :
+    if not new and not st.session_state[_("initialized")] :
             st.session_state["nbQuestions"] = vals["nbQuestions"]
             st.session_state["questions"] = vals["questions"]
     else :
@@ -47,10 +50,10 @@ def loadTemplate(assistant):
 
     add,remove = st.columns([.3,1])
     with add:
-        if st.button("➕ add a question") :
+        if st.button(_("➕ add a question")) :
             st.session_state["nbQuestions"] = st.session_state["nbQuestions"]+1
     with remove:
-        if st.button("➖ remove a question") and st.session_state["nbQuestions"]>1:
+        if st.button(_("➖ remove a question")) and st.session_state["nbQuestions"]>1:
             st.session_state["nbQuestions"] = st.session_state["nbQuestions"]-1
 
     
@@ -58,7 +61,7 @@ def loadTemplate(assistant):
         question, delete = st.columns([0.8,0.2])
         if i-1 < len(st.session_state["questions"]):
             with question :
-                st.session_state["questions"][i-1] = st.text_input(f"Question {i}", placeholder="enter the question statement", key=f"question{i}", value=st.session_state["questions"][i-1])
+                st.session_state["questions"][i-1] = st.text_input(f"Question {i}", placeholder=_("enter the question statement"), key=f"question{i}", value=st.session_state["questions"][i-1])
             if st.session_state["nbQuestions"]>1:
                 with delete :
                     st.container(height=13, border=False)
@@ -69,9 +72,10 @@ def loadTemplate(assistant):
         else :
             with question :
                 st.session_state["questions"].append("")
-                st.session_state["questions"][i-1] = st.text_input(f"Question {i}", placeholder="enter the question statement", key=f"question{i}")
+                st.session_state["questions"][i-1] = st.text_input(f"Question {i}", placeholder=_("enter the question statement"), key=f"question{i}")
             if st.session_state["nbQuestions"]>1:
                 with delete :
+                    st.container(height=13, border=False)
                     if st.button("❌"):
                         st.session_state["nbQuestions"]=st.session_state["nbQuestions"]-1
                         del st.session_state["questions"][i-1]
@@ -81,41 +85,41 @@ def loadTemplate(assistant):
     newprompt = PromptTemplate.from_template(ef.full_template)
 
     if new :
-        advanced = st.expander("Advanced settings")
+        advanced = st.expander(_("Advanced settings"))
     else :
         advanced = st.container()
     
     with advanced:
-        st.write("### Activity's assistant instructions :")
+        st.write(_("### Activity's assistant instructions :"))
 
         #attitude
-        adj1 = st.selectbox("What attitude should the assistant have toward the students ?", attitudes, index=0 if new else attitudes.index(vals["adj1"]))
+        adj1 = st.selectbox(_("What attitude should the assistant have toward the students ?"), attitudes, index=0 if new else attitudes.index(vals["adj1"]))
 
         #teaching type
-        teachtype = st.selectbox("What should be the assistant's approach to teaching ?", teachtypes, index=0 if new else teachtypes.index(vals["teaching_adj"]))
+        teachtype = st.selectbox(_("What should be the assistant's approach to teaching ?"), teachtypes, index=0 if new else teachtypes.index(vals["teaching_adj"]))
 
         #giving answers
-        giveAnswers = st.checkbox("The assistant should give an answer to the activity questions if the student asks for it.", value=False if new else vals["answers"])
+        giveAnswers = st.checkbox(_("The assistant should give an answer to the activity questions if the student asks for it."), value=False if new else vals["answers"])
 
         #using emojis
-        useEmojis = st.checkbox("The assistant should use emojis.", value=True if new else vals["emojis"])
+        useEmojis = st.checkbox(_("The assistant should use emojis."), value=True if new else vals["emojis"])
 
         #mentioning documents
-        mentiondocuments = st.checkbox("The assistant should encourage the student to rely on the provided documents for answering.", value=False if new else vals["documents"])
+        mentiondocuments = st.checkbox(_("The assistant should encourage the student to rely on the provided documents for answering."), value=False if new else vals["documents"])
         if mentiondocuments:
-            url = st.text_input("Is there an URL where to find those documents ?", value="" if new else vals["url"], placeholder="leave empty if you have no url")
+            url = st.text_input(_("Is there an URL where to find those documents ?"), value="" if new else vals["url"], placeholder=_("leave empty if you have no url"))
         else :
             url = ""
         
         #word limit
-        limit = st.number_input("include a word count limit for the assistant's answers ? (0 = no limit)", min_value=0, value=0 if new else vals["limits"])
+        limit = st.number_input(_("include a word count limit for the assistant's answers ? (0 = no limit)"), min_value=0, value=0 if new else vals["limits"])
 
     #Files
     if "files" not in st.session_state or not st.session_state["initialized"]:
         st.session_state["files"] = []
 
     vfiles = []
-    st.write("### Activity files")
+    st.write(_("### Activity files"))
     if "file_search" in dir(assistant["tool_resources"]) and len(assistant["tool_resources"].file_search.vector_store_ids)>0:
         st.write("Current files :")
 
@@ -128,26 +132,26 @@ def loadTemplate(assistant):
                 st.write(file.filename)
             with delete :
                 if st.button("❌",key="del"+str(vf.id)):
-                    fdeleteStatus = st.status("Deleting the file")
+                    fdeleteStatus = st.status(_("Deleting the file"))
                     openai_client.beta.vector_stores.files.delete(file_id=vf.id, vector_store_id=vid)
                     openai_client.files.delete(file_id=vf.id)
-                    fdeleteStatus.update(label="Deleted!",state="complete")
+                    fdeleteStatus.update(label=_("Deleted!"),state="complete")
                 
     else :
-        st.write("No files have been added yet.")
+        st.write(_("No files have been added yet."))
 
 
-    file = st.file_uploader("Drop a file you want to add here", type=accepted_extensions)
+    file = st.file_uploader(_("Drop files you want to add here"), type=accepted_extensions)
 
-    if st.button("Upload files"):
+    if st.button(_("Upload files")):
         
         # Upload a file to OpenAI
         if file :
             if new :
                 st.session_state["files"].append(file)
-                st.write("file added, to be uploaded upon activity creation.")
+                st.write(_("file added, to be uploaded upon activity creation."))
             else:
-                status = st.status("Uploading file")
+                status = st.status(_("Uploading file"))
                 # Add the uploaded file to the assistant
                 # search if vector store exists :
                 if "file_search" in dir(assistant["tool_resources"]) and len(assistant["tool_resources"].file_search.vector_store_ids)>0:
@@ -160,17 +164,17 @@ def loadTemplate(assistant):
                     openai_client.beta.vector_stores.files.upload(
                         vector_store_id=vector_store.id, file=file
                     )   
-                    status.update(label="Linking file to the activity")
+                    status.update(label=_("Linking file to the activity"))
                     openai_client.beta.assistants.update(assistant_id=assistant["id"],tool_resources={"file_search": {"vector_store_ids": [vector_store.id]}},)
                 
-                status.update(label="File added to the activity!",state="complete")
+                status.update(label=_("File added to the activity!"),state="complete")
                 st.session_state["assistants"] = ef.getAssistants()
                 assistant = st.session_state["assistants"][st.session_state["selectedID"]]
 
             file = None
 
         else :
-            error("please, add a file to be uploaded first.")
+            error(_("please, add a file to be uploaded first."))
 
     st.session_state["initialized"] = True
 
@@ -178,11 +182,11 @@ def loadTemplate(assistant):
 
     if not new :
         with cancel:
-            if st.button("Cancel"):
+            if st.button(_("Cancel")):
                 st.session_state["initialized"] = False
                 st.rerun()
     with submit:
-        if st.button("Submit"):
+        if st.button(_("Submit")):
 
             emptyquestion = False
             emptyI = 0
@@ -193,11 +197,11 @@ def loadTemplate(assistant):
                     break
 
             if name == "":
-                error("Please, give a name to your activity.")
+                error(_("Please, give a name to your activity."))
             elif st.session_state["nbQuestions"] == 0 :
-                error("The activity needs to have at least one question.")
+                error(_("The activity needs to have at least one question."))
             elif emptyquestion:
-                error("The question " + str(emptyI+1) + " have no text.")
+                error(_("The question " + str(emptyI+1) + " have no text."))
 
             else :
                 instructions = newprompt.format(
@@ -212,21 +216,21 @@ def loadTemplate(assistant):
                     limits= ef.limitsgen(limit)
                 )
                 if new :
-                    status = st.status(label="Creating activity")
+                    status = st.status(label=_("Creating activity"))
                     vector_store = None
                     if len(st.session_state["files"])>0 :
                         vector_store = openai_client.beta.vector_stores.create(name=name)
-                        status.update(label = "uploading the files")
+                        status.update(label = _("uploading the files"))
                     for f in st.session_state["files"] :
                         openai_client.beta.vector_stores.files.upload(
                             vector_store_id=vector_store.id, file=f
                         )
-                    status.update(label="Creating activity")
+                    status.update(label=_("Creating activity"))
                     if vector_store:
                         openai_client.beta.assistants.create(name = name, description = desc, instructions = instructions, tools=[{"type": "file_search"}], model="gpt-4-turbo",tool_resources={"file_search": {"vector_store_ids": [vector_store.id]}})
                     else :
                         openai_client.beta.assistants.create(name = name, description = desc, instructions = instructions, tools=[{"type": "file_search"}], model="gpt-4-turbo")
-                    success("The new activity have been successfully created")
+                    success(_("The new activity have been successfully created"))
 
                 else :
                     warning_edit(assistant,name,desc,instructions)
@@ -235,32 +239,32 @@ def loadTemplate(assistant):
                     # success("The activity have been successfully updated")
 
 
-@st.experimental_dialog("Success")
+@st.experimental_dialog(_("Success"))
 def success(line):
     st.write(line)
-    if st.button("ok"):
+    if st.button(_("ok")):
         st.session_state["assistants"] = ef.getAssistants()
         st.session_state["initialized"] = False   
         st.rerun() 
 
-@st.experimental_dialog("Error")
+@st.experimental_dialog(_("Error"))
 def error(line):
     st.write(line)
-    if st.button("ok"):
+    if st.button(_("ok")):
         st.rerun() 
 
-@st.experimental_dialog("warning")
+@st.experimental_dialog(_("warning"))
 def warning_edit(assistant,name,desc,instructions):
-    st.write("Editing this activity will reset it for all students, If students are working with the current activity, they will have to start the activity over. If you want to keep it as it is, we recommend you create a new activity")
+    st.write(_("Editing this activity will reset it for all students, If students are working with the current activity, they will have to start the activity over. If you want to keep it as it is, we recommend you create a new activity"))
     cancel,ok = st.columns([1,0.5])
     with cancel :
-        if st.button("cancel"):
+        if st.button(_("cancel")):
             st.rerun()
     with ok :
-        if st.button("ok"):
-            status = st.status("Updating the activity")
+        if st.button(_("ok")):
+            status = st.status(_("Updating the activity"))
             openai_client.beta.assistants.update(assistant["id"], name = name, description = desc, instructions = instructions)
             chatbot_helper.disable_activity_threads(assistant["id"])
-            status.update(label="Activity successfully updated!",state='complete')
+            status.update(label=_("Activity successfully updated!"),state='complete')
             time.sleep(1)
             st.rerun()
