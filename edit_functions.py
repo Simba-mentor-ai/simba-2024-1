@@ -5,6 +5,7 @@ import re
 import time
 from datetime import datetime, date
 import gettext
+import options
 
 _ = gettext.gettext
 openai_client = OpenAI()
@@ -268,9 +269,6 @@ Your first message should begin with ‘Hello! 😸 I am SIMBA, and I will help 
 
 {limits}""")
 
-attitudes = ["friendly","informal","formal"]
-teachtypes = ["socratic","other"]
-
 #deprecated
 # @st.experimental_dialog("Edit the assistant's instructions for the activity")
 # def chgPrompt(assistant):
@@ -365,7 +363,7 @@ def docsGen(mentiondocuments, url):
 def teachTypeGen(type):
     nstr = ""
 
-    if type == "socratic":
+    if type == _("socratic"):
         nstr = _("Act as a Socratic tutor, taking the initiative in getting the students to answer the questions.")
     else :
         nstr = _("Act as a standard teacher.")
@@ -402,32 +400,48 @@ def extractVals(prompt):
     # Adj
     vals["adj1"] = "friendly"
     if checkstring in prompt:
-        result = re.search('You are a (.*) ', prompt)
+        result = re.search(_('You are a (.*) '), prompt)
         if result :
-            if result in attitudes:
+            if result in options.attitudes:
                 vals["adj1"] = result.group(1).split(" ")[0]
         
 
     # teaching style
-    vals["teaching_adj"] = "socratic"
+    vals["teaching_adj"] = _("socratic")
+    searchedLine = _(' (.*) tutor for the course')
     if checkstring in prompt:
-        result = re.search(' (.*) tutor for the course', prompt)
+        result = re.search(searchedLine, prompt)
         if result :
-            if result in teachtypes:
-                vals["teaching_adj"] = result.group(1).split(" ")[-1]
+            if searchedLine[0:5] == " (.*)":
+                result = result.group(1).split(" ")[-1]
+            elif searchedLine[-5:] == "(.*) ":
+                result = result.group(1).split(" ")[0]
+            else :
+                result = result.group(1)
+            
+            if result in options.teachtypes:
+                vals["teaching_adj"] = result
         
 
     # course name
     vals["courseName"] = "default name"
+    searchedLine = _("tutor for the course '(.*)'.")
     if checkstring in prompt:
-        result = re.search("tutor for the course '(.*)'.", prompt)
+        result = re.search(searchedLine, prompt)
         if result :
-            vals["courseName"] = result.group(1)
+            if searchedLine[0:5] == " (.*)":
+                result = result.group(1).split(" ")[-1]
+            elif searchedLine[-5:] == "(.*) ":
+                result = result.group(1).split(" ")[0]
+            else :
+                result = result.group(1)
+            
+            vals["teaching_adj"] = result
         
 
     # questions
     vals["questions"] = []
-    sub = re.compile("Question . : ")
+    sub = re.compile(_("Question . : "))
     splitQ = sub.split(prompt)
     vals["nbQuestions"] = len(sub.findall(prompt))
     for i in range(1,len(splitQ)):
@@ -454,16 +468,32 @@ def extractVals(prompt):
     if _("Encourage them to go and read a section of the provided documents to answer.") in prompt:
         vals["documents"] = True
         if _(" If they do not have access to the text, they can find it at '") in prompt:
-            result = re.search(" If they do not have access to the text, they can find it at '(.*)'.", prompt)
+            searchedLine = _(" If they do not have access to the text, they can find it at '(.*)'.")
+            result = re.search(searchedLine, prompt)
             if result:
-                vals["url"] = result.group(1)
+                if searchedLine[0:5] == " (.*)":
+                    result = result.group(1).split(" ")[-1]
+                elif searchedLine[-5:] == "(.*) ":
+                    result = result.group(1).split(" ")[0]
+                else :
+                    result = result.group(1)
+
+                vals["url"] = result
         
     # words limit
     vals["limits"] = 0
+    searchedLine = _('Your answers should be (.*) words maximum.')
     if checkstring in prompt and "Your answers should be " in prompt:
-        result = re.search('Your answers should be (.*) words maximum.', prompt)
-        if result:
-            vals["limits"] = int(result.group(1))
+        result = re.search(searchedLine, prompt)
+        if result :
+            if searchedLine[0:5] == " (.*)":
+                result = result.group(1).split(" ")[-1]
+            elif searchedLine[-5:] == "(.*) ":
+                result = result.group(1).split(" ")[0]
+            else :
+                result = result.group(1)
+            
+            vals["limits"] = int(result)
         
 
     return vals

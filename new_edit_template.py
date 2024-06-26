@@ -6,12 +6,13 @@ import chatbot_helper
 import time
 import gettext
 from datetime import datetime, date
+import options
 
 _ = gettext.gettext
 
-attitudes = ["friendly","informal","formal"]
-teachtypes = ["socratic","other"]
-accepted_extensions = [".c",".cs",".cpp",".doc",".docx",".html",".java",".json",".md",".pdf",".php",".pptx",".py",".rb",".tex",".txt",".css",".js",".sh",".ts"]
+attitudes = options.attitudes
+teachtypes = options.teachtypes
+accepted_extensions = options.accepted_extensions
 openai_client = OpenAI()
 
 

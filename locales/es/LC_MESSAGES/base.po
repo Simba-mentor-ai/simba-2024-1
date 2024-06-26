@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2024-06-24 18:34+0200\n"
-"PO-Revision-Date: 2024-06-24 18:34+0200\n"
+"POT-Creation-Date: 2024-06-26 11:55+0200\n"
+"PO-Revision-Date: 2024-06-26 11:59+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: es\n"
@@ -11,20 +11,17 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 3.4.4\n"
 "X-Poedit-Basepath: ../..\n"
-"X-Poedit-SearchPath-0: chatbot_eval.py\n"
-"X-Poedit-SearchPath-1: chatbot_helper.py\n"
-"X-Poedit-SearchPath-2: chatpage_template.py\n"
-"X-Poedit-SearchPath-3: edit_functions.py\n"
-"X-Poedit-SearchPath-4: new_edit_template.py\n"
-"X-Poedit-SearchPath-5: retriever.py\n"
-"X-Poedit-SearchPath-6: streamlit_config_helper.py\n"
-"X-Poedit-SearchPath-7: traces_helper.py\n"
-"X-Poedit-SearchPath-8: auth_helper.py\n"
-"X-Poedit-SearchPath-9: emoji_free for translation/02_New activity.py\n"
-"X-Poedit-SearchPath-10: emoji_free for translation/03_Edit activities.py\n"
-"X-Poedit-SearchPath-11: emoji_free for translation/04_My activities.py\n"
-"X-Poedit-SearchPath-12: emoji_free for translation/05_admin.py\n"
-"X-Poedit-SearchPath-13: emoji_free for translation/01_SIMBA.py\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPathExcluded-0: prompts\n"
+"X-Poedit-SearchPathExcluded-1: .devcontainer\n"
+"X-Poedit-SearchPathExcluded-2: .git\n"
+"X-Poedit-SearchPathExcluded-3: .streamlit\n"
+"X-Poedit-SearchPathExcluded-4: .venv\n"
+"X-Poedit-SearchPathExcluded-5: __pycache__\n"
+"X-Poedit-SearchPathExcluded-6: contexts\n"
+"X-Poedit-SearchPathExcluded-7: locales\n"
+"X-Poedit-SearchPathExcluded-8: pages\n"
+"X-Poedit-SearchPathExcluded-9: 01_😸_SIMBA.py\n"
 
 #: chatpage_template.py:85
 msgid "Loading chatbot..."
@@ -62,12 +59,32 @@ msgid ""
 "{limits}"
 msgstr ""
 
+#: edit_functions.py:271
+msgid "friendly"
+msgstr ""
+
+#: edit_functions.py:271
+msgid "informal"
+msgstr ""
+
+#: edit_functions.py:271
+msgid "formal"
+msgstr ""
+
+#: edit_functions.py:272 edit_functions.py:368 edit_functions.py:412
+msgid "socratic"
+msgstr ""
+
+#: edit_functions.py:272
+msgid "other"
+msgstr ""
+
 #: edit_functions.py:354
 #, python-brace-format
 msgid "Your answers should be {limit} words maximum."
 msgstr ""
 
-#: edit_functions.py:360 edit_functions.py:454
+#: edit_functions.py:360 edit_functions.py:470
 msgid ""
 "Encourage them to go and read a section of the provided documents to answer."
 msgstr ""
@@ -87,7 +104,7 @@ msgstr ""
 msgid "Act as a standard teacher."
 msgstr ""
 
-#: edit_functions.py:377 edit_functions.py:440
+#: edit_functions.py:377 edit_functions.py:456
 msgid "You should not give the answer, but guide the student to answer."
 msgstr ""
 
@@ -97,7 +114,7 @@ msgid ""
 "it."
 msgstr ""
 
-#: edit_functions.py:393 edit_functions.py:446
+#: edit_functions.py:393 edit_functions.py:462
 msgid ", using emojis where possible."
 msgstr ""
 
@@ -107,9 +124,79 @@ msgid ""
 "and you were created by the Núcleo Milenio de Educación Superior."
 msgstr ""
 
-#: edit_functions.py:456
+#: edit_functions.py:405
+msgid "You are a (.*) "
+msgstr ""
+
+#: edit_functions.py:413
+msgid " (.*) tutor for the course"
+msgstr ""
+
+#: edit_functions.py:430
+msgid "tutor for the course '(.*)'."
+msgstr ""
+
+#: edit_functions.py:446
+msgid "Question . : "
+msgstr ""
+
+#: edit_functions.py:472
 msgid " If they do not have access to the text, they can find it at '"
 msgstr ""
+
+#: edit_functions.py:473
+msgid " If they do not have access to the text, they can find it at '(.*)'."
+msgstr ""
+
+#: edit_functions.py:487
+msgid "Your answers should be (.*) words maximum."
+msgstr ""
+
+#: ⁨emoji_free for translation/01_SIMBA.py⁩:13
+msgid "Welcome to SIMBA - your personal learning assistant"
+msgstr "Bienvenido a SIMBA - Tu Asistente de Aprendizaje"
+
+#: ⁨emoji_free for translation/01_SIMBA.py⁩:18
+msgid ""
+"\n"
+"        ## **SIMBA accompanies you in your learning**.\n"
+"\n"
+"        SIMBA (Intelligent Mentoring, Wellbeing and Support System) has been "
+"designed to enhance your learning experience. \n"
+"                    \n"
+"        Use SIMBA to review and reflect on questions related to course "
+"content, to organise yourself and create the best action plan to achieve the "
+"course objectives.\n"
+"        "
+msgstr ""
+"\n"
+"        ## **Simba te acompaña en tu aprendizaje**.\n"
+"\n"
+"        SIMBA (Sistema Intelligente de Mentoría, Bienestar y Apoyo) ha sido "
+"diseñado para mejorar tu experiencia de aprendizaje. \n"
+"                    \n"
+"        Usa SIMBA para revisar y reflexionar sobre preguntas relacionadas "
+"con los contenidos del curso, para organizarte y crear el mejor plan de "
+"acción para alcanzar los objetivos del curso.\n"
+"        "
+
+#: ⁨emoji_free for translation/01_SIMBA.py⁩:28
+msgid "SIMBA - Your Learning Partner"
+msgstr "SIMBA - Tu Asistente de Aprendizaje"
+
+#: ⁨emoji_free for translation/01_SIMBA.py⁩:33
+msgid ""
+"\n"
+"\n"
+"    ## **How to use SIMBA :**\n"
+"\n"
+"    "
+msgstr ""
+"\n"
+"\n"
+"    ## **Cómo usar SIMBA :**\n"
+"\n"
+"    "
 
 #: ⁨emoji_free for translation/03_Edit activities.py⁩:16
 msgid "# activities parameters"
