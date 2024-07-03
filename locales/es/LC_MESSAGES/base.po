@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2024-06-26 11:55+0200\n"
-"PO-Revision-Date: 2024-06-26 11:59+0200\n"
+"POT-Creation-Date: 2024-06-26 17:42+0200\n"
+"PO-Revision-Date: 2024-06-26 17:45+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: es\n"
@@ -10,10 +10,10 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "X-Generator: Poedit 3.4.4\n"
-"X-Poedit-Basepath: ../..\n"
+"X-Poedit-Basepath: ../../..\n"
 "X-Poedit-SearchPath-0: .\n"
-"X-Poedit-SearchPathExcluded-0: prompts\n"
-"X-Poedit-SearchPathExcluded-1: .devcontainer\n"
+"X-Poedit-SearchPathExcluded-0: .devcontainer\n"
+"X-Poedit-SearchPathExcluded-1: SIMBA_img.jpeg\n"
 "X-Poedit-SearchPathExcluded-2: .git\n"
 "X-Poedit-SearchPathExcluded-3: .streamlit\n"
 "X-Poedit-SearchPathExcluded-4: .venv\n"
@@ -21,7 +21,12 @@ msgstr ""
 "X-Poedit-SearchPathExcluded-6: contexts\n"
 "X-Poedit-SearchPathExcluded-7: locales\n"
 "X-Poedit-SearchPathExcluded-8: pages\n"
-"X-Poedit-SearchPathExcluded-9: 01_😸_SIMBA.py\n"
+"X-Poedit-SearchPathExcluded-9: prompts\n"
+"X-Poedit-SearchPathExcluded-10: .gitignore\n"
+"X-Poedit-SearchPathExcluded-11: 01_😸_SIMBA.py\n"
+"X-Poedit-SearchPathExcluded-12: LICENSE\n"
+"X-Poedit-SearchPathExcluded-13: README.md\n"
+"X-Poedit-SearchPathExcluded-14: requirements.txt\n"
 
 #: chatpage_template.py:85
 msgid "Loading chatbot..."
@@ -35,7 +40,7 @@ msgstr ""
 msgid "Please, wait a moment, I'm thinking about my answer..."
 msgstr ""
 
-#: edit_functions.py:254
+#: edit_functions.py:255
 #, python-brace-format
 msgid ""
 "You are a {adj1} {teaching_adj} tutor for the course '{courseName}'.\n"
@@ -59,104 +64,92 @@ msgid ""
 "{limits}"
 msgstr ""
 
-#: edit_functions.py:271
-msgid "friendly"
-msgstr ""
-
-#: edit_functions.py:271
-msgid "informal"
-msgstr ""
-
-#: edit_functions.py:271
-msgid "formal"
-msgstr ""
-
-#: edit_functions.py:272 edit_functions.py:368 edit_functions.py:412
-msgid "socratic"
-msgstr ""
-
-#: edit_functions.py:272
-msgid "other"
-msgstr ""
-
-#: edit_functions.py:354
+#: edit_functions.py:352
 #, python-brace-format
 msgid "Your answers should be {limit} words maximum."
 msgstr ""
 
-#: edit_functions.py:360 edit_functions.py:470
+#: edit_functions.py:358 edit_functions.py:468
 msgid ""
 "Encourage them to go and read a section of the provided documents to answer."
 msgstr ""
 
-#: edit_functions.py:362
+#: edit_functions.py:360
 #, python-brace-format
 msgid " If they do not have access to the text, they can find it at '{url}'."
 msgstr ""
 
-#: edit_functions.py:369
+#: edit_functions.py:366 edit_functions.py:410 options.py:9
+msgid "socratic"
+msgstr ""
+
+#: edit_functions.py:367
 msgid ""
 "Act as a Socratic tutor, taking the initiative in getting the students to "
 "answer the questions."
 msgstr ""
 
-#: edit_functions.py:371
+#: edit_functions.py:369
 msgid "Act as a standard teacher."
 msgstr ""
 
-#: edit_functions.py:377 edit_functions.py:456
+#: edit_functions.py:375 edit_functions.py:454
 msgid "You should not give the answer, but guide the student to answer."
 msgstr ""
 
-#: edit_functions.py:379
+#: edit_functions.py:377
 msgid ""
 "You can provide an answer to the provided questions if the student asks for "
 "it."
 msgstr ""
 
-#: edit_functions.py:393 edit_functions.py:462
+#: edit_functions.py:391 edit_functions.py:460
 msgid ", using emojis where possible."
 msgstr ""
 
-#: edit_functions.py:400
+#: edit_functions.py:398
 msgid ""
 "Your name is SIMBA 😸 (Sistema Inteligente de Medición, Bienestar y Apoyo) "
 "and you were created by the Núcleo Milenio de Educación Superior."
 msgstr ""
 
-#: edit_functions.py:405
+#: edit_functions.py:403
 msgid "You are a (.*) "
 msgstr ""
 
-#: edit_functions.py:413
+#: edit_functions.py:411
 msgid " (.*) tutor for the course"
 msgstr ""
 
-#: edit_functions.py:430
+#: edit_functions.py:428
 msgid "tutor for the course '(.*)'."
 msgstr ""
 
-#: edit_functions.py:446
+#: edit_functions.py:444
 msgid "Question . : "
 msgstr ""
 
-#: edit_functions.py:472
+#: edit_functions.py:470
 msgid " If they do not have access to the text, they can find it at '"
 msgstr ""
 
-#: edit_functions.py:473
+#: edit_functions.py:471
 msgid " If they do not have access to the text, they can find it at '(.*)'."
 msgstr ""
 
-#: edit_functions.py:487
+#: edit_functions.py:485
 msgid "Your answers should be (.*) words maximum."
 msgstr ""
 
-#: ⁨emoji_free for translation/01_SIMBA.py⁩:13
+#: ⁨emoji_free for translation/01_SIMBA.py⁩:34
+msgid "Language"
+msgstr ""
+
+#: ⁨emoji_free for translation/01_SIMBA.py⁩:37
 msgid "Welcome to SIMBA - your personal learning assistant"
 msgstr "Bienvenido a SIMBA - Tu Asistente de Aprendizaje"
 
-#: ⁨emoji_free for translation/01_SIMBA.py⁩:18
+#: ⁨emoji_free for translation/01_SIMBA.py⁩:42
 msgid ""
 "\n"
 "        ## **SIMBA accompanies you in your learning**.\n"
@@ -180,11 +173,11 @@ msgstr ""
 "acción para alcanzar los objetivos del curso.\n"
 "        "
 
-#: ⁨emoji_free for translation/01_SIMBA.py⁩:28
+#: ⁨emoji_free for translation/01_SIMBA.py⁩:52
 msgid "SIMBA - Your Learning Partner"
 msgstr "SIMBA - Tu Asistente de Aprendizaje"
 
-#: ⁨emoji_free for translation/01_SIMBA.py⁩:33
+#: ⁨emoji_free for translation/01_SIMBA.py⁩:57
 msgid ""
 "\n"
 "\n"
@@ -234,205 +227,221 @@ msgstr ""
 msgid "select an activity..."
 msgstr ""
 
-#: new_edit_template.py:25
+#: new_edit_template.py:26
 msgid "Create a new activity"
 msgstr ""
 
-#: new_edit_template.py:29
+#: new_edit_template.py:30
 msgid "Modify your activity"
 msgstr ""
 
-#: new_edit_template.py:34
+#: new_edit_template.py:35
 msgid "Activity's new name"
 msgstr ""
 
-#: new_edit_template.py:34
+#: new_edit_template.py:35
 msgid "New name..."
 msgstr ""
 
-#: new_edit_template.py:37
+#: new_edit_template.py:38
 msgid "Course's name"
 msgstr ""
 
-#: new_edit_template.py:37
+#: new_edit_template.py:38
 msgid "New course name..."
 msgstr ""
 
-#: new_edit_template.py:40
+#: new_edit_template.py:41
 msgid "Modify the description or enter a new one"
 msgstr ""
 
-#: new_edit_template.py:40
+#: new_edit_template.py:41
 msgid "New description..."
 msgstr ""
 
-#: new_edit_template.py:43
+#: new_edit_template.py:44
 msgid "initialized"
 msgstr ""
 
-#: new_edit_template.py:53
+#: new_edit_template.py:54
 msgid "➕ add a question"
 msgstr ""
 
-#: new_edit_template.py:56
+#: new_edit_template.py:57
 msgid "➖ remove a question"
 msgstr ""
 
-#: new_edit_template.py:64 new_edit_template.py:75
+#: new_edit_template.py:65 new_edit_template.py:76
 msgid "enter the question statement"
 msgstr ""
 
-#: new_edit_template.py:88
+#: new_edit_template.py:89
 msgid "Advanced settings"
 msgstr ""
 
-#: new_edit_template.py:93
+#: new_edit_template.py:94
 msgid "### Activity's assistant instructions :"
 msgstr ""
 
-#: new_edit_template.py:96
+#: new_edit_template.py:97
 msgid "What attitude should the assistant have toward the students ?"
 msgstr ""
 
-#: new_edit_template.py:99
+#: new_edit_template.py:100
 msgid "What should be the assistant's approach to teaching ?"
 msgstr ""
 
-#: new_edit_template.py:102
+#: new_edit_template.py:103
 msgid ""
 "The assistant should give an answer to the activity questions if the student "
 "asks for it."
 msgstr ""
 
-#: new_edit_template.py:105
+#: new_edit_template.py:106
 msgid "The assistant should use emojis."
 msgstr ""
 
-#: new_edit_template.py:108
+#: new_edit_template.py:109
 msgid ""
 "The assistant should encourage the student to rely on the provided documents "
 "for answering."
 msgstr ""
 
-#: new_edit_template.py:110
+#: new_edit_template.py:111
 msgid "Is there an URL where to find those documents ?"
 msgstr ""
 
-#: new_edit_template.py:110
+#: new_edit_template.py:111
 msgid "leave empty if you have no url"
 msgstr ""
 
-#: new_edit_template.py:115
+#: new_edit_template.py:116
 msgid "include a word count limit for the assistant's answers ? (0 = no limit)"
 msgstr ""
 
-#: new_edit_template.py:122
+#: new_edit_template.py:123
 msgid "### Activity files"
 msgstr ""
 
-#: new_edit_template.py:135
+#: new_edit_template.py:136
 msgid "Deleting the file"
 msgstr ""
 
-#: new_edit_template.py:138
+#: new_edit_template.py:139
 msgid "Deleted!"
 msgstr ""
 
-#: new_edit_template.py:141
+#: new_edit_template.py:142
 msgid "No files have been added yet."
 msgstr ""
 
-#: new_edit_template.py:144
+#: new_edit_template.py:145
 msgid "Drop files you want to add here"
 msgstr ""
 
-#: new_edit_template.py:146
+#: new_edit_template.py:147
 msgid "Upload files"
 msgstr ""
 
-#: new_edit_template.py:152
+#: new_edit_template.py:153
 msgid "file added, to be uploaded upon activity creation."
 msgstr ""
 
-#: new_edit_template.py:154
+#: new_edit_template.py:155
 msgid "Uploading file"
 msgstr ""
 
-#: new_edit_template.py:167
+#: new_edit_template.py:168
 msgid "Linking file to the activity"
 msgstr ""
 
-#: new_edit_template.py:170
+#: new_edit_template.py:171
 msgid "File added to the activity!"
 msgstr ""
 
-#: new_edit_template.py:177
+#: new_edit_template.py:178
 msgid "please, add a file to be uploaded first."
 msgstr ""
 
-#: new_edit_template.py:185
+#: new_edit_template.py:186
 msgid "Cancel"
 msgstr ""
 
-#: new_edit_template.py:189
+#: new_edit_template.py:190
 msgid "Submit"
 msgstr ""
 
-#: new_edit_template.py:200
+#: new_edit_template.py:201
 msgid "Please, give a name to your activity."
 msgstr ""
 
-#: new_edit_template.py:202
+#: new_edit_template.py:203
 msgid "The activity needs to have at least one question."
 msgstr ""
 
-#: new_edit_template.py:204
+#: new_edit_template.py:205
 msgid "The question "
 msgstr ""
 
-#: new_edit_template.py:219 new_edit_template.py:228
+#: new_edit_template.py:220 new_edit_template.py:229
 msgid "Creating activity"
 msgstr ""
 
-#: new_edit_template.py:223
+#: new_edit_template.py:224
 msgid "uploading the files"
 msgstr ""
 
-#: new_edit_template.py:233
+#: new_edit_template.py:234
 msgid "The new activity have been successfully created"
 msgstr ""
 
-#: new_edit_template.py:242
+#: new_edit_template.py:243
 msgid "Success"
 msgstr ""
 
-#: new_edit_template.py:245 new_edit_template.py:253 new_edit_template.py:264
+#: new_edit_template.py:246 new_edit_template.py:254 new_edit_template.py:265
 msgid "ok"
 msgstr ""
 
-#: new_edit_template.py:250
+#: new_edit_template.py:251
 msgid "Error"
 msgstr ""
 
-#: new_edit_template.py:256
+#: new_edit_template.py:257
 msgid "warning"
 msgstr ""
 
-#: new_edit_template.py:258
+#: new_edit_template.py:259
 msgid ""
 "Editing this activity will reset it for all students, If students are "
 "working with the current activity, they will have to start the activity "
 "over. If you want to keep it as it is, we recommend you create a new activity"
 msgstr ""
 
-#: new_edit_template.py:261
+#: new_edit_template.py:262
 msgid "cancel"
 msgstr ""
 
-#: new_edit_template.py:265
+#: new_edit_template.py:266
 msgid "Updating the activity"
 msgstr ""
 
-#: new_edit_template.py:268
+#: new_edit_template.py:269
 msgid "Activity successfully updated!"
+msgstr ""
+
+#: options.py:8
+msgid "friendly"
+msgstr ""
+
+#: options.py:8
+msgid "informal"
+msgstr ""
+
+#: options.py:8
+msgid "formal"
+msgstr ""
+
+#: options.py:9
+msgid "other"
 msgstr ""
