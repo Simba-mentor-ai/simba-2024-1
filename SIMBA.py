@@ -4,6 +4,7 @@ from streamlit_config_helper import set_streamlit_page_config_once
 from auth_helper import get_auth_status
 import options
 import gettext
+from sidebar_loading import loadSidebar
 
 _ = gettext.gettext
 
@@ -11,27 +12,32 @@ set_streamlit_page_config_once()
 
 if "language" not in st.session_state:
     st.session_state["language"] = "en"
+
 elif st.session_state["language"] != "en" :
-    # try:
     localizator = gettext.translation('base', localedir='locales', languages=[st.session_state["language"]])
     localizator.install()
     _ = localizator.gettext 
-    # except:
-    #     print("ERROR : could not find")
-    #     pass
 
 def selectLanguage() :
     selected = options.languages[0]
-    print(selected)
-    if "SelectedLanguage" in st.session_state and st.session_state["SelectedLanguage"]:
+    if "SelectedLanguage" in st.session_state and st.session_state["SelectedLanguage"] :
         selected = st.session_state["SelectedLanguage"]
+        if options.langCorrespondance[selected] != st.session_state["language"]:
+            st.session_state["language"] = options.langCorrespondance[selected]
+            st.rerun()
         
-    st.session_state["language"] = options.langCorrespondance[selected]
+    
 
 if get_auth_status():
 
+    st.session_state["UserType"]="teacher"
+
+    loadSidebar()
+
     #Language selection
-    st.selectbox("", options=options.languages, index=None, placeholder=_("Language"), on_change=selectLanguage(), key="SelectedLanguage")
+    lang,stuff = st.columns([0.15,0.85])
+    with lang:
+        st.selectbox("", options=options.languages, index=options.langSymbols.index(st.session_state["language"]), on_change=selectLanguage(), key="SelectedLanguage")
 
     # Title of the webpage
     st.title(_("Welcome to SIMBA - your personal learning assistant"))

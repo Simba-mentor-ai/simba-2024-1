@@ -5,7 +5,7 @@ import edit_functions as ef
 import chatbot_helper
 import time
 import gettext
-from datetime import datetime, date
+import datetime
 import options
 
 _ = gettext.gettext
@@ -50,7 +50,7 @@ def loadTemplate(assistant):
             oldprompt = ""
         else :
             oldprompt = assistant["instructions"]
-        prompt = st.text_area("Enter the prompt", value=oldprompt)
+        prompt = st.text_area("Enter the prompt", value=oldprompt,height=550)
     else :
         #Questions
         if not new and not st.session_state[_("initialized")] :
@@ -133,7 +133,7 @@ def loadTemplate(assistant):
 
     vfiles = []
     st.write(_("### Activity files"))
-    if "file_search" in dir(assistant["tool_resources"]) and len(assistant["tool_resources"].file_search.vector_store_ids)>0:
+    if not new and "file_search" in dir(assistant["tool_resources"]) and len(assistant["tool_resources"].file_search.vector_store_ids)>0:
         st.write("Current files :")
 
         vid = assistant["tool_resources"].file_search.vector_store_ids[0]
@@ -199,14 +199,14 @@ def loadTemplate(assistant):
     if not new :
         if "startDate" in assistant["metadata"].keys():
             oldStartBool = True
-            oldStart = assistant["metadata"]["startDate"]
+            oldStart = datetime.datetime.strptime(assistant["metadata"]["startDate"], "%Y/%m/%d")
 
         if "endDate" in assistant["metadata"].keys():
             oldEndBool = True
-            oldEnd = assistant["metadata"]["startDate"]
+            oldEnd = datetime.datetime.strptime(assistant["metadata"]["startDate"], "%Y/%m/%d")
 
     with start :
-        startBool = st.checkbox("I want the activity to be accessible only starting from a certain day", value=oldStartBool)
+        startBool = st.checkbox("I want the activity to be accessible only from a certain day", value=oldStartBool)
         if startBool:
             startDate = st.date_input("start date", value=oldStart)
     
@@ -217,7 +217,7 @@ def loadTemplate(assistant):
 
     st.session_state["initialized"] = True
 
-    cancel,submit = st.columns([.5,1])
+    submit,cancel = st.columns([1,.2])
 
     if not new :
         with cancel:
@@ -259,11 +259,11 @@ def loadTemplate(assistant):
                     )
                 metadata = {}
                 if startBool and endBool :
-                    metadata = {"startDate":startDate, "endDate":endDate}
+                    metadata = {"startDate":startDate.strftime("%Y/%m/%d"), "endDate":endDate.strftime("%Y/%m/%d")}
                 elif startBool :
-                    metadata = {"startDate":startDate}
+                    metadata = {"startDate":startDate.strftime("%Y/%m/%d")}
                 elif endBool :
-                    metadata = {"endDate":endDate}
+                    metadata = {"endDate":endDate.strftime("%Y/%m/%d")}
                 if new :
                     status = st.status(label=_("Creating activity"))
                     vector_store = None

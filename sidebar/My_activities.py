@@ -7,16 +7,33 @@ import streamlit as st
 import edit_functions
 import chatpage_template
 import gettext
+import datetime
 
 _ = gettext.gettext
 
 st.set_page_config(layout="wide")
 
+st.session_state["UserType"] = "teacher"
+today = datetime.date.today()
+
 st.session_state["activities"] = edit_functions.getAssistants()
 ids = st.session_state["activities"].keys()
 names = []
 for id in ids :
-    names.append(st.session_state["activities"][id]["name"])
+    activity = st.session_state["activities"][id]
+    if st.session_state["UserType"] == "teacher":
+        names.append(activity["name"])
+    elif st.session_state["UserType"] == "student":
+        startCheck = True
+        endCheck = True
+
+        if "startDate" in activity["metadata"] and today< datetime.datetime.strptime(activity["metadata"]["startDate"],"%Y/%m/%d").date():
+            startCheck = False
+        if "endDate" in activity["metadata"] and today> datetime.datetime.strptime(activity["metadata"]["endDate"],"%Y/%m/%d").date():
+            endCheck = False
+
+        if startCheck and endCheck:
+            names.append(activity["name"])
 
 def selectActivity() :
     if "SelectedName" in st.session_state and st.session_state["SelectedName"] != None:
