@@ -13,7 +13,7 @@ _ = gettext.gettext
 
 st.set_page_config(layout="wide")
 
-st.session_state["UserType"] = "teacher"
+st.session_state["UserRole"] = "teacher"
 today = datetime.date.today()
 
 st.session_state["activities"] = edit_functions.getAssistants()
@@ -21,9 +21,9 @@ ids = st.session_state["activities"].keys()
 names = []
 for id in ids :
     activity = st.session_state["activities"][id]
-    if st.session_state["UserType"] == "teacher":
+    if st.session_state["UserRole"] == "teacher":
         names.append(activity["name"])
-    elif st.session_state["UserType"] == "student":
+    elif st.session_state["UserRole"] == "student":
         startCheck = True
         endCheck = True
 

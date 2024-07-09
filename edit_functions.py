@@ -1,9 +1,6 @@
 from openai import OpenAI
 import streamlit as st
-from langchain_core.prompts import PromptTemplate
 import re
-import time
-from datetime import datetime, date
 import gettext
 import options
 
