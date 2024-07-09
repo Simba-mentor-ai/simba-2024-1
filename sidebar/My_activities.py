@@ -16,13 +16,17 @@ st.set_page_config(layout="wide")
 st.session_state["UserRole"] = "teacher"
 today = datetime.date.today()
 
-st.session_state["activities"] = edit_functions.getAssistants()
-ids = st.session_state["activities"].keys()
+# st.session_state["assistants"] = edit_functions.getAssistants()
+if "assistants" not in st.session_state :
+    st.session_state["assistants"] = edit_functions.getUserAssistants(st.session_state["username"])
+
+ids = st.session_state["assistants"].keys()
 names = []
 for id in ids :
-    activity = st.session_state["activities"][id]
+    activity = st.session_state["assistants"][id]
     if st.session_state["UserRole"] == "teacher":
         names.append(activity["name"])
+    
     elif st.session_state["UserRole"] == "student":
         startCheck = True
         endCheck = True
@@ -50,8 +54,8 @@ st.selectbox(_("Select the activity you want to work on"), options=names, index=
 activityContainer = st.container()
 with activityContainer:
     if st.session_state["selected activity"]!="" and st.session_state["SelectedName"] != None:
-        if get_auth_status():
-            assistant = st.session_state["activities"][st.session_state["selected activity"]]
+        # if get_auth_status():
+            assistant = st.session_state["assistants"][st.session_state["selected activity"]]
             chatpage_template.load_template(
                 activity_id=assistant["id"],
                 assistant_id=assistant["id"],

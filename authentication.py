@@ -2,8 +2,10 @@ import streamlit as st
 import streamlit_authenticator as stauth
 import yaml
 import gettext
+import random
+import string
 from yaml.loader import SafeLoader
-from database_manager import getRole
+import database_manager as dbm
 
 _ = gettext.gettext
 
@@ -67,7 +69,7 @@ def get_auth_status():
 
     elif authentication_status == True:
         # # ---- SIDEBAR ----
-        st.session_state["UserRole"] = getRole(st.session_state["username"])
+        st.session_state["UserRole"] = dbm.getRole(st.session_state["username"])
         authenticator.logout(location='sidebar')
 
 def register():
@@ -90,3 +92,18 @@ def register():
                                         'Register': _('Register') })
     
     saveConfig(config)
+
+def AIED_authenticate():
+
+    letters = string.ascii_letters
+
+    userName = "AIED_"+"".join(random.choice(letters) for i in range(10))
+
+    dbm.createUser(userName, "teacher")
+    dbm.addToCourse(userName,"AIED")
+
+    st.session_state['authentication_status'] = True
+    st.session_state["UserRole"] = "teacher"
+    st.session_state["username"] = userName
+
+    return True

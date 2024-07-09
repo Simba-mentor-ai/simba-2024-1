@@ -1,7 +1,7 @@
 import streamlit as st
 import streamlit_authenticator as stauth
 from streamlit_config_helper import set_streamlit_page_config_once
-from authentication import get_auth_status
+from authentication import get_auth_status, AIED_authenticate
 import options
 import gettext
 from sidebar_loading import loadSidebar
@@ -27,18 +27,16 @@ def selectLanguage() :
             st.rerun()
         
     
-get_auth_status()
 
-if st.session_state['authentication_status'] :
 
-    st.session_state["UserRole"]="teacher"
+if AIED_authenticate() :
 
     loadSidebar()
 
-    #Language selection
-    lang,stuff = st.columns([0.15,0.85])
-    with lang:
-        st.selectbox("Language", options=options.languages, index=options.langSymbols.index(st.session_state["language"]), on_change=selectLanguage(), key="SelectedLanguage", label_visibility="hidden")
+    # #Language selection
+    # lang,stuff = st.columns([0.15,0.85])
+    # with lang:
+    #     st.selectbox("Language", options=options.languages, index=options.langSymbols.index(st.session_state["language"]), on_change=selectLanguage(), key="SelectedLanguage", label_visibility="hidden")
 
     # Title of the webpage
     st.title(_("Welcome to SIMBA - your personal learning assistant"))

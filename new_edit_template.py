@@ -7,6 +7,7 @@ import time
 import gettext
 import datetime
 import options
+import database_manager as dbm
 
 _ = gettext.gettext
 
@@ -36,8 +37,8 @@ def loadTemplate(assistant):
     #Name
     name = st.text_input(_("Activity's new name"), value = "" if new else assistant["name"], placeholder = _("New name..."))
 
-    #Course
-    course = st.text_input(_("Course's name"), value = "" if new else vals["courseName"], placeholder = _("New course name..."))
+    #Course TODO
+    course = "AIED"
 
     #Description
     desc = st.text_input(_("Modify the description or enter a new one"), value = "" if new else assistant["description"], placeholder = _("New description..."))
@@ -74,7 +75,8 @@ def loadTemplate(assistant):
             question, delete = st.columns([0.8,0.2])
             if i-1 < len(st.session_state["questions"]):
                 with question :
-                    st.session_state["questions"][i-1] = st.text_input(f"Question {i}", placeholder=_("enter the question statement"), key=f"question{i}", value=st.session_state["questions"][i-1])
+                    q = st.text_input(f"Question {i}", placeholder=_("enter the question statement"), key=f"question{i}", value=st.session_state["questions"][i-1])
+                    st.session_state["questions"][i-1] = q
                 if st.session_state["nbQuestions"]>1:
                     with delete :
                         st.container(height=13, border=False)
@@ -181,7 +183,8 @@ def loadTemplate(assistant):
                     openai_client.beta.assistants.update(assistant_id=assistant["id"],tool_resources={"file_search": {"vector_store_ids": [vector_store.id]}},)
                 
                 status.update(label=_("File added to the activity!"),state="complete")
-                st.session_state["assistants"] = ef.getAssistants()
+                # st.session_state["assistants"] = ef.getAssistants()
+                st.session_state["assistants"] = ef.getUserAssistants(st.session_state["username"])
                 assistant = st.session_state["assistants"][st.session_state["selectedID"]]
 
             file = None
@@ -279,7 +282,8 @@ def loadTemplate(assistant):
                         tool_resources = {"file_search": {"vector_store_ids": [vector_store.id]}}
                     else :
                         tool_resources = {}
-                    openai_client.beta.assistants.create(name = name, description = desc, instructions = instructions, tools=[{"type": "file_search"}], model="gpt-4-turbo",tool_resources=tool_resources, metadata=metadata)
+                    activity = openai_client.beta.assistants.create(name = name, description = desc, instructions = instructions, tools=[{"type": "file_search"}], model="gpt-4-turbo",tool_resources=tool_resources, metadata=metadata)
+                    dbm.addActivity(activity,course)
                     success(_("The new activity have been successfully created"))
 
                 else :
@@ -293,7 +297,8 @@ def loadTemplate(assistant):
 def success(line):
     st.write(line)
     if st.button(_("ok")):
-        st.session_state["assistants"] = ef.getAssistants()
+        # st.session_state["assistants"] = ef.getAssistants()
+        st.session_state["assistants"] = ef.getUserAssistants(st.session_state["username"])
         st.session_state["initialized"] = False   
         st.rerun() 
 
@@ -301,7 +306,7 @@ def success(line):
 def error(line):
     st.write(line)
     if st.button(_("ok")):
-        st.rerun() 
+        st.rerun()      
 
 @st.experimental_dialog(_("warning"))
 def warning_edit(assistant,name,desc,instructions,metadata):

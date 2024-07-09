@@ -3,6 +3,7 @@ import streamlit as st
 import re
 import gettext
 import options
+import database_manager as dbm
 
 _ = gettext.gettext
 openai_client = OpenAI()
@@ -30,9 +31,53 @@ def getAssistants():
 
     return assistants
 
+def getUserAssistants(userName):
+
+    courses = dbm.getCourses(userName)
+
+    activities = []
+    for course in courses :
+        activities = activities + dbm.getActivities(course)
+    
+    assistants = {}
+    for activity in activities:
+        newassistant = {}
+        a = openai_client.beta.assistants.retrieve(activity)
+
+        newassistant["id"] = a.id
+        newassistant["name"] = a.name
+        newassistant["model"] = a.model
+        newassistant["description"] = a.description
+        newassistant["instructions"] = a.instructions
+        newassistant["metadata"] = a.metadata
+        if("tool_resources" in dir(a)):
+            newassistant["tool_resources"] = a.tool_resources
+        else :
+            newassistant["tool_resources"] = {}
+        
+        assistants[a.id] = newassistant
+
+    return assistants
+
+#Delete activity
+@st.experimental_dialog("Are you sure ?")
+def delAssistant(id):
+    st.write("If you click 'ok', this assistant will be deleted permanently, no recovery will be possible")
+
+    cancel,ok = st.columns([1,0.5])
+
+    with cancel :
+        if st.button("cancel"):
+            st.rerun()
+
+    with ok :
+        if st.button("ok") :
+            dbm.delAssistant(id)
+            openai_client.beta.assistants.delete(id) 
+            st.rerun()  
+
 def setSelectedid(i):
-    st.session_state["selectedID"] = i
-            
+    st.session_state["selectedID"] = i  
 
 #Modifying the main prompt :
 
