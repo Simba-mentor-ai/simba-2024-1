@@ -86,9 +86,9 @@ def addToCourse(userName,courseName):
 
 def addActivity(activity,courseName):
 
-    # values = {"name" : activity.name, "threads" : {"active" : [], "inactive" : []}, "course" : courseName}
+    values = {"name" : activity.name, "course" : courseName}
 
-    # db.collection('activities').document(activity.id).create(values)
+    db.collection('activities').document(activity.id).create(values)
 
     course = db.collection('courses').document(courseName)
     courseDoc = course.get()
