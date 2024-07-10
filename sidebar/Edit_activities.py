@@ -2,6 +2,7 @@ import streamlit as st
 import edit_functions
 import new_edit_template
 import gettext
+from authentication import AIED_authenticate
 
 _ = gettext.gettext
 
@@ -9,7 +10,7 @@ st.set_page_config(layout="wide")
 
 if "assistants" not in st.session_state:
         # st.session_state["assistants"] = edit_functions.getAssistants()
-        st.session_state["assistants"] = edit_functions.getUserAssistants(st.session_state["username"])
+        st.session_state["assistants"] = edit_functions.getUserAssistants()
 
 if not "selectedID" in st.session_state:
         st.session_state["selectedID"] = list(st.session_state["assistants"].keys())[0]
@@ -27,7 +28,7 @@ with col1 :
 
         if st.button(_("↺ refresh activities list")):
             # st.session_state["assistants"] = edit_functions.getAssistants() 
-            st.session_state["assistants"] = edit_functions.getUserAssistants(st.session_state["username"])
+            st.session_state["assistants"] = edit_functions.getUserAssistants()
         
         if asdict == {}:
              st.write("No activities created yet!")

@@ -64,6 +64,32 @@ def createUser(username, role):
     
     db.collection('users').document(username).create(values)
 
+def deleteUser(username) :
+
+    userdoc = db.collection('users').document(username).get()
+
+    if userdoc.exists :
+        userdic = userdoc.to_dict()
+        role = userdic["role"]
+        courses = userdic["courses"]
+
+        for coursename in courses :
+
+            coursedoc = db.collection('courses').document(coursename).get()
+
+            if coursedoc.exists :
+                coursedic = coursedoc.to_dict()
+
+                if role == "teacher":
+                    coursedic["teachers"].remove(username)
+
+                elif role == "student":
+                    coursedic["students"].remove(username)
+
+                db.collection('courses').document(coursename).update(coursedic)
+        
+        userdoc = db.collection('users').document(username).delete()
+
 def addToCourse(userName,courseName):
 
     user = db.collection('users').document(userName)
@@ -99,3 +125,15 @@ def addActivity(activity,courseName):
         courseDic["activities"].append(activity.id)
 
         course.update(courseDic)
+
+def delAIEDUsers():
+
+    coursedic = db.collection("courses").document("AIED").get().to_dict()
+    teachers = coursedic["teachers"]
+
+    print(teachers)
+
+    for teacher in teachers :
+        if teacher[0:4] == "AIED":
+            print("deleting", teacher)
+            deleteUser(teacher)

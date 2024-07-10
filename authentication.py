@@ -95,15 +95,17 @@ def register():
 
 def AIED_authenticate():
 
-    letters = string.ascii_letters
+    if 'authentication_status' not in st.session_state or st.session_state['authentication_status'] == False or "username" not in st.session_state :
 
-    userName = "AIED_"+"".join(random.choice(letters) for i in range(10))
+        letters = string.ascii_letters
 
-    dbm.createUser(userName, "teacher")
-    dbm.addToCourse(userName,"AIED")
+        userName = "AIED_"+"".join(random.choice(letters) for i in range(10))
 
-    st.session_state['authentication_status'] = True
-    st.session_state["UserRole"] = "teacher"
-    st.session_state["username"] = userName
+        dbm.createUser(userName, "teacher")
+        dbm.addToCourse(userName,"AIED")
+
+        st.session_state['authentication_status'] = True
+        st.session_state["UserRole"] = "teacher"
+        st.session_state["username"] = userName
 
     return True

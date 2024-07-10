@@ -8,6 +8,7 @@ import edit_functions
 import chatpage_template
 import gettext
 import datetime
+from authentication import AIED_authenticate
 
 _ = gettext.gettext
 
@@ -18,7 +19,7 @@ today = datetime.date.today()
 
 # st.session_state["assistants"] = edit_functions.getAssistants()
 if "assistants" not in st.session_state :
-    st.session_state["assistants"] = edit_functions.getUserAssistants(st.session_state["username"])
+    st.session_state["assistants"] = edit_functions.getUserAssistants()
 
 ids = st.session_state["assistants"].keys()
 names = []

@@ -111,7 +111,8 @@ def loadTemplate(assistant):
             adj1 = st.selectbox(_("What attitude should the assistant have toward the students ?"), attitudes, index=0 if new else attitudes.index(vals["adj1"]))
 
             #teaching type
-            teachtype = st.selectbox(_("What should be the assistant's approach to teaching ?"), teachtypes, index=0 if new else teachtypes.index(vals["teaching_adj"]))
+            # teachtype = st.selectbox(_("What should be the assistant's approach to teaching ?"), teachtypes, index=0 if new else teachtypes.index(vals["teaching_adj"]))
+            teachtype = "socratic"
 
             #giving answers
             giveAnswers = st.checkbox(_("The assistant should give an answer to the activity questions if the student asks for it."), value=False if new else vals["answers"])
@@ -184,7 +185,7 @@ def loadTemplate(assistant):
                 
                 status.update(label=_("File added to the activity!"),state="complete")
                 # st.session_state["assistants"] = ef.getAssistants()
-                st.session_state["assistants"] = ef.getUserAssistants(st.session_state["username"])
+                st.session_state["assistants"] = ef.getUserAssistants()
                 assistant = st.session_state["assistants"][st.session_state["selectedID"]]
 
             file = None
@@ -240,9 +241,9 @@ def loadTemplate(assistant):
 
             if name == "":
                 error(_("Please, give a name to your activity."))
-            elif st.session_state["nbQuestions"] == 0 :
+            elif st.session_state["nbQuestions"] == 0 and not expert:
                 error(_("The activity needs to have at least one question."))
-            elif emptyquestion:
+            elif emptyquestion and not expert:
                 error(_("The question " + str(emptyI+1) + " have no text."))
 
             else :
@@ -298,7 +299,7 @@ def success(line):
     st.write(line)
     if st.button(_("ok")):
         # st.session_state["assistants"] = ef.getAssistants()
-        st.session_state["assistants"] = ef.getUserAssistants(st.session_state["username"])
+        st.session_state["assistants"] = ef.getUserAssistants()
         st.session_state["initialized"] = False   
         st.rerun() 
 

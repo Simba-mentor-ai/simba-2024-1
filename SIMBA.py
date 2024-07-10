@@ -59,8 +59,8 @@ if AIED_authenticate() :
     st.markdown("---")
 
     # Introduction and brief summary
-    st.markdown(_("""
+    # st.markdown(_("""
 
-    ## **How to use SIMBA :**
+    # ## **How to use SIMBA :**
 
-    """))
+    # """))
