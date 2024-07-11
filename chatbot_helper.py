@@ -26,29 +26,29 @@ def disable_activity_threads(activity_id):
 
     # TODO : undo simplification for AIED
     # for id in userids :
-    with st.session_state["username"] as id :
-        threads = db.collection("users").document(id).collection('activity_threads').document(activity_id).get()
-        # print(id)
-        if threads.exists:
-            # print("threads exists")
-            dic = threads.to_dict()
-            # print(dic)
-            newdic = dic.copy()
-            if "threads" in dic:
-                for i in range(len(dic["threads"])):
-                    if dic["threads"][i]["active"] :
-                        newdic["threads"][i]["active"] = False
-                        # print("found one")
-            elif "thread_id" in dic:
-                newdic = {"threads" : [{"id" : dic["thread_id"], "active" : False}]}
-            else :
-                newdic = {"threads" : []}
+    id = st.session_state["username"]
+    threads = db.collection("users").document(id).collection('activity_threads').document(activity_id).get()
+    # print(id)
+    if threads.exists:
+        # print("threads exists")
+        dic = threads.to_dict()
+        # print(dic)
+        newdic = dic.copy()
+        if "threads" in dic:
+            for i in range(len(dic["threads"])):
+                if dic["threads"][i]["active"] :
+                    newdic["threads"][i]["active"] = False
+                    # print("found one")
+        elif "thread_id" in dic:
+            newdic = {"threads" : [{"id" : dic["thread_id"], "active" : False}]}
+        else :
+            newdic = {"threads" : []}
 
-            print(dic)
-            db.collection("users").document(id).collection('activity_threads').document(activity_id).set(newdic)
+        print(dic)
+        db.collection("users").document(id).collection('activity_threads').document(activity_id).set(newdic)
 
 
-
+#TODO ajouter le thread à la collection "activity" pour pouvoir faciliter les disable.
 def get_activity_thread(activity_id):
     user_id = st.session_state['username']
     user_db = db.collection('users').document(str(user_id))
