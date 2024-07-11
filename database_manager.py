@@ -40,10 +40,11 @@ def getActivities(courseName):
     print(activities)
     return activities
 
-def delAssistant(id):
+#TODO : delete the threads ?
+def delActivitiy(id):
 
-    assistant = db.collection('activities').document(id)
-    doc = assistant.get()
+    activity = db.collection('activities').document(id)
+    doc = activity.get()
 
     if doc.exists:
         dic = doc.to_dict()
@@ -56,7 +57,7 @@ def delAssistant(id):
             courseDic = courseDoc.to_dict()
             courseDic["activities"].remove(id)
 
-        assistant.delete()
+        activity.delete()
 
 def createUser(username, role):
 

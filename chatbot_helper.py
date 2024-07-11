@@ -24,7 +24,9 @@ def disable_activity_threads(activity_id):
         dic = courseDoc.to_dict()
         userids = dic["students"] + dic["teachers"]
 
-    for id in userids :
+    # TODO : undo simplification for AIED
+    # for id in userids :
+    with st.session_state["username"] as id :
         threads = db.collection("users").document(id).collection('activity_threads').document(activity_id).get()
         # print(id)
         if threads.exists:

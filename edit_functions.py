@@ -76,7 +76,7 @@ def delAssistant(id):
 
     with ok :
         if st.button("ok") :
-            dbm.delAssistant(id)
+            dbm.delActivitiy(id)
             openai_client.beta.assistants.delete(id) 
             st.rerun()  
 
