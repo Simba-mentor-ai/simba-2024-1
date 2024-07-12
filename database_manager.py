@@ -56,6 +56,7 @@ def delActivitiy(id):
         if courseDoc.exists :
             courseDic = courseDoc.to_dict()
             courseDic["activities"].remove(id)
+            course.update(courseDic)
 
         activity.delete()
 

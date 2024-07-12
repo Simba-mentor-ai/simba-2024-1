@@ -8,9 +8,8 @@ _ = gettext.gettext
 
 st.set_page_config(layout="wide")
 
-if "assistants" not in st.session_state:
-        # st.session_state["assistants"] = edit_functions.getAssistants()
-        st.session_state["assistants"] = edit_functions.getUserAssistants()
+
+st.session_state["assistants"] = edit_functions.getUserAssistants()
 
 if not "selectedID" in st.session_state:
         st.session_state["selectedID"] = list(st.session_state["assistants"].keys())[0]
@@ -29,6 +28,7 @@ with col1 :
         if st.button(_("↺ refresh activities list")):
             # st.session_state["assistants"] = edit_functions.getAssistants() 
             st.session_state["assistants"] = edit_functions.getUserAssistants()
+            st.rerun()
         
         if asdict == {}:
              st.write("No activities created yet!")
@@ -45,7 +45,7 @@ with col1 :
                     st.rerun()
     
     if st.button(_("delete selected activity"),type="primary"):
-        edit_functions.delAssistant(st.session_state["assistants"][st.session_state["selectedID"]])
+        edit_functions.delAssistant(st.session_state["selectedID"])
 
 with col2 :
     st.write(_("### Selected activity"))
