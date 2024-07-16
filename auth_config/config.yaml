@@ -1,13 +1,14 @@
+cookie:
+  expiry_days: 30
+  key: some_signature_key
+  name: some_cookie_name
 credentials:
   usernames:
     gferrettini:
       email: gabriel.ferrettini@irit.fr
-      failed_login_attempts: 0 # Will be managed automatically
+      failed_login_attempts: 0
+      logged_in: false
       name: Gabriel Ferrettini
-      password: test_password # Will be hashed automatically
-cookie:
-  expiry_days: 30
-  key: some_signature_key # Must be string
-  name: some_cookie_name
+      password: $2b$12$LOMvWPYND.hCc5rANCypjuvEPc6o./Jc4SUOQpVz/dRMAP6JqOZwS
 pre-authorized:
-  emails:
+  emails: null

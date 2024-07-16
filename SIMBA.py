@@ -29,7 +29,7 @@ def selectLanguage() :
     
 
 
-if AIED_authenticate() :
+if get_auth_status() :
 
     loadSidebar()
 
