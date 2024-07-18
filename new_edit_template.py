@@ -11,6 +11,8 @@ import database_manager as dbm
 
 _ = gettext.gettext
 
+options.translate()
+
 attitudes = options.attitudes
 teachtypes = options.teachtypes
 accepted_extensions = options.accepted_extensions
@@ -37,8 +39,8 @@ def loadTemplate(assistant):
     #Name
     name = st.text_input(_("Activity's new name"), value = "" if new else assistant["name"], placeholder = _("New name..."))
 
-    #Course TODO
-    course = "AIED"
+    #Course name
+    course = st.text_input(_("Course name"), value = "" if new else vals["courseName"], placeholder = _("New name..."))
 
     #Description
     desc = st.text_input(_("Modify the description or enter a new one"), value = "" if new else assistant["description"], placeholder = _("New description..."))
@@ -284,7 +286,7 @@ def loadTemplate(assistant):
                     else :
                         tool_resources = {}
                     activity = openai_client.beta.assistants.create(name = name, description = desc, instructions = instructions, tools=[{"type": "file_search"}], model="gpt-4-turbo",tool_resources=tool_resources, metadata=metadata)
-                    dbm.addActivity(activity,course)
+                    dbm.createActivity(activity)
                     success(_("The new activity have been successfully created"))
 
                 else :

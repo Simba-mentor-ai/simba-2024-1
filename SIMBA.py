@@ -1,22 +1,15 @@
 import streamlit as st
 import streamlit_authenticator as stauth
 from streamlit_config_helper import set_streamlit_page_config_once
-from authentication import get_auth_status, AIED_authenticate
+from authentication import authenticate
 import options
 import gettext
-from sidebar_loading import loadSidebar
 
 _ = gettext.gettext
 
 set_streamlit_page_config_once()
 
-if "language" not in st.session_state:
-    st.session_state["language"] = "en"
-
-elif st.session_state["language"] != "en" :
-    localizator = gettext.translation('base', localedir='locales', languages=[st.session_state["language"]])
-    localizator.install()
-    _ = localizator.gettext 
+options.translate()
 
 def selectLanguage() :
     selected = options.languages[0]
@@ -26,12 +19,12 @@ def selectLanguage() :
             st.session_state["language"] = options.langCorrespondance[selected]
             st.rerun()
         
-    
+# if "authentication_status" not in st.session_state or not st.session_state["authentication_status"]:
 
+authenticate()
 
-if get_auth_status() :
-
-    loadSidebar()
+# else :
+if "authentication_status" in st.session_state and st.session_state["authentication_status"]:
 
     # #Language selection
     # lang,stuff = st.columns([0.15,0.85])
@@ -57,6 +50,9 @@ if get_auth_status() :
         st.image("SIMBA_img.jpeg", caption=_('SIMBA - Your Learning Partner'))
 
     st.markdown("---")
+
+    # with st.sidebar :
+        # if st.button("modify account")
 
     # Introduction and brief summary
     # st.markdown(_("""

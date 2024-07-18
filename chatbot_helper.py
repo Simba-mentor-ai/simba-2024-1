@@ -11,44 +11,41 @@ openai.api_key = st.secrets["OPENAI_API_KEY"]
 openai_client = OpenAI()
 
 GCP_PROJECT = st.secrets["GCP_PROJECT"]
-COURSE_ID = "AIED"
 
 import json
 creds = service_account.Credentials.from_service_account_info(st.secrets["FIRESTORE_CREDS"])
 db = firestore.Client(credentials=creds, project=GCP_PROJECT)
 
 def disable_activity_threads(activity_id):
-    courseDoc = db.collection('courses').document(str(COURSE_ID)).get()
+    activityDoc = db.collection('activities').document(activity_id).get()
     userids = []
-    if courseDoc.exists:
-        dic = courseDoc.to_dict()
+    if activityDoc.exists:
+        dic = activityDoc.to_dict()
         userids = dic["students"] + dic["teachers"]
 
-    # TODO : undo simplification for AIED
-    # for id in userids :
-    id = st.session_state["username"]
-    threads = db.collection("users").document(id).collection('activity_threads').document(activity_id).get()
-    # print(id)
-    if threads.exists:
-        # print("threads exists")
-        dic = threads.to_dict()
-        # print(dic)
-        newdic = dic.copy()
-        if "threads" in dic:
-            for i in range(len(dic["threads"])):
-                if dic["threads"][i]["active"] :
-                    newdic["threads"][i]["active"] = False
-                    # print("found one")
-        elif "thread_id" in dic:
-            newdic = {"threads" : [{"id" : dic["thread_id"], "active" : False}]}
-        else :
-            newdic = {"threads" : []}
+    for id in userids :
+        id = st.session_state["username"]
+        threads = db.collection("users").document(id).collection('activity_threads').document(activity_id).get()
+        
+        if threads.exists:
+            
+            dic = threads.to_dict()
+            
+            newdic = dic.copy()
+            if "threads" in dic:
+                for i in range(len(dic["threads"])):
+                    if dic["threads"][i]["active"] :
+                        newdic["threads"][i]["active"] = False
+                        
+            elif "thread_id" in dic:
+                newdic = {"threads" : [{"id" : dic["thread_id"], "active" : False}]}
+            else :
+                newdic = {"threads" : []}
 
-        print(dic)
-        db.collection("users").document(id).collection('activity_threads').document(activity_id).set(newdic)
+            print(dic)
+            db.collection("users").document(id).collection('activity_threads').document(activity_id).set(newdic)
 
 
-#TODO ajouter le thread à la collection "activity" pour pouvoir faciliter les disable.
 def get_activity_thread(activity_id):
     user_id = st.session_state['username']
     user_db = db.collection('users').document(str(user_id))
@@ -68,16 +65,6 @@ def get_activity_thread(activity_id):
 
     else :
         dic = ua_threads.to_dict()
-        # # If old version, create new thread and update
-        # if 'threads' not in dic.keys():
-        #     old_id = dic['thread_id']
-        #     thread = openai_client.beta.threads.create()
-        #     create_message("Hello!", thread.id, activity_id)
-        #     ua_doc_threads.set({'threads': [{'id':old_id, 'active' : False},{'id':thread.id, 'active' : True}]})
-        #     tid = thread.id
-
-        # # If current, just retrieve the active thread id
-        # else :
         for t in dic['threads']:
             if t["active"]:
                 tid = t["id"]
@@ -93,19 +80,6 @@ def get_activity_thread(activity_id):
             tid = thread.id
 
     return tid
-
-    # OLD VERSION :
-    # activity_thread = user_db.collection('activity_threads').document(activity_id)
-
-    # # If thread_id is None, create a new thread
-    # activity_thread_exists = activity_thread.get().exists
-    # if not activity_thread_exists:
-    #     thread = openai_client.beta.threads.create()
-    #     activity_thread.set({'thread_id': thread.id})
-    #     create_message("Hola!", thread.id, activity_id)
-
-    # return activity_thread.get().get('thread_id')
-
 
 def get_messages(thread_id):
     # Get messages from thread
@@ -124,8 +98,6 @@ def get_messages(thread_id):
         }
         clean_messages.append(new_message)
 
-
-    # Reassign roles to messages
     return clean_messages
 
 

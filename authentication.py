@@ -4,12 +4,14 @@ import yaml
 import gettext
 import random
 import string
+import options
+from sidebar_loading import clearSidebar, loadSidebar
 from yaml.loader import SafeLoader
 import database_manager as dbm
 
 _ = gettext.gettext
 
-
+options.translate()
 
 # hide_bar= """
 #         <style>
@@ -36,41 +38,42 @@ def saveConfig(config):
         yaml.dump(config, file, default_flow_style=False)
 
 def initAuth():
-    config = getConfig()
-
-    authenticator = stauth.Authenticate(
-        config['credentials'],
-        config['cookie']['name'],
-        config['cookie']['key'],
-        config['cookie']['expiry_days']
+    st.session_state["auth_config"] = getConfig()
+    
+    st.session_state["authenticator"]  = stauth.Authenticate(
+        st.session_state["auth_config"]['credentials'],
+        st.session_state["auth_config"]['cookie']['name'],
+        st.session_state["auth_config"]['cookie']['key'],
+        st.session_state["auth_config"]['cookie']['expiry_days']
     )
 
-    return authenticator
+def authenticate():
 
-def get_auth_status():
-
+    clearSidebar()
     
-    config = getConfig()
+    # st.session_state["auth_config"] = getConfig()
 
-    authenticator = stauth.Authenticate(
-        config['credentials'],
-        config['cookie']['name'],
-        config['cookie']['key'],
-        config['cookie']['expiry_days']
-    )
+    # st.session_state["authenticator"] = stauth.Authenticate(
+    #     st.session_state["auth_config"]['credentials'],
+    #     st.session_state["auth_config"]['cookie']['name'],
+    #     st.session_state["auth_config"]['cookie']['key'],
+    #     st.session_state["auth_config"]['cookie']['expiry_days']
+    # )
     
-    # authenticator = initAuth
+    if "authenticator" not in st.session_state:
+        initAuth()
 
-    if "displayRegister" not in st.session_state :
-        st.session_state["displayRegister"] = False
+    if "auth_display" not in st.session_state :
+        st.session_state["auth_display"] = "login"
 
-    st.write(st.session_state["displayRegister"])
+    #Register new user
+    if st.session_state["auth_display"] == "register" :
 
-    if st.session_state["displayRegister"] :
+        if st.sidebar.button(_("Login"), use_container_width=True):
+            st.session_state["auth_display"] = "login"
+            st.rerun()
 
-        st.sidebar.button(_("Login"), on_click=displayRegister())
-
-        authenticator.register_user(preauthorization=False,
+        email, username, name = st.session_state["authenticator"].register_user(preauthorization=False,
                                 fields={ 'Form name': _('Register User'),
                                         'Username': _('Username'),
                                         'Email': _('Email'),
@@ -78,75 +81,97 @@ def get_auth_status():
                                         'Repeat password': _('Repeat password'),
                                         'Register': _('Register') })
     
-        saveConfig(config)
-        displayLogin()
-        # st.rerun()
+        if email:
+            saveConfig(st.session_state["auth_config"])
+            dbm.createUser(username,"student",name,email)
+            st.session_state["auth_display"] = "login"
+            st.rerun()
 
-    else :
-    
-        st.sidebar.button(_("New user"), on_click=displayRegister())
+    #Forgot username
+    elif st.session_state["auth_display"] == "fgusr" :
+        username, email = st.session_state["authenticator"].forgot_username(fields = {'Form name': _('Forgot username'),
+                                                                                                            'Email': _('Email'),
+                                                                                                            'Submit': _('Submit')})
 
-        authenticator.login(
+        if username:
+            st.success('Username to be sent securely')
+            # The developer should securely transfer the username to the user.
+        elif username == False:
+            st.error('Email not found')
+
+    #Forgot password
+    elif st.session_state["auth_display"] == "fgpwd" :
+        username, email, new = st.session_state["authenticator"].forgot_password(fields = {'Form name': _('Forgot password'),
+                                                                                                                                   'Username': _('Username'),
+                                                                                                                                   'Submit': _('Submit')})
+        if username:
+            st.success('New password to be sent securely')
+            # The developer should securely transfer the new password to the user.
+        elif username == False:
+            st.error('Username not found')
+
+
+    #Login
+    elif st.session_state["auth_display"] == "login" :
+
+        st.session_state["authenticator"].login(
             fields = {
                 'Form name':_('Login'), 
-                'Username':_('University email'), 
+                'Username':_('Username'), 
                 'Password':_('Password'), 
                 'Login':_('Login')
                 }
             )
-        
-        authentication_status = st.session_state['authentication_status']
 
-        if authentication_status == False:
-            st.error(_('Username or password is incorrect'))
-            # st.markdown(hide_bar, unsafe_allow_html=True)
+        if st.session_state["authentication_status"] is None or st.session_state["authentication_status"] is False :
 
-        elif authentication_status is None:
-            st.warning(_('Please, login before using the application.'))
-            # st.markdown(hide_bar, unsafe_allow_html=True)
+            # Display message
+            if st.session_state["authentication_status"] is False:
+                st.error(_('Username or password is incorrect'))
+            elif st.session_state["authentication_status"] is None:
+                st.warning(_('Please, login before using the application.'))
 
-        elif authentication_status == True:
-            # # ---- SIDEBAR ----
+            #Buttons
+            if st.sidebar.button(_("New user"), use_container_width=True):
+                st.session_state["auth_display"] = "register"
+                st.rerun()
+            if st.sidebar.button(_("Forgot my password"), use_container_width=True):
+                st.session_state["auth_display"] = "fgpwd"
+                st.rerun()
+            if st.sidebar.button(_("Forgot my username"), use_container_width=True):
+                st.session_state["auth_display"] = "fgusr"
+                st.rerun()
+
+        elif st.session_state["authentication_status"]:
             st.session_state["UserRole"] = dbm.getRole(st.session_state["username"])
-            authenticator.logout(location='sidebar')
+            loadSidebar()
+            st.session_state["authenticator"].logout(location='sidebar')
+            return st.session_state["authentication_status"]
 
-        return authentication_status
+        
+def resetPwd():
 
+    if "authenticator" not in st.session_state:
+        initAuth()
 
-def displayRegister():
-    st.session_state["displayRegister"] = not st.session_state["displayRegister"]
+    if st.session_state["authenticator"].reset_password(st.session_state["username"], fields = {'Form name': _('Reset password'),
+                                                                                                'Current password': _('Current password'),
+                                                                                                'New password': _('New password'),
+                                                                                                'Repeat password': _('Repeat password'),
+                                                                                                'Reset': _('Reset')}):
+        saveConfig(st.session_state["auth_config"])
+        st.success('Password modified successfully')
 
-def displayLogin():
-    st.session_state["displayRegister"] = False
+def updateUsr():
 
+    if "authenticator" not in st.session_state:
+        initAuth()
 
-def register(authenticator):
-
-    config = getConfig()
-
-    authenticator.register_user(preauthorization=False,
-                                fields={ 'Form name': _('Register User'),
-                                        'Username': _('Username'),
-                                        'Email': _('Email'),
-                                        'Password': _('Password'),
-                                        'Repeat password': _('Repeat password'),
-                                        'Register': _('Register') })
-    
-    saveConfig(config)
-
-def AIED_authenticate():
-
-    if 'authentication_status' not in st.session_state or st.session_state['authentication_status'] == False or "username" not in st.session_state :
-
-        letters = string.ascii_letters
-
-        userName = "AIED_"+"".join(random.choice(letters) for i in range(10))
-
-        dbm.createUser(userName, "teacher")
-        dbm.addToCourse(userName,"AIED")
-
-        st.session_state['authentication_status'] = True
-        st.session_state["UserRole"] = "teacher"
-        st.session_state["username"] = userName
-
-    return True
+    if st.session_state["authenticator"].update_user_details(st.session_state["username"], fields = { 'Form name': _('Update user details'),
+                                                                                                     'Field': _('Field'),
+                                                                                                     'Name': _('Name'),
+                                                                                                     'Email': _('Email'),
+                                                                                                     'New value': _('New value'),
+                                                                                                     'Update': _('Update') }):
+        saveConfig(st.session_state["auth_config"])
+        st.success('Entries updated successfully')

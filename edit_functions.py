@@ -4,10 +4,11 @@ import re
 import gettext
 import options
 import database_manager as dbm
-from authentication import AIED_authenticate
 
 _ = gettext.gettext
 openai_client = OpenAI()
+
+options.translate()
 
 def getAssistants():
     
@@ -34,14 +35,7 @@ def getAssistants():
 
 def getUserAssistants():
 
-    if "username" not in st.session_state:
-        AIED_authenticate()
-
-    courses = dbm.getCourses(st.session_state["username"])
-
-    activities = []
-    for course in courses :
-        activities = activities + dbm.getActivities(course)
+    activities = dbm.getActivities(st.session_state["username"])
     
     assistants = {}
     for activity in activities:

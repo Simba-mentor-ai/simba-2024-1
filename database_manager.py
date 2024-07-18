@@ -17,30 +17,17 @@ def getRole(userName):
     
     return role
 
-def getCourses(userName):
+def getActivities(userName):
 
     user = db.collection('users').document(userName).get()
-    courses = []
-
-    if user.exists:
-        courses = user.to_dict()["courses"]
-
-    print(courses)
-    return courses
-
-
-def getActivities(courseName):
-
-    course = db.collection('courses').document(courseName).get()
     activities = []
 
-    if course.exists:
-        activities = course.to_dict()["activities"]
+    if user.exists:
+        activities = user.to_dict()["activities"]
 
-    print(activities)
     return activities
 
-#TODO : delete the threads ?
+
 def delActivitiy(id):
 
     activity = db.collection('activities').document(id)
@@ -49,22 +36,29 @@ def delActivitiy(id):
     if doc.exists:
         dic = doc.to_dict()
 
-        courseid = dic["course"]
-        course = db.collection('courses').document(courseid)
-        courseDoc = course.get()
+        usersids = dic["users"]
+
+        for userId in usersids :
+
+            user = db.collection('users').document(userId)
+            userDoc = user.get()
         
-        if courseDoc.exists :
-            courseDic = courseDoc.to_dict()
-            courseDic["activities"].remove(id)
-            course.update(courseDic)
+            if userDoc.exists :
+                userDic = userDoc.to_dict()
+                userDic["activities"].remove(id)
+                user.update(userDic)
 
         activity.delete()
 
-def createUser(username, role):
+def createUser(username, role, name, email):
 
-    values = {"role" : role, "name" : "AIED test teacher", "courses" : []}            
-    
+    values = {"role" : role, "name" : name, "email" : email, "activities" : []}
     db.collection('users').document(username).create(values)
+
+def modifyUser(username, role, name, email):
+    
+    values = {"role" : role, "name" : name, "email" : email}
+    db.collection('users').document(username).update(values)
 
 def deleteUser(username) :
 
@@ -73,69 +67,70 @@ def deleteUser(username) :
     if userdoc.exists :
         userdic = userdoc.to_dict()
         role = userdic["role"]
-        courses = userdic["courses"]
+        activities = userdic["activities"]
 
-        for coursename in courses :
+        for activityName in activities :
 
-            coursedoc = db.collection('courses').document(coursename).get()
+            activityDoc = db.collection('activities').document(activityName).get()
 
-            if coursedoc.exists :
-                coursedic = coursedoc.to_dict()
+            if activityDoc.exists :
+                activityDic = activityDoc.to_dict()
 
-                if role == "teacher":
-                    coursedic["teachers"].remove(username)
+                activityDic["users"].remove(username)
 
-                elif role == "student":
-                    coursedic["students"].remove(username)
-
-                db.collection('courses').document(coursename).update(coursedic)
+                db.collection('activities').document(activityName).update(activityDic)
         
         userdoc = db.collection('users').document(username).delete()
 
-def addToCourse(userName,courseName):
+def createActivity(activity):
+
+    values = {"name" : activity.name, "users" : [st.session_state["username"]]}
+    db.collection('activities').document(activity.id).create(values)
+
+def addUserToActivity(activityName,userName):
 
     user = db.collection('users').document(userName)
     userDoc = user.get()
-    course = db.collection('courses').document(courseName)
-    courseDoc = course.get()
+    activity = db.collection('activities').document(activityName)
+    activityDoc = activity.get()
 
-    if courseDoc.exists and userDoc.exists:
-        role = userDoc.to_dict()["role"]
-        courseDic = courseDoc.to_dict()
+    if activityDoc.exists and userDoc.exists:
+
+        activityDic = activityDoc.to_dict()
         userDic = userDoc.to_dict()
-        if role == "teacher":
-            courseDic["teachers"].append(userName)
-        elif role == "student":
-            courseDic["students"].append(userName)
-        userDic["courses"].append(courseName)
+        role = userDic["role"]
 
-        course.update(courseDic)
+        activityDic["users"].append(userName)
+        userDic["activities"].append(activityName)
+
+        activity.update(activityDic)
         user.update(userDic)
 
-def addActivity(activity,courseName):
+def updateActivities():
+    
+    activities = db.collection('activities').get()
 
-    values = {"name" : activity.name, "course" : courseName}
+    for activity in activities :
+        
+        dic = activity.to_dict()
 
-    db.collection('activities').document(activity.id).create(values)
+        if "users" not in dic.keys() :
 
-    course = db.collection('courses').document(courseName)
-    courseDoc = course.get()
+            if "name" in dic.keys():
+                values = {"name" : dic["name"], "users" : [st.session_state["username"]]}
+            else :
+                values = {"name" : "defaultName", "users" : [st.session_state["username"]]}
 
-    if courseDoc.exists :
-        courseDic = courseDoc.to_dict()
+            db.collection('activities').document(activity.id).set(values)
+        
+    assistants = openai_client.beta.assistants.list()
 
-        courseDic["activities"].append(activity.id)
+    for assistant in assistants :
 
-        course.update(courseDic)
+        doc = db.collection('activities').document(assistant.id).get()
 
-def delAIEDUsers():
+        if not doc.exists :
 
-    coursedic = db.collection("courses").document("AIED").get().to_dict()
-    teachers = coursedic["teachers"]
+            values = values = {"name" : assistant.name, "users" : ["gabartas"]}
 
-    print(teachers)
-
-    for teacher in teachers :
-        if teacher[0:4] == "AIED":
-            print("deleting", teacher)
-            deleteUser(teacher)
+            db.collection('activities').document(assistant.id).create(values)

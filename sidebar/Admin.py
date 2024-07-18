@@ -7,3 +7,9 @@ if st.button("Cleanup files"):
 
 if st.button("Delete AIED users"):
     dbm.delAIEDUsers()
+
+if st.button("Check AIED users"):
+    dbm.checkAIEDUsers()
+
+if st.button("Update activities"):
+    dbm.updateActivities()
