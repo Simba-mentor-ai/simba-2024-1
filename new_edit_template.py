@@ -1,6 +1,7 @@
 from openai import OpenAI
 import streamlit as st
 from langchain_core.prompts import PromptTemplate
+from traces_helper import save_navigation
 import edit_functions as ef
 import chatbot_helper
 import time
@@ -287,7 +288,9 @@ def loadTemplate(assistant):
                         tool_resources = {}
                     activity = openai_client.beta.assistants.create(name = name, description = desc, instructions = instructions, tools=[{"type": "file_search"}], model="gpt-4-turbo",tool_resources=tool_resources, metadata=metadata)
                     dbm.createActivity(activity)
+                    save_navigation(assistant["id"], "created")
                     success(_("The new activity have been successfully created"))
+                    
 
                 else :
                     warning_edit(assistant,name,desc,instructions,metadata)
@@ -324,5 +327,7 @@ def warning_edit(assistant,name,desc,instructions,metadata):
             openai_client.beta.assistants.update(assistant["id"], name = name, description = desc, instructions = instructions, metadata=metadata)
             chatbot_helper.disable_activity_threads(assistant["id"])
             status.update(label=_("Activity successfully updated!"),state='complete')
+            save_navigation(assistant["id"], "updated")
             time.sleep(1)
+            st.session_state["assistants"] = ef.getUserAssistants()
             st.rerun()

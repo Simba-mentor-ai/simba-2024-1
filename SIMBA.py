@@ -1,9 +1,9 @@
 import streamlit as st
-import streamlit_authenticator as stauth
 from streamlit_config_helper import set_streamlit_page_config_once
-from authentication import authenticate
+from authentication import authenticate, updateUsr, resetPwd, initSession
 import options
 import gettext
+import database_manager as dbm
 
 _ = gettext.gettext
 
@@ -19,19 +19,24 @@ def selectLanguage() :
             st.session_state["language"] = options.langCorrespondance[selected]
             st.rerun()
         
-# if "authentication_status" not in st.session_state or not st.session_state["authentication_status"]:
+if "authentication_status" not in st.session_state or not st.session_state["authentication_status"]:
+    
+    authenticate()
 
-authenticate()
+else:
 
-# else :
-if "authentication_status" in st.session_state and st.session_state["authentication_status"]:
-
+    initSession()
     # #Language selection
     # lang,stuff = st.columns([0.15,0.85])
     # with lang:
     #     st.selectbox("Language", options=options.languages, index=options.langSymbols.index(st.session_state["language"]), on_change=selectLanguage(), key="SelectedLanguage", label_visibility="hidden")
 
     # Title of the webpage
+
+    if "code" in st.query_params :
+        name = dbm.addUserFromCode(st.query_params["code"],st.session_state["username"])
+        st.success(f"The activity '{name}' have been added to your account.")
+
     st.title(_("Welcome to SIMBA - your personal learning assistant"))
 
     # Using columns to place text and image side by side
@@ -51,8 +56,15 @@ if "authentication_status" in st.session_state and st.session_state["authenticat
 
     st.markdown("---")
 
-    # with st.sidebar :
-        # if st.button("modify account")
+
+    with st.sidebar :
+        if st.button("Modify account details", use_container_width=True):
+            updateUsr()
+            st.success('Entries updated successfully')
+    with st.sidebar :
+        if st.button("Modify password", use_container_width=True):
+            resetPwd()
+            st.success('Password modified successfully')
 
     # Introduction and brief summary
     # st.markdown(_("""

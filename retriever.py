@@ -29,8 +29,8 @@ def createRetriever(id):
     )
     
     # You can print the status and the file counts of the batch to see the result of this operation.
-    print(file_batch.status)
-    print(file_batch.file_counts)
+    # print(file_batch.status)
+    # print(file_batch.file_counts)
 
     assistant = client.beta.assistants.update(
         assistant_id=assistant.id,

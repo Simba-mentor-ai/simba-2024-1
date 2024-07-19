@@ -42,7 +42,7 @@ def disable_activity_threads(activity_id):
             else :
                 newdic = {"threads" : []}
 
-            print(dic)
+            # print(dic)
             db.collection("users").document(id).collection('activity_threads').document(activity_id).set(newdic)
 
 

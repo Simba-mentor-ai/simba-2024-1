@@ -51,17 +51,11 @@ def authenticate():
 
     clearSidebar()
     
-    # st.session_state["auth_config"] = getConfig()
-
-    # st.session_state["authenticator"] = stauth.Authenticate(
-    #     st.session_state["auth_config"]['credentials'],
-    #     st.session_state["auth_config"]['cookie']['name'],
-    #     st.session_state["auth_config"]['cookie']['key'],
-    #     st.session_state["auth_config"]['cookie']['expiry_days']
-    # )
-    
     if "authenticator" not in st.session_state:
         initAuth()
+
+    if "username" in st.session_state:
+        st.session_state["oldUser"] = st.session_state["username"]
 
     if "auth_display" not in st.session_state :
         st.session_state["auth_display"] = "login"
@@ -114,7 +108,9 @@ def authenticate():
     #Login
     elif st.session_state["auth_display"] == "login" :
 
-        st.session_state["authenticator"].login(
+
+
+        emailr, username, name = st.session_state["authenticator"].login(
             fields = {
                 'Form name':_('Login'), 
                 'Username':_('Username'), 
@@ -142,11 +138,7 @@ def authenticate():
                 st.session_state["auth_display"] = "fgusr"
                 st.rerun()
 
-        elif st.session_state["authentication_status"]:
-            st.session_state["UserRole"] = dbm.getRole(st.session_state["username"])
-            loadSidebar()
-            st.session_state["authenticator"].logout(location='sidebar')
-            return st.session_state["authentication_status"]
+        # elif st.session_state["authentication_status"]:
 
         
 def resetPwd():
@@ -175,3 +167,13 @@ def updateUsr():
                                                                                                      'Update': _('Update') }):
         saveConfig(st.session_state["auth_config"])
         st.success('Entries updated successfully')
+
+def initSession():
+    if "session_initiated" not in st.session_state or not st.session_state["session_initiated"] or st.session_state["oldUser"] != st.session_state["username"]:
+        st.session_state["UserRole"] = dbm.getRole(st.session_state["username"])
+        loadSidebar()
+        st.session_state["authenticator"].logout(location='sidebar')
+        st.session_state["session_initiated"] = True
+
+    else :
+        st.session_state["authenticator"].logout(location='sidebar')

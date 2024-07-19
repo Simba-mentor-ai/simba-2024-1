@@ -13,3 +13,6 @@ if st.button("Check AIED users"):
 
 if st.button("Update activities"):
     dbm.updateActivities()
+
+if st.button("generate activity codes"):
+    dbm.generateCodes()

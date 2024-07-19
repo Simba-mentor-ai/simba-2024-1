@@ -27,7 +27,7 @@ def enable():
 
 def load_template(activity_id, assistant_id, title):
 
-    save_navigation(activity_id)
+    save_navigation(activity_id, "accessed")
     if "text_disabled" not in st.session_state:
         st.session_state["text_disabled"] = False
 

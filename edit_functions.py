@@ -4,6 +4,7 @@ import re
 import gettext
 import options
 import database_manager as dbm
+from traces_helper import save_navigation
 
 _ = gettext.gettext
 openai_client = OpenAI()
@@ -72,6 +73,7 @@ def delAssistant(id):
         if st.button("ok") :
             dbm.delActivitiy(id)
             openai_client.beta.assistants.delete(id) 
+            save_navigation(id, "deleted")
             st.rerun()  
 
 def setSelectedid(i):
@@ -244,5 +246,5 @@ def extractVals(prompt):
             
             vals["limits"] = int(result)
         
-    print(vals)
+    # print(vals)
     return vals

@@ -4,27 +4,15 @@ cookie:
   name: some_cookie_name
 credentials:
   usernames:
-    admingferrett:
-      email: gabriel.ferrettini@irit.fr
-      failed_login_attempts: 0
-      logged_in: false
-      name: Gabriel Ferrettini
-      password: $2b$12$QzlyV0OAUtN8H4Qp4f13XuiDhl3eVVg3imr6lRYrEvVnKNPcNuVIW
     gabartas:
       email: gabriel.ferrettini@gmail.com
       logged_in: false
       name: Gabriel Ferrettini
       password: $2b$12$J5QwO2uH1aDYRtA5g9nt8eZOcDHZDLcsGPxRafHLWYnfJaEb2hlM6
-    gferrettini:
-      email: gabriel.ferrettini@irit.fr
-      failed_login_attempts: 0
+    test_student:
+      email: gabartas@hotmail.fr
       logged_in: false
-      name: Gabriel Ferrettini
-      password: $2b$12$LOMvWPYND.hCc5rANCypjuvEPc6o./Jc4SUOQpVz/dRMAP6JqOZwS
-    test_new_user:
-      email: test@gmail.com
-      logged_in: false
-      name: test
-      password: $2b$12$mJpwBz2cd.Ex0AeZDGiVAeqAiDC3mgptekS/XXhTZFHhTd9ocvFHC
+      name: tester
+      password: $2b$12$BZG99TIzjAj4jj5wU4DeiuQoSACNH.hXc1jsgk07p5MeTo1rC5EGK
 pre-authorized:
   emails: null

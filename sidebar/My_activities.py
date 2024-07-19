@@ -1,23 +1,22 @@
-from streamlit_config_helper import set_streamlit_page_config_once
-
-# set_streamlit_page_config_once()
-
-from auth_helper import get_auth_status
 import streamlit as st
 import edit_functions
 import chatpage_template
 import gettext
 import datetime
 import options
-from authentication import authenticate
+import database_manager as dbm
+from authentication import authenticate, initSession
 
 _ = gettext.gettext
 
 options.translate()
 
-authenticate()
+if "authentication_status" not in st.session_state or not st.session_state["authentication_status"]:
+    authenticate()
 
-if "authentication_status" in st.session_state and st.session_state["authentication_status"]:
+else:
+
+    initSession()
     today = datetime.date.today()
 
     # st.session_state["assistants"] = edit_functions.getAssistants()
@@ -51,7 +50,19 @@ if "authentication_status" in st.session_state and st.session_state["authenticat
     if "selected activity" not in st.session_state :
         st.session_state["selected activity"] = ""
 
-    st.write(_("# Activity"))
+    st.write(_("# Activities"))
+
+    # textc,buttonc = st.columns([0.3,0.7])
+
+    # with textc :
+    #     code = st.text_input("Enter an activity code to add it to your activities")
+
+    # with buttonc :
+    #     st.container(height=13, border=False)
+    #     if st.button("Add activity"):
+    #         dbm.addUserFromCode(code,st.session_state["username"])
+    #         st.session_state["assistants"] = edit_functions.getUserAssistants()
+    #         st.rerun()
 
     st.selectbox(_("Select the activity you want to work on"), options=names, index=None, placeholder=_("select an activity..."), on_change=selectActivity(), key="SelectedName")
 

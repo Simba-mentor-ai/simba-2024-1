@@ -146,7 +146,7 @@ def evaluateLast(col,tru):
         if len(records) != 0:
             metric_cols_ix = records.columns.str.startswith("[METRIC]") & ~records.columns.str.endswith("_calls")
             metric_cols = records.columns[metric_cols_ix]
-            print(records)
+            # print(records)
             # last_metrics = records[metric_cols][-1]
         
             # with col:

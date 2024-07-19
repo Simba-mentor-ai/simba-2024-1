@@ -1,13 +1,25 @@
-import smtplib, ssl
+# Import smtplib for the actual sending function
+import smtplib
 
-port = 465  # For SSL
-password = input("Type your password and press enter: ")
+# Import the email modules we'll need
+from email.mime.text import MIMEText
 
+# Open a plain text file for reading.  For this example, assume that
+# the text file contains only ASCII characters.
+with open("testmail.txt", 'r', encoding="utf-8") as fp:
+    # Create a text/plain message
+    msg = MIMEText(fp.read())
 
-def sendMail(address,content):
-    # Create a secure SSL context
-    context = ssl.create_default_context()
+me = "simba@noreply.com"
+you = "gabriel.ferrettini@gmail.com"
+# me == the sender's email address
+# you == the recipient's email address
+msg['Subject'] = 'The contents'
+msg['From'] = me
+msg['To'] = you
 
-    with smtplib.SMTP_SSL("smtp.gmail.com", port, context=context) as server:
-        server.login("my@gmail.com", password)
-        # TODO: Send email here
+# Send the message via our own SMTP server, but don't include the
+# envelope header.
+s = smtplib.SMTP('localhost')
+s.sendmail(me, [you], msg.as_string())
+s.quit()
