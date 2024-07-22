@@ -66,22 +66,26 @@ def authenticate():
             st.session_state["auth_display"] = "login"
             st.rerun()
 
-        email, username, name = st.session_state["authenticator"].register_user(preauthorization=False,
-                                fields={ 'Form name': _('Register User'),
-                                        'Username': _('Username'),
-                                        'Email': _('Email'),
-                                        'Password': _('Password'),
-                                        'Repeat password': _('Repeat password'),
-                                        'Register': _('Register') })
-    
-        if email:
-            dbm.saveConfig(st.session_state["auth_config"])
-            dbm.createUser(username,"student",name,email)
-            st.session_state["auth_display"] = "login"
-            st.rerun()
+        try:
+            email, username, name = st.session_state["authenticator"].register_user(preauthorization=False,
+                                    fields={ 'Form name': _('Register User'),
+                                            'Username': _('Username'),
+                                            'Email': _('Email'),
+                                            'Password': _('Password'),
+                                            'Repeat password': _('Repeat password'),
+                                            'Register': _('Register') })
+        
+            if email:
+                dbm.saveConfig(st.session_state["auth_config"])
+                dbm.createUser(username,"student",name,email)
+                st.session_state["auth_display"] = "login"
+                st.rerun()
+        except Exception as e:
+            st.error(e)
 
     #Forgot username
     elif st.session_state["auth_display"] == "fgusr" :
+
         username, email = st.session_state["authenticator"].forgot_username(fields = {'Form name': _('Forgot username'),
                                                                                                             'Email': _('Email'),
                                                                                                             'Submit': _('Submit')})
@@ -94,7 +98,7 @@ Please, delete this message after receiving it to ensure it is not stolen.""").f
             st.success(_('An email with your username have been sent to you, remember to check your spam folder if you cannot find it'))
 
         elif username == False:
-            st.error('Email not found')
+            st.error(_('Email not found'))
 
         if st.sidebar.button(_("Login")):
             st.session_state["auth_display"] = "login"
@@ -113,15 +117,14 @@ Please, modify it as soon as possible from the main page to ensure it is not sto
             dbm.saveConfig(st.session_state["auth_config"])
             st.success(_('An email with a new password have been sent to you, remember to check your spam folder if you cannot find it'))
         elif username == False:
-            st.error('Username not found')
+            st.error(_('Username not found'))
 
 
     #Login
     elif st.session_state["auth_display"] == "login" :
 
 
-
-        emailr, username, name = st.session_state["authenticator"].login(
+        email, username, name = st.session_state["authenticator"].login(
             fields = {
                 'Form name':_('Login'), 
                 'Username':_('Username'), 
