@@ -1,12 +1,9 @@
 import streamlit as st
 import streamlit_authenticator as stauth
-import yaml
 import gettext
-import random
-import string
 import options
+import emails
 from sidebar_loading import clearSidebar, loadSidebar
-from yaml.loader import SafeLoader
 import database_manager as dbm
 
 _ = gettext.gettext
@@ -25,20 +22,21 @@ options.translate()
 #         </style>
 #     """
 
-def getConfig():
-    config = []
+# def getConfig():
+#     config = []
 
-    with open('./auth_config/config.yaml') as file:
-        config = yaml.load(file, Loader=SafeLoader)
+#     with open('./auth_config/config.yaml') as file:
+#         config = yaml.load(file, Loader=SafeLoader)
 
-    return config
+#     return config
 
-def saveConfig(config):
-    with open('./auth_config/config.yaml', 'w') as file:
-        yaml.dump(config, file, default_flow_style=False)
+
+# def saveConfig(config):
+#     with open('./auth_config/config.yaml', 'w') as file:
+#         yaml.dump(config, file, default_flow_style=False)
 
 def initAuth():
-    st.session_state["auth_config"] = getConfig()
+    st.session_state["auth_config"] = dbm.getConfig()
     
     st.session_state["authenticator"]  = stauth.Authenticate(
         st.session_state["auth_config"]['credentials'],
@@ -46,6 +44,7 @@ def initAuth():
         st.session_state["auth_config"]['cookie']['key'],
         st.session_state["auth_config"]['cookie']['expiry_days']
     )
+
 
 def authenticate():
 
@@ -76,7 +75,7 @@ def authenticate():
                                         'Register': _('Register') })
     
         if email:
-            saveConfig(st.session_state["auth_config"])
+            dbm.saveConfig(st.session_state["auth_config"])
             dbm.createUser(username,"student",name,email)
             st.session_state["auth_display"] = "login"
             st.rerun()
@@ -88,19 +87,31 @@ def authenticate():
                                                                                                             'Submit': _('Submit')})
 
         if username:
-            st.success('Username to be sent securely')
-            # The developer should securely transfer the username to the user.
+            message = _("""Hello, this is SIMBA recovery \n
+Your username is {name}. \n
+Please, delete this message after receiving it to ensure it is not stolen.""").format(name=username)
+            emails.send_email_gmail(_("username recovery"),message,email)
+            st.success(_('An email with your username have been sent to you, remember to check your spam folder if you cannot find it'))
+
         elif username == False:
             st.error('Email not found')
 
+        if st.sidebar.button(_("Login")):
+            st.session_state["auth_display"] = "login"
+            st.rerun()
+
     #Forgot password
     elif st.session_state["auth_display"] == "fgpwd" :
-        username, email, new = st.session_state["authenticator"].forgot_password(fields = {'Form name': _('Forgot password'),
+        username, email, newPwd = st.session_state["authenticator"].forgot_password(fields = {'Form name': _('Forgot password'),
                                                                                                                                    'Username': _('Username'),
                                                                                                                                    'Submit': _('Submit')})
         if username:
-            st.success('New password to be sent securely')
-            # The developer should securely transfer the new password to the user.
+            message = _("""Hello, this is SIMBA recovery \n
+Your randomly generated password is {password}. \n
+Please, modify it as soon as possible from the main page to ensure it is not stolen.""").format(password=newPwd)
+            emails.send_email_gmail(_("new password"),message,email)
+            dbm.saveConfig(st.session_state["auth_config"])
+            st.success(_('An email with a new password have been sent to you, remember to check your spam folder if you cannot find it'))
         elif username == False:
             st.error('Username not found')
 
@@ -151,8 +162,8 @@ def resetPwd():
                                                                                                 'New password': _('New password'),
                                                                                                 'Repeat password': _('Repeat password'),
                                                                                                 'Reset': _('Reset')}):
-        saveConfig(st.session_state["auth_config"])
         st.success('Password modified successfully')
+        dbm.saveConfig(st.session_state["auth_config"])
 
 def updateUsr():
 
@@ -165,8 +176,8 @@ def updateUsr():
                                                                                                      'Email': _('Email'),
                                                                                                      'New value': _('New value'),
                                                                                                      'Update': _('Update') }):
-        saveConfig(st.session_state["auth_config"])
         st.success('Entries updated successfully')
+        dbm.saveConfig(st.session_state["auth_config"])
 
 def initSession():
     if "session_initiated" not in st.session_state or not st.session_state["session_initiated"] or st.session_state["oldUser"] != st.session_state["username"]:

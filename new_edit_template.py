@@ -78,7 +78,7 @@ def loadTemplate(assistant):
             question, delete = st.columns([0.8,0.2])
             if i-1 < len(st.session_state["questions"]):
                 with question :
-                    q = st.text_input(f"Question {i}", placeholder=_("enter the question statement"), key=f"question{i}", value=st.session_state["questions"][i-1])
+                    q = st.text_input(_("Question {i}").format(i=i), placeholder=_("enter the question statement"), key=f"question{i}", value=st.session_state["questions"][i-1])
                     st.session_state["questions"][i-1] = q
                 if st.session_state["nbQuestions"]>1:
                     with delete :
@@ -90,7 +90,7 @@ def loadTemplate(assistant):
             else :
                 with question :
                     st.session_state["questions"].append("")
-                    st.session_state["questions"][i-1] = st.text_input(f"Question {i}", placeholder=_("enter the question statement"), key=f"question{i}")
+                    st.session_state["questions"][i-1] = st.text_input(_("Question {i}").format(i=i), placeholder=_("enter the question statement"), key=f"question{i}")
                 if st.session_state["nbQuestions"]>1:
                     with delete :
                         st.container(height=13, border=False)

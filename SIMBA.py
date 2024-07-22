@@ -35,7 +35,7 @@ else:
 
     if "code" in st.query_params :
         name = dbm.addUserFromCode(st.query_params["code"],st.session_state["username"])
-        st.success(f"The activity '{name}' have been added to your account.")
+        st.success(_("The activity '{name}' have been added to your account.").format(name=name))
 
     st.title(_("Welcome to SIMBA - your personal learning assistant"))
 
@@ -52,19 +52,19 @@ else:
         
 
     with col2:  # Second column for the image
-        st.image("SIMBA_img.jpeg", caption=_('SIMBA - Your Learning Partner'))
+        st.image("SIMBA_img.jpeg", caption=_('SIMBA - Your Learning Partner'), width=300)
 
     st.markdown("---")
 
 
-    with st.sidebar :
-        if st.button("Modify account details", use_container_width=True):
-            updateUsr()
-            st.success('Entries updated successfully')
-    with st.sidebar :
-        if st.button("Modify password", use_container_width=True):
-            resetPwd()
-            st.success('Password modified successfully')
+    # with st.sidebar :
+    #     if st.button("Modify account details", use_container_width=True):
+    #         updateUsr()
+    #         st.success('Entries updated successfully')
+    # with st.sidebar :
+    #     if st.button("Modify password", use_container_width=True):
+    #         resetPwd()
+    #         st.success('Password modified successfully')
 
     # Introduction and brief summary
     # st.markdown(_("""

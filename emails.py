@@ -1,25 +1,20 @@
-# Import smtplib for the actual sending function
 import smtplib
+import streamlit as st
+from email.message import EmailMessage
 
-# Import the email modules we'll need
-from email.mime.text import MIMEText
+pwd = st.secrets["EMAILAPPPWD"]
 
-# Open a plain text file for reading.  For this example, assume that
-# the text file contains only ASCII characters.
-with open("testmail.txt", 'r', encoding="utf-8") as fp:
-    # Create a text/plain message
-    msg = MIMEText(fp.read())
+def send_email_gmail(subject, message, destination):
+    server = smtplib.SMTP('smtp.gmail.com', 587)
+    server.starttls()
+    #This is where you would replace your password with the app password
+    server.login('simba.mentor.recovery@gmail.com', pwd)
 
-me = "simba@noreply.com"
-you = "gabriel.ferrettini@gmail.com"
-# me == the sender's email address
-# you == the recipient's email address
-msg['Subject'] = 'The contents'
-msg['From'] = me
-msg['To'] = you
+    msg = EmailMessage()
 
-# Send the message via our own SMTP server, but don't include the
-# envelope header.
-s = smtplib.SMTP('localhost')
-s.sendmail(me, [you], msg.as_string())
-s.quit()
+    message = f'{message}\n'
+    msg.set_content(message)
+    msg['Subject'] = subject
+    msg['From'] = 'simba.mentor.recovery@gmail.com'
+    msg['To'] = destination
+    server.send_message(msg)

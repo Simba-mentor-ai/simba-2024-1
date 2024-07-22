@@ -133,7 +133,7 @@ def questionsGen():
     nstr = ""
 
     for i in range(1,st.session_state["nbQuestions"]+1):
-        nstr = nstr + f"Question {i} : {st.session_state[f'question{i}']} \n"
+        nstr = nstr + _("Question {i} : {question} \n").format(i=i, question = st.session_state[f'question{i}'])
 
     return nstr
 

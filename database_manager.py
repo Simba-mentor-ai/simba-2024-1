@@ -1,6 +1,8 @@
 import streamlit as st
 import random
 import string
+import yaml
+from yaml.loader import SafeLoader
 from google.oauth2 import service_account
 from google.cloud import firestore
 from openai import OpenAI
@@ -158,7 +160,33 @@ def getRole(userName):
     return role
 
 
+# Credentials
+def getConfig():
+
+    cred = db.collection("utilities").document("credentials").get().to_dict()
+
+    config = cred["credentials"]
+
+    return config
+
+def saveConfig(config):
+    cred = db.collection("utilities").document("credentials").get().to_dict()
+
+    cred["credentials"] = config
+
+    db.collection("utilities").document("credentials").update(cred)
+
+
 # Admin special functions
+
+def initConfig():
+    config = []
+
+    with open('./auth_config/config.yaml') as file:
+        config = yaml.load(file, Loader=SafeLoader)
+
+    saveConfig(config)
+
 def updateActivities():
     
     activities = db.collection('activities').get()
