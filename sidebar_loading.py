@@ -21,4 +21,4 @@ def loadSidebar():
                 # Page("sidebar/Admin.py", "Admin")
     ])
     if st.session_state["UserRole"]=="student":
-        hide_pages([_("New activity"), _("Edit activities")])
+        hide_pages(["New activity", "Edit activities"])
