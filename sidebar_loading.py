@@ -19,7 +19,7 @@ def loadSidebar():
                 Page("sidebar/Edit_activities.py", _("Edit activities"), "⚙️"),
                 Page("sidebar/My_activities.py", _("My activities"), "📝"),
                 Page("sidebar/Manage_account.py", _("Manage my account"), "👤"),
-                Page("sidebar/Admin.py", "Admin")
+                # Page("sidebar/Admin.py", "Admin")
         ])
     else :
         show_pages([
