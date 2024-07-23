@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2024-07-22 15:58+0200\n"
-"PO-Revision-Date: 2024-07-22 16:03+0200\n"
+"POT-Creation-Date: 2024-07-23 15:06+0200\n"
+"PO-Revision-Date: 2024-07-23 15:10+0200\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: es\n"
@@ -32,11 +32,11 @@ msgstr ""
 msgid "The activity '{name}' have been added to your account."
 msgstr ""
 
-#: SIMBA.py:40
+#: SIMBA.py:41
 msgid "Welcome to SIMBA - your personal learning assistant"
 msgstr "Bienvenido a SIMBA - Tu Asistente de Aprendizaje"
 
-#: SIMBA.py:45
+#: SIMBA.py:46
 msgid ""
 "\n"
 "        ## **SIMBA accompanies you in your learning**.\n"
@@ -60,49 +60,49 @@ msgstr ""
 "acción para alcanzar los objetivos del curso.\n"
 "        "
 
-#: SIMBA.py:55
+#: SIMBA.py:56
 msgid "SIMBA - Your Learning Partner"
 msgstr "SIMBA - Tu Asistente de Aprendizaje"
 
-#: authentication.py:65 authentication.py:99 authentication.py:126
-#: authentication.py:129
+#: authentication.py:65 authentication.py:103 authentication.py:129
+#: authentication.py:132
 msgid "Login"
 msgstr ""
 
-#: authentication.py:70
+#: authentication.py:71
 msgid "Register User"
 msgstr ""
 
-#: authentication.py:71 authentication.py:106 authentication.py:127
+#: authentication.py:72 authentication.py:110 authentication.py:130
 msgid "Username"
 msgstr ""
 
-#: authentication.py:72 authentication.py:86 authentication.py:176
+#: authentication.py:73 authentication.py:90 authentication.py:179
 #: sidebar/Manage_account.py:26
 msgid "Email"
 msgstr ""
 
-#: authentication.py:73 authentication.py:128
+#: authentication.py:74 authentication.py:131
 msgid "Password"
 msgstr ""
 
-#: authentication.py:74 authentication.py:163 sidebar/Manage_account.py:41
+#: authentication.py:75 authentication.py:166 sidebar/Manage_account.py:41
 msgid "Repeat password"
 msgstr ""
 
-#: authentication.py:75
+#: authentication.py:76
 msgid "Register"
 msgstr ""
 
-#: authentication.py:85
+#: authentication.py:89
 msgid "Forgot username"
 msgstr ""
 
-#: authentication.py:87 authentication.py:107 new_edit_template.py:235
+#: authentication.py:91 authentication.py:111 new_edit_template.py:239
 msgid "Submit"
 msgstr "Subir"
 
-#: authentication.py:90
+#: authentication.py:94
 #, python-brace-format
 msgid ""
 "Hello, this is SIMBA recovery \n"
@@ -112,21 +112,25 @@ msgid ""
 "Please, delete this message after receiving it to ensure it is not stolen."
 msgstr ""
 
-#: authentication.py:93
+#: authentication.py:97
 msgid "username recovery"
 msgstr ""
 
-#: authentication.py:94
+#: authentication.py:98
 msgid ""
 "An email with your username have been sent to you, remember to check your "
 "spam folder if you cannot find it"
 msgstr ""
 
-#: authentication.py:105
-msgid "Forgot password"
+#: authentication.py:101
+msgid "Email not found"
 msgstr ""
 
 #: authentication.py:109
+msgid "Forgot password"
+msgstr ""
+
+#: authentication.py:113
 #, python-brace-format
 msgid ""
 "Hello, this is SIMBA recovery \n"
@@ -137,69 +141,73 @@ msgid ""
 "stolen."
 msgstr ""
 
-#: authentication.py:112
+#: authentication.py:116
 msgid "new password"
 msgstr ""
 
-#: authentication.py:114
+#: authentication.py:118
 msgid ""
 "An email with a new password have been sent to you, remember to check your "
 "spam folder if you cannot find it"
 msgstr ""
 
-#: authentication.py:137
+#: authentication.py:120
+msgid "Username not found"
+msgstr ""
+
+#: authentication.py:140
 msgid "Username or password is incorrect"
 msgstr ""
 
-#: authentication.py:139
+#: authentication.py:142
 msgid "Please, login before using the application."
 msgstr ""
 
-#: authentication.py:142
+#: authentication.py:145
 msgid "New user"
 msgstr ""
 
-#: authentication.py:145
+#: authentication.py:148
 msgid "Forgot my password"
 msgstr ""
 
-#: authentication.py:148
+#: authentication.py:151
 msgid "Forgot my username"
 msgstr ""
 
-#: authentication.py:160 sidebar/Manage_account.py:38
+#: authentication.py:163 sidebar/Manage_account.py:38
 msgid "Reset password"
 msgstr ""
 
-#: authentication.py:161 sidebar/Manage_account.py:39
+#: authentication.py:164 sidebar/Manage_account.py:39
 msgid "Current password"
 msgstr ""
 
-#: authentication.py:162 sidebar/Manage_account.py:40
+#: authentication.py:165 sidebar/Manage_account.py:40
 msgid "New password"
 msgstr ""
 
-#: authentication.py:164 sidebar/Manage_account.py:42
+#: authentication.py:167 sidebar/Manage_account.py:42
 msgid "Reset"
 msgstr ""
 
-#: authentication.py:173 sidebar/Manage_account.py:23
+#: authentication.py:176 sidebar/Manage_account.py:23
 msgid "Update user details"
 msgstr ""
 
-#: authentication.py:174 sidebar/Manage_account.py:24
+#: authentication.py:177 sidebar/Manage_account.py:24
 msgid "Field"
 msgstr ""
 
-#: authentication.py:175 sidebar/Manage_account.py:25
+#: authentication.py:178 sidebar/Manage_account.py:25
 msgid "Name"
 msgstr ""
 
-#: authentication.py:177 sidebar/Manage_account.py:27
+#: authentication.py:180 sidebar/Manage_account.py:27
 msgid "New value"
 msgstr "Nuevo nombre"
 
-#: authentication.py:178 sidebar/Manage_account.py:28
+#: authentication.py:181 sidebar/Manage_account.py:28
 msgid "Update"
 msgstr ""
 
@@ -215,7 +223,7 @@ msgstr "¿En qué puedo ayudarte?"
 msgid "Please, wait a moment, I'm thinking about my answer..."
 msgstr "Por favor, espera un segundo, estoy pensando la respuesta..."
 
-#: edit_functions.py:84
+#: edit_functions.py:86
 #, python-brace-format
 msgid ""
 "You are a {adj1} {teaching_adj} tutor for the course '{courseName}'.\n"
@@ -259,27 +267,28 @@ msgstr ""
 "\n"
 "{limits}"
 
-#: edit_functions.py:104
+#: edit_functions.py:106
 #, python-brace-format
 msgid "Your answers should be {limit} words maximum."
 msgstr "Tus respuestas deben tener un máximo de {limit} palabras."
 
-#: edit_functions.py:110 edit_functions.py:219
+#: edit_functions.py:112 edit_functions.py:221
 msgid ""
 "Encourage them to go and read a section of the provided documents to answer."
 msgstr ""
 "Anímales a leer una sección de los documentos proporcionados para responder."
 
-#: edit_functions.py:112
+#: edit_functions.py:114
 #, python-brace-format
 msgid " If they do not have access to the text, they can find it at '{url}'."
 msgstr " Si no tienen acceso al texto, pueden encontrarlo en '{url}'."
 
-#: edit_functions.py:118 edit_functions.py:162 options.py:23
+#: edit_functions.py:120 edit_functions.py:164 new_edit_template.py:122
+#: options.py:31
 msgid "socratic"
 msgstr ""
 
-#: edit_functions.py:119
+#: edit_functions.py:121
 msgid ""
 "Act as a Socratic tutor, taking the initiative in getting the students to "
 "answer the questions."
@@ -287,31 +296,31 @@ msgstr ""
 "Actúa como un tutor socrático, tomando la iniciativa para que los "
 "estudiantes respondan a las preguntas."
 
-#: edit_functions.py:121
+#: edit_functions.py:123
 msgid "Act as a standard teacher."
 msgstr "Actúa como profesor estándar."
 
-#: edit_functions.py:127 edit_functions.py:205
+#: edit_functions.py:129 edit_functions.py:207
 msgid "You should not give the answer, but guide the student to answer."
 msgstr "No debe dar la respuesta, sino guiar al alumno para que responda."
 
-#: edit_functions.py:129
+#: edit_functions.py:131
 msgid ""
 "You can provide an answer to the provided questions if the student asks for "
 "it."
 msgstr ""
 "Puede responder a las preguntas que se le formulen si el alumno solicita."
 
-#: edit_functions.py:136
+#: edit_functions.py:138
 #, python-brace-format
 msgid "Question {i} : {question} \n"
 msgstr "Pregunta {i} : {question} \n"
 
-#: edit_functions.py:143 edit_functions.py:211
+#: edit_functions.py:145 edit_functions.py:213
 msgid ", using emojis where possible."
 msgstr "utilizando emojis siempre que sea posible."
 
-#: edit_functions.py:150
+#: edit_functions.py:152
 msgid ""
 "Your name is SIMBA 😸 (Sistema Inteligente de Medición, Bienestar y Apoyo) "
 "and you were created by the Núcleo Milenio de Educación Superior."
@@ -320,31 +329,31 @@ msgstr ""
 "has sido creado con el apoyo del Núcleo Milenio de Educación Superior y el "
 "proyecto ANR LASER."
 
-#: edit_functions.py:155
+#: edit_functions.py:157
 msgid "You are a (.*) "
 msgstr "Eres un (.*) "
 
-#: edit_functions.py:163
+#: edit_functions.py:165
 msgid " (.*) tutor for the course"
 msgstr " (.*) tutor del curso"
 
-#: edit_functions.py:179
+#: edit_functions.py:181
 msgid "tutor for the course '(.*)'."
 msgstr "tutor del curso '(.*)'."
 
-#: edit_functions.py:195
+#: edit_functions.py:197
 msgid "Question . : "
 msgstr "Pregunta . : "
 
-#: edit_functions.py:221
+#: edit_functions.py:223
 msgid " If they do not have access to the text, they can find it at '"
 msgstr " Si no tienen acceso al texto, pueden encontrarlo en"
 
-#: edit_functions.py:222
+#: edit_functions.py:224
 msgid " If they do not have access to the text, they can find it at '(.*)'."
 msgstr " Si no tienen acceso al texto, pueden encontrarlo en '(.*)'."
 
-#: edit_functions.py:236
+#: edit_functions.py:238
 msgid "Your answers should be (.*) words maximum."
 msgstr "Tus respuestas deben tener un máximo de (.*) palabras."
 
@@ -376,9 +385,9 @@ msgstr "Mofifica la descripción o entra una nueva"
 msgid "New description..."
 msgstr "Nueva descripción..."
 
-#: new_edit_template.py:60
-msgid "initialized"
-msgstr "inicializada"
+#: new_edit_template.py:50
+msgid "Expert mode (modify the prompt directly)"
+msgstr ""
 
 #: new_edit_template.py:70
 msgid "➕ add a question"
@@ -405,11 +414,11 @@ msgstr "Opciones avanzadas"
 msgid "### Activity's assistant instructions :"
 msgstr "### Instrucciones de la actividad :"
 
-#: new_edit_template.py:114
+#: new_edit_template.py:118
 msgid "What attitude should the assistant have toward the students ?"
 msgstr "¿Qué actitud debe tener el asistente con los alumnos?"
 
-#: new_edit_template.py:121
+#: new_edit_template.py:125
 msgid ""
 "The assistant should give an answer to the activity questions if the student "
 "asks for it."
@@ -417,11 +426,11 @@ msgstr ""
 "El ayudante debe dar una respuesta a las preguntas de la actividad si el "
 "alumno."
 
-#: new_edit_template.py:124
+#: new_edit_template.py:128
 msgid "The assistant should use emojis."
 msgstr "El asistente debe utilizar emojis."
 
-#: new_edit_template.py:127
+#: new_edit_template.py:131
 msgid ""
 "The assistant should encourage the student to rely on the provided documents "
 "for answering."
@@ -429,109 +438,117 @@ msgstr ""
 "El asistente debe animar al alumno a basarse en los documentos "
 "proporcionados."
 
-#: new_edit_template.py:129
+#: new_edit_template.py:133
 msgid "Is there an URL where to find those documents ?"
 msgstr "¿Existe una URL donde encontrar esos documentos?"
 
-#: new_edit_template.py:129
+#: new_edit_template.py:133
 msgid "leave empty if you have no url"
 msgstr "dejar en blanco si no hay url"
 
-#: new_edit_template.py:134
+#: new_edit_template.py:138
 msgid "include a word count limit for the assistant's answers ? (0 = no limit)"
 msgstr ""
 "¿Quiere añadir un límite de palabras para las respuestas del asistente (0 = "
 "sin límite)?"
 
-#: new_edit_template.py:141
+#: new_edit_template.py:145
 msgid "### Activity files"
 msgstr "### Documentos de la Actividad"
 
-#: new_edit_template.py:154
+#: new_edit_template.py:158
 msgid "Deleting the file"
 msgstr "Eliminar documento"
 
-#: new_edit_template.py:157
+#: new_edit_template.py:161
 msgid "Deleted!"
 msgstr "Eliminado!"
 
-#: new_edit_template.py:160
+#: new_edit_template.py:164
 msgid "No files have been added yet."
 msgstr "No se ha añadido ningún documento."
 
-#: new_edit_template.py:163
+#: new_edit_template.py:167
 msgid "Drop files you want to add here"
 msgstr "Desliza los documentos que quieras añadir"
 
-#: new_edit_template.py:165
+#: new_edit_template.py:169
 msgid "Upload files"
 msgstr "Subir documentos"
 
-#: new_edit_template.py:171
+#: new_edit_template.py:175
 msgid "file added, to be uploaded upon activity creation."
 msgstr "documenot añadido."
 
-#: new_edit_template.py:173
+#: new_edit_template.py:177
 msgid "Uploading file"
 msgstr "Subiendo fichero"
 
-#: new_edit_template.py:186
+#: new_edit_template.py:190
 msgid "Linking file to the activity"
 msgstr "Asociando el documento a la actividad"
 
-#: new_edit_template.py:189
+#: new_edit_template.py:193
 msgid "File added to the activity!"
 msgstr "Documento añadido a la actividad."
 
-#: new_edit_template.py:197
+#: new_edit_template.py:201
 msgid "please, add a file to be uploaded first."
 msgstr "por favor, añada los documentos antes."
 
-#: new_edit_template.py:231
+#: new_edit_template.py:220
+msgid "I want the activity to be accessible only from a certain day"
+msgstr ""
+
+#: new_edit_template.py:225
+msgid "I want the activity to be hidden after a certain day"
+msgstr ""
+
+#: new_edit_template.py:235
 msgid "Cancel"
 msgstr "Anular"
 
-#: new_edit_template.py:246
+#: new_edit_template.py:250
 msgid "Please, give a name to your activity."
 msgstr "Por favor, añade un nombre a tu actividad."
 
-#: new_edit_template.py:248
+#: new_edit_template.py:252
 msgid "The activity needs to have at least one question."
 msgstr "La actividad necesita incluri al menos una pregunta."
 
-#: new_edit_template.py:250
+#: new_edit_template.py:254
 msgid "The question "
 msgstr "La pregunta "
 
-#: new_edit_template.py:275 new_edit_template.py:284
+#: new_edit_template.py:279 new_edit_template.py:288
 msgid "Creating activity"
 msgstr "Creando la actividad"
 
-#: new_edit_template.py:279
+#: new_edit_template.py:283
 msgid "uploading the files"
 msgstr "cargando documentos"
 
-#: new_edit_template.py:292
+#: new_edit_template.py:296
 msgid "The new activity have been successfully created"
 msgstr "La actividad se ha creado correctamente"
 
-#: new_edit_template.py:302
+#: new_edit_template.py:306
 msgid "Success"
 msgstr "Hecho"
 
-#: new_edit_template.py:305 new_edit_template.py:314 new_edit_template.py:325
+#: new_edit_template.py:309 new_edit_template.py:317 new_edit_template.py:328
 msgid "ok"
 msgstr "de acuerdo"
 
-#: new_edit_template.py:311
+#: new_edit_template.py:314
 msgid "Error"
 msgstr "Error"
 
-#: new_edit_template.py:317
+#: new_edit_template.py:320
 msgid "warning"
 msgstr "cuidado"
 
-#: new_edit_template.py:319
+#: new_edit_template.py:322
 msgid ""
 "Editing this activity will reset it for all students, If students are "
 "working with the current activity, they will have to start the activity "
@@ -542,31 +559,31 @@ msgstr ""
 "actividad de nuevo. Si desea mantenerla como está, le recomendamos que cree "
 "una nueva actividad"
 
-#: new_edit_template.py:322
+#: new_edit_template.py:325
 msgid "cancel"
 msgstr "anular"
 
-#: new_edit_template.py:326
+#: new_edit_template.py:329
 msgid "Updating the activity"
 msgstr "Actualizando la actividad"
 
-#: new_edit_template.py:329
+#: new_edit_template.py:332
 msgid "Activity successfully updated!"
 msgstr "La actividad ha sido actualizada."
 
-#: options.py:22
+#: options.py:30
 msgid "friendly"
 msgstr "amigable"
 
-#: options.py:22
+#: options.py:30
 msgid "informal"
 msgstr "informal"
 
-#: options.py:22
+#: options.py:30
 msgid "formal"
 msgstr "formal"
 
-#: options.py:23
+#: options.py:31
 msgid "other"
 msgstr "otro"
 
@@ -610,25 +627,19 @@ msgstr "Selecciona la actividad en la que quieres trabajar"
 msgid "select an activity..."
 msgstr "selecciona una actividad..."
 
-#: sidebar_loading.py:12 sidebar_loading.py:17 sidebar_loading.py:26
-msgid "SIMBA main page"
-msgstr ""
-
-#: sidebar_loading.py:12 sidebar_loading.py:18
+#: sidebar_loading.py:24
 msgid "New activity"
 msgstr "Nueva actividad"
 
-#: sidebar_loading.py:12 sidebar_loading.py:19
+#: sidebar_loading.py:24
 msgid "Edit activities"
 msgstr "Editar actividades"
 
-#: sidebar_loading.py:12 sidebar_loading.py:20 sidebar_loading.py:27
-msgid "My activities"
-msgstr "Mis actividades"
+#~ msgid "initialized"
+#~ msgstr "inicializada"
 
-#: sidebar_loading.py:12 sidebar_loading.py:21 sidebar_loading.py:28
-msgid "Manage my account"
-msgstr ""
+#~ msgid "My activities"
+#~ msgstr "Mis actividades"
 
 #~ msgid "What should be the assistant's approach to teaching ?"
 #~ msgstr "¿Cuál debe ser el enfoque pedagógico del asistente?"
