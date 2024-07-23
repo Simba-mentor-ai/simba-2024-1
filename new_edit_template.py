@@ -303,7 +303,6 @@ def loadTemplate(assistant):
 def success(line):
     st.write(line)
     if st.button(_("ok")):
-        # st.session_state["assistants"] = ef.getAssistants()
         st.session_state["assistants"] = ef.getUserAssistants()
         st.session_state["initialized"] = False   
         st.rerun() 

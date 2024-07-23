@@ -74,6 +74,8 @@ def delAssistant(id):
             dbm.delActivitiy(id)
             openai_client.beta.assistants.delete(id) 
             save_navigation(id, "deleted")
+            st.session_state["assistants"] = getUserAssistants()
+            st.session_state["selectedID"] = 0 
             st.rerun()  
 
 def setSelectedid(i):

@@ -51,6 +51,7 @@ def createActivity(activity):
 
     db.collection('activities').document(activity.id).create(values)
     db.collection('utilities').document('activity_codes').update({"codes" : codes})
+    addUserToActivity(activity.id,st.session_state["username"])
 
 def getActivities(userName):
 
@@ -108,28 +109,10 @@ def deleteUser(username) :
 
 def addUserFromCode(code,userName):
 
-    user = db.collection('users').document(userName)
-    userDoc = user.get()
     codes = db.collection('utilities').document('activity_codes').get().to_dict()["codes"]
     activityName = codes[code]
-    activity = db.collection('activities').document(activityName)
-    activityDoc = activity.get()
-
-    if activityDoc.exists and userDoc.exists:
-
-        activityDic = activityDoc.to_dict()
-        userDic = userDoc.to_dict()
-        role = userDic["role"]
-
-        if activityName not in userDic["activities"] :
-            userDic["activities"].append(activityName)
-            user.update(userDic)
-        
-        if userName not in activityDic["users"]:
-            activityDic["users"].append(userName)
-            activity.update(activityDic)
-            
-            return activityDic["name"]
+    name = addUserToActivity(activityName, userName)
+    return name
 
 def addUserToActivity(activityName,userName):
 
@@ -142,13 +125,16 @@ def addUserToActivity(activityName,userName):
 
         activityDic = activityDoc.to_dict()
         userDic = userDoc.to_dict()
-        role = userDic["role"]
 
-        activityDic["users"].append(userName)
-        userDic["activities"].append(activityName)
-
-        activity.update(activityDic)
-        user.update(userDic)
+        if activityName not in userDic["activities"] :
+            userDic["activities"].append(activityName)
+            user.update(userDic)
+        
+        if userName not in activityDic["users"]:
+            activityDic["users"].append(userName)
+            activity.update(activityDic)
+            
+            return activityDic["name"]
 
 def getRole(userName):
 
