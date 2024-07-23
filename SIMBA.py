@@ -9,7 +9,7 @@ _ = gettext.gettext
 
 set_streamlit_page_config_once()
 
-options.translate()
+_ = options.translate(_)
 
 def selectLanguage() :
     selected = options.languages[0]

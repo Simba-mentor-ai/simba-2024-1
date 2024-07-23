@@ -12,7 +12,7 @@ import database_manager as dbm
 
 _ = gettext.gettext
 
-options.translate()
+_ = options.translate(_)
 
 attitudes = options.attitudes
 teachtypes = options.teachtypes
@@ -47,7 +47,7 @@ def loadTemplate(assistant):
     desc = st.text_input(_("Modify the description or enter a new one"), value = "" if new else assistant["description"], placeholder = _("New description..."))
         
 
-    expert = st.checkbox("Expert mode (modify the prompt directly)")
+    expert = st.checkbox(_("Expert mode (modify the prompt directly)"))
 
     if expert :
         if new :
@@ -57,7 +57,7 @@ def loadTemplate(assistant):
         prompt = st.text_area("Enter the prompt", value=oldprompt,height=550)
     else :
         #Questions
-        if not new and not st.session_state[_("initialized")] :
+        if not new and not st.session_state["initialized"] :
                 st.session_state["nbQuestions"] = vals["nbQuestions"]
                 st.session_state["questions"] = vals["questions"]
         else :
@@ -111,11 +111,15 @@ def loadTemplate(assistant):
             st.write(_("### Activity's assistant instructions :"))
 
             #attitude
-            adj1 = st.selectbox(_("What attitude should the assistant have toward the students ?"), attitudes, index=0 if new else attitudes.index(vals["adj1"]))
+            attInd = 0
+            if vals["adj1"] in attitudes:
+                attInd = attitudes.index(vals["adj1"])
+
+            adj1 = st.selectbox(_("What attitude should the assistant have toward the students ?"), attitudes, index=0 if new else attInd)
 
             #teaching type
             # teachtype = st.selectbox(_("What should be the assistant's approach to teaching ?"), teachtypes, index=0 if new else teachtypes.index(vals["teaching_adj"]))
-            teachtype = "socratic"
+            teachtype = _("socratic")
 
             #giving answers
             giveAnswers = st.checkbox(_("The assistant should give an answer to the activity questions if the student asks for it."), value=False if new else vals["answers"])
@@ -213,12 +217,12 @@ def loadTemplate(assistant):
             oldEnd = datetime.datetime.strptime(assistant["metadata"]["startDate"], "%Y/%m/%d")
 
     with start :
-        startBool = st.checkbox("I want the activity to be accessible only from a certain day", value=oldStartBool)
+        startBool = st.checkbox(_("I want the activity to be accessible only from a certain day"), value=oldStartBool)
         if startBool:
             startDate = st.date_input("start date", value=oldStart)
     
     with end :
-        endBool = st.checkbox("I want the activity to be hidden after a certain day", value=oldEndBool)
+        endBool = st.checkbox(_("I want the activity to be hidden after a certain day"), value=oldEndBool)
         if endBool:
             endDate = st.date_input("end date", value=oldEnd)
 

@@ -8,7 +8,7 @@ import database_manager as dbm
 
 _ = gettext.gettext
 
-options.translate()
+_ = options.translate(_)
 
 # hide_bar= """
 #         <style>

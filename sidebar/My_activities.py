@@ -9,7 +9,7 @@ from authentication import authenticate, initSession
 
 _ = gettext.gettext
 
-options.translate()
+_ = options.translate(_)
 
 if "authentication_status" not in st.session_state or not st.session_state["authentication_status"]:
     authenticate()

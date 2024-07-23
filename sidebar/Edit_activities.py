@@ -9,7 +9,7 @@ from authentication import authenticate, initSession
 
 _ = gettext.gettext
 
-options.translate()
+_ = options.translate(_)
 
 # My activities/
 @st.experimental_dialog("Activity link")

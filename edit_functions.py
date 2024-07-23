@@ -9,7 +9,7 @@ from traces_helper import save_navigation
 _ = gettext.gettext
 openai_client = OpenAI()
 
-options.translate()
+_ = options.translate(_)
 
 def getAssistants():
     
