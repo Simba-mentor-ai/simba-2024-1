@@ -178,15 +178,6 @@ def saveConfig(config):
 
 
 # Admin special functions
-
-def initConfig():
-    config = []
-
-    with open('./auth_config/config.yaml') as file:
-        config = yaml.load(file, Loader=SafeLoader)
-
-    saveConfig(config)
-
 def updateActivities():
     
     activities = db.collection('activities').get()

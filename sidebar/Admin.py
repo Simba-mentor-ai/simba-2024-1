@@ -12,8 +12,5 @@ if st.button("Update activities"):
 if st.button("generate activity codes"):
     dbm.generateCodes()
 
-if st.button("init config"):
-    dbm.initConfig()
-
 if st.button("test email"):
     emails.send_email_gmail("SIMBA test", "If you can read this, it worked", "gabriel.ferrettini@gmail.com")
