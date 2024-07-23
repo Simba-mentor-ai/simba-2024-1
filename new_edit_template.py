@@ -288,7 +288,7 @@ def loadTemplate(assistant):
                         tool_resources = {}
                     activity = openai_client.beta.assistants.create(name = name, description = desc, instructions = instructions, tools=[{"type": "file_search"}], model="gpt-4-turbo",tool_resources=tool_resources, metadata=metadata)
                     dbm.createActivity(activity)
-                    save_navigation(assistant["id"], "created")
+                    save_navigation(activity.id, "created")
                     success(_("The new activity have been successfully created"))
                     
 

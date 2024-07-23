@@ -27,16 +27,17 @@ else:
 
     initSession()
     # #Language selection
-    # lang,stuff = st.columns([0.15,0.85])
-    # with lang:
-    #     st.selectbox("Language", options=options.languages, index=options.langSymbols.index(st.session_state["language"]), on_change=selectLanguage(), key="SelectedLanguage", label_visibility="hidden")
+    lang,stuff = st.columns([0.15,0.85])
+    with lang:
+        st.selectbox("Language", options=options.languages, index=options.langSymbols.index(st.session_state["language"]), on_change=selectLanguage(), key="SelectedLanguage", label_visibility="hidden")
 
-    # Title of the webpage
+    
 
     if "code" in st.query_params :
         name = dbm.addUserFromCode(st.query_params["code"],st.session_state["username"])
         st.success(_("The activity '{name}' have been added to your account.").format(name=name))
 
+    # Title of the webpage
     st.title(_("Welcome to SIMBA - your personal learning assistant"))
 
     # Using columns to place text and image side by side

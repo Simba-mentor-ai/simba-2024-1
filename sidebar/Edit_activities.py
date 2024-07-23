@@ -16,7 +16,7 @@ options.translate()
 def displayCode(code):
     # st.write("give this code to your students to give them access to the activity :")
     # st.markdown(code)
-    st.write("give this url to your students to give them access to the activity  :")
+    st.write("This is the url that you should share with your students to give them access to your activity. Please, right-click on the link and select 'copy link' before pasting it.")
     st.markdown(f"[share](/?code={code})")
 
 if "authentication_status" not in st.session_state or not st.session_state["authentication_status"]:
