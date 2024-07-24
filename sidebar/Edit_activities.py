@@ -69,7 +69,6 @@ else:
             
             if st.button(_("delete selected activity"),type="primary", use_container_width=True):
                 edit_functions.delAssistant(st.session_state["selectedID"])
-                st.session_state["assistants"] = edit_functions.getUserAssistants()
 
             if st.button(_("get this activity's access link"), use_container_width=True):
                 code = dbm.getActivityCode(st.session_state["selectedID"])

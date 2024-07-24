@@ -21,7 +21,7 @@ def disable_activity_threads(activity_id):
     userids = []
     if activityDoc.exists:
         dic = activityDoc.to_dict()
-        userids = dic["students"] + dic["teachers"]
+        userids = dic["users"]
 
     for id in userids :
         id = st.session_state["username"]

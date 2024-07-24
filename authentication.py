@@ -85,6 +85,9 @@ def authenticate():
 
     #Forgot username
     elif st.session_state["auth_display"] == "fgusr" :
+        if st.sidebar.button(_("Login"), use_container_width=True):
+            st.session_state["auth_display"] = "login"
+            st.rerun()
 
         username, email = st.session_state["authenticator"].forgot_username(fields = {'Form name': _('Forgot username'),
                                                                                                             'Email': _('Email'),
@@ -106,6 +109,10 @@ Please, delete this message after receiving it to ensure it is not stolen.""").f
 
     #Forgot password
     elif st.session_state["auth_display"] == "fgpwd" :
+        if st.sidebar.button(_("Login"), use_container_width=True):
+            st.session_state["auth_display"] = "login"
+            st.rerun()
+
         username, email, newPwd = st.session_state["authenticator"].forgot_password(fields = {'Form name': _('Forgot password'),
                                                                                                                                    'Username': _('Username'),
                                                                                                                                    'Submit': _('Submit')})

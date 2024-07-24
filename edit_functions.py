@@ -76,6 +76,9 @@ def delAssistant(id):
             save_navigation(id, "deleted")
             st.session_state["assistants"] = getUserAssistants()
             st.session_state["selectedID"] = 0 
+            st.session_state["nbQuestions"] = 1
+            st.session_state["questions"] = [""]
+            st.session_state["initialized"] = False 
             st.rerun()  
 
 def setSelectedid(i):

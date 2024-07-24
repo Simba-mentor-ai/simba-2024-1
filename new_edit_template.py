@@ -58,6 +58,7 @@ def loadTemplate(assistant):
     else :
         #Questions
         if not new and not st.session_state["initialized"] :
+                print("here")
                 st.session_state["nbQuestions"] = vals["nbQuestions"]
                 st.session_state["questions"] = vals["questions"]
         else :
@@ -112,7 +113,7 @@ def loadTemplate(assistant):
 
             #attitude
             attInd = 0
-            if vals["adj1"] in attitudes:
+            if not new and vals["adj1"] in attitudes:
                 attInd = attitudes.index(vals["adj1"])
 
             adj1 = st.selectbox(_("What attitude should the assistant have toward the students ?"), attitudes, index=0 if new else attInd)
@@ -214,7 +215,7 @@ def loadTemplate(assistant):
 
         if "endDate" in assistant["metadata"].keys():
             oldEndBool = True
-            oldEnd = datetime.datetime.strptime(assistant["metadata"]["startDate"], "%Y/%m/%d")
+            oldEnd = datetime.datetime.strptime(assistant["metadata"]["endDate"], "%Y/%m/%d")
 
     with start :
         startBool = st.checkbox(_("I want the activity to be accessible only from a certain day"), value=oldStartBool)
@@ -293,6 +294,9 @@ def loadTemplate(assistant):
                     activity = openai_client.beta.assistants.create(name = name, description = desc, instructions = instructions, tools=[{"type": "file_search"}], model="gpt-4-turbo",tool_resources=tool_resources, metadata=metadata)
                     dbm.createActivity(activity)
                     save_navigation(activity.id, "created")
+                    st.session_state["nbQuestions"] = 1
+                    st.session_state["questions"] = [""]
+                    st.session_state["initialized"] = False 
                     success(_("The new activity have been successfully created"))
                     
 
@@ -331,6 +335,9 @@ def warning_edit(assistant,name,desc,instructions,metadata):
             chatbot_helper.disable_activity_threads(assistant["id"])
             status.update(label=_("Activity successfully updated!"),state='complete')
             save_navigation(assistant["id"], "updated")
-            time.sleep(1)
             st.session_state["assistants"] = ef.getUserAssistants()
+            st.session_state["nbQuestions"] = 1
+            st.session_state["questions"] = [""]
+            st.session_state["initialized"] = False 
+            time.sleep(1)
             st.rerun()
