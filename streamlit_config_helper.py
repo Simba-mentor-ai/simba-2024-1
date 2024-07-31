@@ -5,11 +5,12 @@ def set_streamlit_page_config_once():
     try:
         streamlit.set_page_config(    
             page_title="SIMBA",
-            page_icon="😸"
+            page_icon="😸",
+            layout="wide"
         )
     except streamlit.errors.StreamlitAPIException as e:
         if "can only be called once per app" in e.__str__():
             # ignore this error
-            print("--------- Ignoring error ---------")
+            # print("--------- Ignoring error ---------")
             return
         raise e
