@@ -6,10 +6,10 @@ _ = gettext.gettext
 
 def translate(basefunc):
     if "language" not in st.session_state:
-        st.session_state["language"] = "en"
+        st.session_state["language"] = "es"
         func = basefunc
 
-    elif st.session_state["language"] != "en" :
+    if st.session_state["language"] != "en" :
         print("translating", st.session_state["language"])
         localizator = gettext.translation('base', localedir='locales', languages=[st.session_state["language"]])
         localizator.install()
@@ -23,9 +23,12 @@ def translate(basefunc):
 
 _ = translate(_)
 
-languages = ["english 🇬🇧","español 🇪🇸","français 🇫🇷"]
-langSymbols = ["en","es","fr"]
-langCorrespondance = {"english 🇬🇧" : "en", "español 🇪🇸" : "es", "français 🇫🇷" : "fr"}
+# languages = ["english 🇬🇧","español 🇪🇸","français 🇫🇷"]
+# langSymbols = ["en","es","fr"]
+# langCorrespondance = {"english 🇬🇧" : "en", "español 🇪🇸" : "es", "français 🇫🇷" : "fr"}
+languages = ["english 🇬🇧","español 🇪🇸"]
+langSymbols = ["en","es"]
+langCorrespondance = {"english 🇬🇧" : "en", "español 🇪🇸" : "es"}
 
 attitudes = [_("friendly"),_("informal"),_("formal")]
 teachtypes = [_("socratic"),_("other")]
