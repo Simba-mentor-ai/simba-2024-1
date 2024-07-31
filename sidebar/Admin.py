@@ -14,3 +14,6 @@ if st.button("generate activity codes"):
 
 if st.button("test email"):
     emails.send_email_gmail("SIMBA test", "If you can read this, it worked", "gabriel.ferrettini@gmail.com")
+
+if st.button("cleanupAIED"):
+    dbm.delAIEDUsers()

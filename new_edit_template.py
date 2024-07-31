@@ -58,7 +58,6 @@ def loadTemplate(assistant):
     else :
         #Questions
         if not new and not st.session_state["initialized"] :
-                print("here")
                 st.session_state["nbQuestions"] = vals["nbQuestions"]
                 st.session_state["questions"] = vals["questions"]
         else :

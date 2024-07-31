@@ -11,6 +11,6 @@ def set_streamlit_page_config_once():
     except streamlit.errors.StreamlitAPIException as e:
         if "can only be called once per app" in e.__str__():
             # ignore this error
-            print("--------- Ignoring error ---------")
+            # print("--------- Ignoring error ---------")
             return
         raise e

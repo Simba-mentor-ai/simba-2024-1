@@ -1,11 +1,5 @@
 from st_pages import Page, show_pages, hide_pages
 import streamlit as st
-import options
-import gettext
-
-_ = gettext.gettext
-
-_ = options.translate(_)
 
 def clearSidebar():
     # show_pages([Page("SIMBA.py", _("SIMBA main page"), "😸")])

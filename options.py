@@ -10,7 +10,7 @@ def translate(basefunc):
         func = basefunc
 
     if st.session_state["language"] != "en" :
-        print("translating", st.session_state["language"])
+        # print("translating", st.session_state["language"])
         localizator = gettext.translation('base', localedir='locales', languages=[st.session_state["language"]])
         localizator.install()
         _ = localizator.gettext 

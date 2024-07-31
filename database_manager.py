@@ -107,6 +107,18 @@ def deleteUser(username) :
         
         userdoc = db.collection('users').document(username).delete()
 
+def deleteAIEDUser(username) :
+
+    userdoc = db.collection('users').document(username).get()
+
+    if userdoc.exists :
+        userdic = userdoc.to_dict()
+        coursedic = db.collection("courses").document("AIED").get().to_dict()
+        coursedic["teachers"].remove(username)
+        
+        db.collection("courses").document("AIED").update(coursedic)
+        db.collection('users').document(username).delete()
+
 def addUserFromCode(code,userName):
 
     codes = db.collection('utilities').document('activity_codes').get().to_dict()["codes"]
@@ -217,3 +229,20 @@ def generateCodes():
         db.collection('activities').document(activity.id).update(activitydic)
 
     db.collection('utilities').document('activity_codes').update({"codes" : codes})
+
+def delAIEDUsers():
+
+    coursedic = db.collection("courses").document("AIED").get().to_dict()
+    teachers = coursedic["teachers"]
+
+    print(teachers)
+
+    for teacher in teachers :
+        if teacher[0:4] == "AIED":
+            collection = db.collection("users").document(teacher).collection("activity_threads").get()
+            # print(teacher,collection)
+            if len(collection)>0:
+                print("keeping", teacher)
+            else :
+                print("deleting", teacher)
+                deleteAIEDUser(teacher)
