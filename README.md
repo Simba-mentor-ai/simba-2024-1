@@ -17,6 +17,17 @@ https://simba-tutor.streamlit.app/ is the stable version (based on the main bran
 https://simba-test.streamlit.app/ is the test version (based on the test branch)
 https://simba-aied.streamlit.app/ is a legacy version presented at the AIED workshop (based on the AIED branch)
 
+you can find the documentations for streamlit here : https://docs.streamlit.io/
+and for the openAI python API in its github : https://github.com/openai/openai-python and here : https://github.com/openai/openai-python/blob/main/api.md
+
+all the accounts for this project (streamlit.io, firebase, github) can be managed with a specific email address. Ask Esteban Villalobos or Gabriel Ferrettini for it.
+
+The whole principle of the project is to use streamlit as a front end, allowing us to display chatbots hosted on openai. The data about the users and the chatbots is
+kept in a google firebase database, with a simple structure :
+each activity have an ID and its threads for conversations with the users
+each user, along with his credentials have a role (teacher or student) and the list of the activity IDs they have access to.
+A teacher can give access to his activities through an access link obtained in the "edit activity" page.
+
 # Project files
 
 Here is a breakdown of the content of the files and folders :
