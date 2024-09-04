@@ -1,6 +1,6 @@
 # SIMBA-2024-1
 
-Implementation of SIMBA, an educational chatbot meant to support students' learning strategies. This implementation was developed in collaboration with Chile's Millenium Nucleus of Higher Education (NMEdSup).
+Implementation of SIMBA, an educational chatbot meant to support students' learning strategies. This implementation was developed by IRIT in the context of the ANR JCJC LASER project and in collaboration with Chile's Millenium Nucleus of Higher Education (NMEdSup). 
  
 # Overview
 
