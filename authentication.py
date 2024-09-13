@@ -45,7 +45,7 @@ def initAuth():
         st.session_state["auth_config"]['cookie']['expiry_days']
     )
 
-
+#Function to be used on every page
 def authenticate():
 
     clearSidebar()
@@ -56,6 +56,7 @@ def authenticate():
     if "username" in st.session_state:
         st.session_state["oldUser"] = st.session_state["username"]
 
+    #State indicating the page to display
     if "auth_display" not in st.session_state :
         st.session_state["auth_display"] = "login"
 

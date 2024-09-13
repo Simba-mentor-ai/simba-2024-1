@@ -11,6 +11,9 @@ openai_client = OpenAI()
 
 _ = options.translate(_)
 
+attitudes = [_("friendly"),_("informal"),_("formal")]
+teachtypes = [_("socratic"),_("other")]
+
 def getAssistants():
     
     assistantslist = openai_client.beta.assistants.list()
@@ -159,7 +162,7 @@ def extractVals(prompt):
     if checkstring in prompt:
         result = re.search(_('You are a (.*) '), prompt)
         if result :
-            if result in options.attitudes:
+            if result in attitudes:
                 vals["adj1"] = result.group(1).split(" ")[0]
         
 
@@ -175,7 +178,7 @@ def extractVals(prompt):
                 result = result.group(1).split(" ")[0]
             else :
                 result = result.group(1)
-            if result in options.teachtypes:
+            if result in teachtypes:
                 vals["teaching_adj"] = result
         
 
