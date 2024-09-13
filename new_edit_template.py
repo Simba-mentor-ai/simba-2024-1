@@ -14,9 +14,9 @@ _ = gettext.gettext
 
 _ = options.translate(_)
 
-attitudes = options.attitudes
-teachtypes = options.teachtypes
-accepted_extensions = options.accepted_extensions
+attitudes = [_("friendly"),_("informal"),_("formal")]
+teachtypes = [_("socratic"),_("other")]
+accepted_extensions = [".c",".cs",".cpp",".doc",".docx",".html",".java",".json",".md",".pdf",".php",".pptx",".py",".rb",".tex",".txt",".css",".js",".sh",".ts"]
 openai_client = OpenAI()
 
 
@@ -290,7 +290,7 @@ def loadTemplate(assistant):
                         tool_resources = {"file_search": {"vector_store_ids": [vector_store.id]}}
                     else :
                         tool_resources = {}
-                    activity = openai_client.beta.assistants.create(name = name, description = desc, instructions = instructions, tools=[{"type": "file_search"}], model="gpt-4-turbo",tool_resources=tool_resources, metadata=metadata)
+                    activity = openai_client.beta.assistants.create(name = name, description = desc, instructions = instructions, tools=[{"type": "file_search"}], model="gpt-4o-mini",tool_resources=tool_resources, metadata=metadata)
                     dbm.createActivity(activity)
                     save_navigation(activity.id, "created")
                     st.session_state["nbQuestions"] = 1
