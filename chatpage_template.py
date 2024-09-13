@@ -95,15 +95,16 @@ def load_template(activity_id, assistant_id, title):
 
         prompt = st.chat_input(_("What is up?"), on_submit=disable, disabled=st.session_state["text_disabled"])
         if prompt and thread_id is not None:
-            disable()
             with chatContainer:
                 # Display user message in chat message container
-                st.chat_message("user").markdown(prompt)
-                # Add user message to chat history
-                st.session_state.messages.append({"role": "user", "content": prompt})
+                with st.chat_message("user") :
+                    st.markdown(prompt)
 
+                # Add user message to chat history
                 logging.info('Creating message in thread...')
                 with st.status("..."):
+                    disable()
+                    st.session_state.messages.append({"role": "user", "content": prompt})
                     st.write(_("Please, wait a moment, I'm thinking about my answer..."))
                     response_message = chatbot_helper.create_message(prompt, thread_id, assistant_id)        
                     logging.info(f'Response message: {response_message}')
