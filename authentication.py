@@ -47,7 +47,7 @@ def initAuth():
 
 #Function to be used on every page
 def authenticate():
-    st.session_state["language"] = "en"
+    _ = gettext.gettext
     _ = options.translate(_)
     clearSidebar()
     
