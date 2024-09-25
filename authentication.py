@@ -45,9 +45,10 @@ def initAuth():
         st.session_state["auth_config"]['cookie']['expiry_days']
     )
 
-
+#Function to be used on every page
 def authenticate():
-
+    _ = gettext.gettext
+    _ = options.translate(_)
     clearSidebar()
     
     if "authenticator" not in st.session_state:
@@ -56,6 +57,7 @@ def authenticate():
     if "username" in st.session_state:
         st.session_state["oldUser"] = st.session_state["username"]
 
+    #State indicating the page to display
     if "auth_display" not in st.session_state :
         st.session_state["auth_display"] = "login"
 
@@ -102,10 +104,6 @@ Please, delete this message after receiving it to ensure it is not stolen.""").f
 
         elif username == False:
             st.error(_('Email not found'))
-
-        if st.sidebar.button(_("Login")):
-            st.session_state["auth_display"] = "login"
-            st.rerun()
 
     #Forgot password
     elif st.session_state["auth_display"] == "fgpwd" :
