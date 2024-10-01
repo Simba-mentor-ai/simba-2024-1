@@ -3,12 +3,14 @@ import logging
 import sys
 import gettext
 import chatbot_helper
+import options
 # import chatbot_eval as ce
 from traces_helper import save_navigation
 # from trulens_eval import Tru
 # from streamlit_js_eval import streamlit_js_eval
 
 _ = gettext.gettext
+_ = options.translate(_)
 
 put_all_messages = False
 means = False
@@ -26,7 +28,7 @@ def enable():
 # )
 
 def load_template(activity_id, assistant_id, title):
-
+    # _ = options.translate(_)
     save_navigation(activity_id, "accessed")
     if "text_disabled" not in st.session_state:
         st.session_state["text_disabled"] = False

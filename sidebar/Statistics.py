@@ -10,14 +10,13 @@ from authentication import authenticate, initSession
 
 _ = gettext.gettext
 
-_ = options.translate(_)
-
 
 if "authentication_status" not in st.session_state or not st.session_state["authentication_status"]:
     authenticate()
 
 else:
     initSession()
+    _ = options.translate(_)
     today = datetime.date.today()
 
     # st.session_state["assistants"] = edit_functions.getAssistants()

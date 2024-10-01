@@ -8,16 +8,6 @@ import database_manager as dbm
 _ = gettext.gettext
 
 set_streamlit_page_config_once()
-
-_ = options.translate(_)
-
-def selectLanguage() :
-    selected = options.languages[0]
-    if "SelectedLanguage" in st.session_state and st.session_state["SelectedLanguage"] :
-        selected = st.session_state["SelectedLanguage"]
-        if options.langCorrespondance[selected] != st.session_state["language"]:
-            st.session_state["language"] = options.langCorrespondance[selected]
-            st.rerun()
         
 if "authentication_status" not in st.session_state or not st.session_state["authentication_status"]:
     
@@ -26,12 +16,10 @@ if "authentication_status" not in st.session_state or not st.session_state["auth
 else:
 
     initSession()
+    _ = options.translate(_)
     # #Language selection
-    lang,stuff = st.columns([0.15,0.85])
-    with lang:
-        st.selectbox("Language", options=options.languages, index=options.langSymbols.index(st.session_state["language"]), on_change=selectLanguage(), key="SelectedLanguage", label_visibility="hidden")
 
-    
+    options.languageSelector()
 
     if "code" in st.query_params :
         name = dbm.addUserFromCode(st.query_params["code"],st.session_state["username"])

@@ -157,6 +157,27 @@ def getRole(userName):
     
     return role
 
+def getLanguage(userName):
+
+    language = "en"
+    userDoc = db.collection('users').document(userName).get()
+    if userDoc.exists :
+        dic = userDoc.to_dict()
+        if "language" in dic.keys():
+            language = dic["language"]
+        else :
+            language = "en"
+            dic["language"] = language
+            db.collection('users').document(userName).update(dic)
+
+    return language
+
+def setLanguage(userName,language):
+    userDoc = db.collection('users').document(userName).get()
+    if userDoc.exists :
+        dic = userDoc.to_dict()
+        dic["language"] = language
+        db.collection('users').document(userName).update(dic)
 
 # Credentials
 def getConfig():
