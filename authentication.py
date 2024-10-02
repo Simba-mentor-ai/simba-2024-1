@@ -10,31 +10,6 @@ _ = gettext.gettext
 
 _ = options.translate(_)
 
-# hide_bar= """
-#         <style>
-#         [data-testid="stSidebar"][aria-expanded="true"] > div:first-child {
-#             visibility:hidden;
-#             width: 0px;
-#         }
-#         [data-testid="stSidebar"][aria-expanded="false"] > div:first-child {
-#             visibility:hidden;
-#         }
-#         </style>
-#     """
-
-# def getConfig():
-#     config = []
-
-#     with open('./auth_config/config.yaml') as file:
-#         config = yaml.load(file, Loader=SafeLoader)
-
-#     return config
-
-
-# def saveConfig(config):
-#     with open('./auth_config/config.yaml', 'w') as file:
-#         yaml.dump(config, file, default_flow_style=False)
-
 def initAuth():
     st.session_state["auth_config"] = dbm.getConfig()
     
@@ -45,9 +20,10 @@ def initAuth():
         st.session_state["auth_config"]['cookie']['expiry_days']
     )
 
-
+#Function to be used on every page
 def authenticate():
-
+    _ = gettext.gettext
+    _ = options.translate(_)
     clearSidebar()
     
     if "authenticator" not in st.session_state:
@@ -56,6 +32,7 @@ def authenticate():
     if "username" in st.session_state:
         st.session_state["oldUser"] = st.session_state["username"]
 
+    #State indicating the page to display
     if "auth_display" not in st.session_state :
         st.session_state["auth_display"] = "login"
 

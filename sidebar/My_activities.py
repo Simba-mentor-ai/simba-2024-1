@@ -70,11 +70,12 @@ else:
     with activityContainer:
         if st.session_state["selected activity"]!="" and st.session_state["SelectedName"] != None:
             # if get_auth_status():
-                assistant = st.session_state["assistants"][st.session_state["selected activity"]]
-                chatpage_template.load_template(
-                    activity_id=assistant["id"],
-                    assistant_id=assistant["id"],
-                    title=assistant["name"]
-                )
+                with st.spinner(_("Loading activity.")):
+                    assistant = st.session_state["assistants"][st.session_state["selected activity"]]
+                    chatpage_template.load_template(
+                        activity_id=assistant["id"],
+                        assistant_id=assistant["id"],
+                        title=assistant["name"]
+                    )
 
     

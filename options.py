@@ -6,7 +6,7 @@ _ = gettext.gettext
 
 def translate(basefunc):
     if "language" not in st.session_state:
-        st.session_state["language"] = "es"
+        st.session_state["language"] = "en"
         func = basefunc
 
     if st.session_state["language"] != "en" :
@@ -30,10 +30,5 @@ languages = ["english 🇬🇧","español 🇪🇸"]
 langSymbols = ["en","es"]
 langCorrespondance = {"english 🇬🇧" : "en", "español 🇪🇸" : "es"}
 
-attitudes = [_("friendly"),_("informal"),_("formal")]
-teachtypes = [_("socratic"),_("other")]
 
-
-
-accepted_extensions = [".c",".cs",".cpp",".doc",".docx",".html",".java",".json",".md",".pdf",".php",".pptx",".py",".rb",".tex",".txt",".css",".js",".sh",".ts"]
 
