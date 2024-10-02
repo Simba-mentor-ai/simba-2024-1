@@ -267,3 +267,21 @@ def delAIEDUsers():
             else :
                 print("deleting", teacher)
                 deleteAIEDUser(teacher)
+
+def delUser(id):
+    userdb = db.collection('users').document(id)
+    credentialsdb = db.collection('utilities').document('credentials')
+    user = userdb.get()
+
+    if user.exists :
+
+        activities = user.to_dict()["activities"]
+
+        for aid in activities:
+            activitydb = db.collection('activities').document(aid)
+            activitydic = activitydb.get().to_dict()
+            
+
+        credentials = credentialsdb.get().to_dict()
+        credentials["credentials"]["credentials"]["usernames"].pop(id)
+
