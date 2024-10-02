@@ -67,7 +67,7 @@ def authenticate():
             st.rerun()
 
         try:
-            email, username, name = st.session_state["authenticator"].register_user(preauthorization=False,
+            email, username, name = st.session_state["authenticator"].register_user(
                                     fields={ 'Form name': _('Register User'),
                                             'Username': _('Username'),
                                             'Email': _('Email'),
