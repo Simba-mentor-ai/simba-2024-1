@@ -180,7 +180,7 @@ def setLanguage(userName,language):
         db.collection('users').document(userName).update(dic)
 
 # Credentials
-def getConfig():
+def     getConfig():
 
     cred = db.collection("utilities").document("credentials").get().to_dict()
 

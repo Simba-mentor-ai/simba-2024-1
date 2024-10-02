@@ -10,31 +10,6 @@ _ = gettext.gettext
 
 _ = options.translate(_)
 
-# hide_bar= """
-#         <style>
-#         [data-testid="stSidebar"][aria-expanded="true"] > div:first-child {
-#             visibility:hidden;
-#             width: 0px;
-#         }
-#         [data-testid="stSidebar"][aria-expanded="false"] > div:first-child {
-#             visibility:hidden;
-#         }
-#         </style>
-#     """
-
-# def getConfig():
-#     config = []
-
-#     with open('./auth_config/config.yaml') as file:
-#         config = yaml.load(file, Loader=SafeLoader)
-
-#     return config
-
-
-# def saveConfig(config):
-#     with open('./auth_config/config.yaml', 'w') as file:
-#         yaml.dump(config, file, default_flow_style=False)
-
 def initAuth():
     st.session_state["auth_config"] = dbm.getConfig()
     
@@ -65,13 +40,12 @@ def authenticate():
 
     #Register new user
     if st.session_state["auth_display"] == "register" :
-
         if st.sidebar.button(_("Login"), use_container_width=True):
             st.session_state["auth_display"] = "login"
             st.rerun()
 
         try:
-            email, username, name = st.session_state["authenticator"].register_user(preauthorization=False,
+            email, username, name = st.session_state["authenticator"].register_user(
                                     fields={ 'Form name': _('Register User'),
                                             'Username': _('Username'),
                                             'Email': _('Email'),
@@ -131,7 +105,7 @@ Please, modify it as soon as possible from the main page to ensure it is not sto
     elif st.session_state["auth_display"] == "login" :
 
 
-        email, username, name = st.session_state["authenticator"].login(
+        st.session_state["authenticator"].login(
             fields = {
                 'Form name':_('Login'), 
                 'Username':_('Username'), 

@@ -16,7 +16,7 @@ def displayCode(code):
     st.write("This is the url that you should share with your students to give them access to your activity. Please, right-click on the link and select 'copy link' before pasting it.")
     st.markdown(f"[share](/?code={code})")
 
-if "authentication_status" not in st.session_state or not st.session_state["authentication_status"]:
+if "authentication_status" not in st.session_state or st.session_state["authentication_status"]==False:
     authenticate()
 
 else:
