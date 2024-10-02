@@ -38,7 +38,6 @@ def authenticate():
 
     #Register new user
     if st.session_state["auth_display"] == "register" :
-
         if st.sidebar.button(_("Login"), use_container_width=True):
             st.session_state["auth_display"] = "login"
             st.rerun()
@@ -80,10 +79,6 @@ Please, delete this message after receiving it to ensure it is not stolen.""").f
         elif username == False:
             st.error(_('Email not found'))
 
-        if st.sidebar.button(_("Login")):
-            st.session_state["auth_display"] = "login"
-            st.rerun()
-
     #Forgot password
     elif st.session_state["auth_display"] == "fgpwd" :
         if st.sidebar.button(_("Login"), use_container_width=True):
@@ -108,7 +103,7 @@ Please, modify it as soon as possible from the main page to ensure it is not sto
     elif st.session_state["auth_display"] == "login" :
 
 
-        email, username, name = st.session_state["authenticator"].login(
+        st.session_state["authenticator"].login(
             fields = {
                 'Form name':_('Login'), 
                 'Username':_('Username'), 
