@@ -159,7 +159,7 @@ def getRole(userName):
 
 
 # Credentials
-def getConfig():
+def     getConfig():
 
     cred = db.collection("utilities").document("credentials").get().to_dict()
 
