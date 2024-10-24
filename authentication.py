@@ -17,7 +17,8 @@ def initAuth():
         st.session_state["auth_config"]['credentials'],
         st.session_state["auth_config"]['cookie']['name'],
         st.session_state["auth_config"]['cookie']['key'],
-        st.session_state["auth_config"]['cookie']['expiry_days']
+        st.session_state["auth_config"]['cookie']['expiry_days'],
+        auto_hash=False
     )
 
 #Function to be used on every page
@@ -59,6 +60,7 @@ def authenticate():
                 st.rerun()
         except Exception as e:
             st.error(e)
+            
 
     #Forgot username
     elif st.session_state["auth_display"] == "fgusr" :
