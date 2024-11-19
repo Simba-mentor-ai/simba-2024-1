@@ -17,7 +17,8 @@ def initAuth():
         st.session_state["auth_config"]['credentials'],
         st.session_state["auth_config"]['cookie']['name'],
         st.session_state["auth_config"]['cookie']['key'],
-        st.session_state["auth_config"]['cookie']['expiry_days']
+        st.session_state["auth_config"]['cookie']['expiry_days'],
+        auto_hash=False
     )
 
 #Function to be used on every page
@@ -26,8 +27,6 @@ def authenticate():
     _ = options.translate(_)
     clearSidebar()
     
-    options.languageSelector()
-
     if "authenticator" not in st.session_state:
         initAuth()
 
@@ -60,6 +59,7 @@ def authenticate():
                 st.rerun()
         except Exception as e:
             st.error(e)
+            
 
     #Forgot username
     elif st.session_state["auth_display"] == "fgusr" :
@@ -133,6 +133,8 @@ Please, modify it as soon as possible from the main page to ensure it is not sto
                 st.session_state["auth_display"] = "fgusr"
                 st.rerun()
 
+        # elif st.session_state["authentication_status"]:
+
         
 def resetPwd():
 
@@ -163,14 +165,10 @@ def updateUsr():
 
 def initSession():
     if "session_initiated" not in st.session_state or not st.session_state["session_initiated"] or st.session_state["oldUser"] != st.session_state["username"]:
-        print("init", st.session_state["session_initiated"], st.session_state["oldUser"], st.session_state["username"])
         st.session_state["UserRole"] = dbm.getRole(st.session_state["username"])
-        st.session_state["language"] = dbm.getLanguage(st.session_state["username"])
-        st.session_state["SelectedLanguage"] = options.languages[options.langSymbols.index(st.session_state["language"])]
         loadSidebar()
         st.session_state["authenticator"].logout(location='sidebar')
         st.session_state["session_initiated"] = True
-        st.session_state["oldUser"] = st.session_state["username"]
 
     else :
         st.session_state["authenticator"].logout(location='sidebar')

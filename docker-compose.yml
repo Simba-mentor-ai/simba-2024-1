@@ -1,0 +1,21 @@
+
+services:
+  simba-app:
+    build: .
+    container_name: simba-app
+    network_mode: "host"
+    # env_file: .env
+    # environment:
+    #   MYSQL_ROOT_PASSWORD: ${MYSQL_ROOT_PASSWORD}
+    #   MYSQL_USER: ${MYSQL_USER}
+    #   MYSQL_PASSWORD: ${MYSQL_PASSWORD}
+    #   MYSQL_DATABASE: ${MYSQL_DATABASE}
+    ports:
+      - "8501:8501"
+    volumes:
+      - .:/app
+      - .env:/app/.env
+    # entrypoint: ["streamlit", "run", "dashboard/dashboard.py"]
+    #, "--server.address=0.0.0.0"]
+    entrypoint: ["streamlit", "run", "SIMBA.py"]
+    # , "--server.address=0.0.0.0"]
