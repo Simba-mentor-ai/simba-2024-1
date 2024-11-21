@@ -3,7 +3,7 @@
 import altair as alt
 import pandas as pd
 import streamlit as st
-from dashboard import cluster_students
+# from dashboard import cluster_students
 from dashboard.feature_extractor import ConversationFeatureExtractor
 from scipy.stats import zscore
 from streamlit_echarts import st_echarts
@@ -16,7 +16,8 @@ class ConversationStats():
         self.df = df
         self.user_stats = ConversationFeatureExtractor(self.df).extract_features().fillna(0)
 
-    def create_overview(self):
+    def create(self):
+
         # 1st row - Overall statistics
         with st.container():
             self.get_overall_stats()
@@ -25,15 +26,30 @@ class ConversationStats():
         with st.container():
             self.get_conversation_stats()
 
+        # with st.container():
+        #     self.get_activity_stats()
+
         # 3rd row - Conversation grid and tree
         with st.container():
-            col1, col2 = st.columns(2)
-            with col1:
-                # self.get_conversation_tree()
-                self.get_activity_graph()
+            # col1, col2 = st.columns(2)
+            # with col1:
+            #     # self.get_conversation_tree()
+            #     # self.get_activity_graph()
+            #     self.get_activity_stats()
 
-            with col2:
-                self.get_conversation_grid()
+            # with col2:
+            self.get_conversation_grid()
+
+    def get_activity_stats(self):
+        # plot a bar chart of the number of messages per activity and the total conversation length, ordered by the date of the first message
+        st.write("### Activity Statistics")
+        activity_stats = self.user_stats\
+            .groupby('activity_id')\
+            .agg(num_student_messages=('user_turns', 'sum'),
+                num_messages=('total_turns', 'sum'))
+        
+        st.bar_chart(activity_stats)
+
 
     def get_conversation_stats(self):
         # 2nd Row - Top 25%, Bottom 25%, and suggested chart
@@ -41,26 +57,56 @@ class ConversationStats():
 
         col1, col2, col3 = st.columns(3)
 
-        # Top 25% students by message length
-        top_25 = self.user_stats.nlargest(int(len(self.user_stats) * 0.25), 'total_user_conversation_length')
-        top_25 = top_25.loc[:, ['user_id', 'total_user_conversation_length', 'median_user_response_length']]\
-            .rename(columns={'total_user_conversation_length': 'Conversation Length', 'median_user_response_length': 'Median Length'})
-        col1.write("Top 25% Students (Longest Conversations)")
-        col1.dataframe(top_25, height=250, hide_index=True)
+        # Top 5 students by message length
+        with col1:
+            top_5 = self.user_stats.nlargest(5, 'total_user_conversation_length')
+            col1.write("Top 5 Students (Longest Conversations) :clap:")
+            for i, row in enumerate(top_5.itertuples(), start=1):
+                col1.write(f"{i}. {row.user_id}")
+        
+        # bar chart of the quartiles by message length
+        with col2:
+            # student with no messages
+            no_messages = self.user_stats[self.user_stats['user_turns'] == 0]
+            no_messages['email'] = ''
+            no_messages = no_messages.loc[:, ['user_id', 'email']]
+            col2.write("Students with no messages :bangbang:")
+            col2.dataframe(no_messages, height=250, hide_index=True)   
+        
+        with col3:    
+            self.get_activity_stats()
+        #     st.write("Conversation Length by Quartile")
+        #     quartiles = self.user_stats['total_user_conversation_length'].quantile([0.25, 0.5, 0.75])
+        #     quartiles = quartiles.reset_index().rename(columns={'index': 'Quartile', 'total_user_conversation_length': 'Conversation Length'})
+        #     quartiles = self.user_stats.groupby(pd.qcut(self.user_stats['total_user_conversation_length'], 4))\
+        #         .size().reset_index(name='count')
+        #     quartiles['Quartile'] = quartiles['total_user_conversation_length'].astype(str)
+        #     quartiles = quartiles.drop(columns=['total_user_conversation_length'])
 
-        # Bottom 25% students by message length
-        bottom_25 = self.user_stats.nsmallest(int(len(self.user_stats) * 0.25), 'total_user_conversation_length')
-        bottom_25 = bottom_25.loc[:, ['user_id', 'total_user_conversation_length', 'median_user_response_length']]\
-            .rename(columns={'total_user_conversation_length': 'Conversation Length', 'median_user_response_length': 'Median Length'})
-        col2.write("Bottom 25% Students (Shortest Conversations)")
-        col2.dataframe(bottom_25, height=250, hide_index=True)
+        #     st.write("### Conversation Length by Quartile")
+        #     bar_chart = alt.Chart(quartiles).mark_bar().encode(
+        #         x='Quartile',
+        #         y='count',
+        #         color='Quartile'
+        #     ).properties(
+        #         width=400,
+        #         height=300
+        #     )
+        #     st.altair_chart(bar_chart, use_container_width=True)
 
-        # student with no messages
-        no_messages = self.user_stats[self.user_stats['user_turns'] == 0]
-        no_messages = no_messages.loc[:, ['user_id', 'total_user_conversation_length', 'median_user_response_length']]\
-            .rename(columns={'total_user_conversation_length': 'Conversation Length', 'median_user_response_length': 'Median Length'})
-        col3.write("Students with no messages")
-        col3.dataframe(no_messages, height=250, hide_index=True)   
+        # top_25 = self.user_stats.nlargest(int(len(self.user_stats) * 0.25), 'total_user_conversation_length')
+        # top_25 = top_25.loc[:, ['user_id', 'total_user_conversation_length', 'median_user_response_length']]\
+        #     .rename(columns={'total_user_conversation_length': 'Conversation Length', 'median_user_response_length': 'Median Length'})
+        # col1.write("Top 25% Students (Longest Conversations)")
+        # col1.dataframe(top_25, height=250, hide_index=True)
+
+        # # Bottom 25% students by message length
+        # bottom_25 = self.user_stats.nsmallest(int(len(self.user_stats) * 0.25), 'total_user_conversation_length')
+        # bottom_25 = bottom_25.loc[:, ['user_id', 'total_user_conversation_length', 'median_user_response_length']]\
+        #     .rename(columns={'total_user_conversation_length': 'Conversation Length', 'median_user_response_length': 'Median Length'})
+        # col2.write("Bottom 25% Students (Shortest Conversations)")
+        # col2.dataframe(bottom_25, height=250, hide_index=True)
+
 
     def get_overall_stats(self):
         total_students = self.df['user_id'].nunique()
@@ -70,56 +116,48 @@ class ConversationStats():
         median_user_response_length = self.df[self.df['role'] == 'user']['content'].str.len().median()
         median_model_response_length = self.df[self.df['role'] == 'model']['content'].str.len().median()
         average_conversation_duration = self.df.groupby('user_id')['timestamp'].apply(lambda x: x.max() - x.min()).mean()
+        average_conversation_duration = average_conversation_duration.total_seconds() / total_students
 
         # Display metrics
-        col1, col2, col3, col4, col5, col6, col7, col8 = st.columns(8)
+        col1, col2, col3, col4, col5, col6,  = st.columns(6)
         col1.metric("Total Students", total_students)
         col2.metric("Total Activities", total_activities)
-        col3.metric("Total User Turns", total_user_turns)
-        col4.metric("Total Model Turns", total_model_turns)
-        col5.metric("Median User Response Length", median_user_response_length)
-        col6.metric("Median Model Response Length", median_model_response_length)
-        average_conversation_duration_hours = average_conversation_duration.total_seconds() // 3600
-        average_conversation_duration_minutes = (average_conversation_duration.total_seconds() % 3600) // 60
-        col7.metric("Average Conversation Duration", f"{int(average_conversation_duration_hours)}h {int(average_conversation_duration_minutes)}m")
+        col3.metric("Total Number of \n\nStudents Messages", total_user_turns)
+        # col4.metric("Total SIMBA Messages", total_model_turns)
+        col4.metric("Median Number of \n\nCharacters in Student \n\nMessages", median_user_response_length)
+        col5.metric("Median Number of \n\nCharacters in SIMBA \n\nMessages", median_model_response_length)
+        average_conversation_duration_hours     = average_conversation_duration // 3600
+        average_conversation_duration_minutes   = (average_conversation_duration % 3600) // 60
+        col6.metric("Avg. time spent \n\nin conversations \n\nper student", f"{int(average_conversation_duration_hours)}h {int(average_conversation_duration_minutes)}m")
 
     def get_conversation_grid(self):
-        model_features = [  'total_turns','user_turns','model_turns',
-                            'avg_response_time_seconds','total_conversation_duration_seconds', 
-                            'avg_user_response_length','avg_model_response_length']
-        
-        clusters = cluster_students.run_clustering(self.user_stats, n_clusters=4, model_features=model_features)
-        
-    
-        # scatter plot of number of messages vs conversation length
-        st.write("### Conversation Length vs Number of Messages")
-        # centralize data to the origin by subtracting the mean
-        scatter_data = clusters.copy()
-        # standardize the data
-        scatter_data['norm__total_user_conversation_length'] = zscore(scatter_data['total_user_conversation_length'])
-        scatter_data['norm__user_turns'] = zscore(scatter_data['user_turns'])
-        # scatter_data['cluster'] = clusters['cluster']  # Add cluster information to the scatter data
-        
-        scatter = alt.Chart(scatter_data)\
-            .mark_circle()\
-            .encode(
-                x=alt.X('norm__total_user_conversation_length', 
-                        axis=alt.Axis(values=[0.5], grid=True)),
-                y=alt.Y('norm__user_turns', 
-                        axis=alt.Axis(values=[0.5], grid=True)),
-                size='median_user_response_length',
-                color='cluster:N',  # Color by cluster
-                tooltip=['user_id', 'total_user_conversation_length', 'user_turns', 'median_user_response_length', 'cluster']
-            ).properties(
-                width=800,
-                height=400
-            ).configure_axis(
-                domain=False
-            ).configure_view(
-                stroke=None
-            )
+        st.write("### Conversation Quadrant Chart")
+        # Calculate average conversation length and number of turns
+        avg_conversation_length = self.user_stats['total_user_conversation_length'].mean()
+        avg_turns = self.user_stats['user_turns'].mean()
 
-        st.altair_chart(scatter, use_container_width=True)
+        # Create a new column to classify students into quadrants
+        self.user_stats['quadrant'] = self.user_stats.apply(
+            lambda row: (
+            'Above Avg Length & Turns' if row['total_user_conversation_length'] > avg_conversation_length and row['user_turns'] > avg_turns else
+            'Above Avg Length & Below Avg Turns' if row['total_user_conversation_length'] > avg_conversation_length and row['user_turns'] <= avg_turns else
+            'Below Avg Length & Above Avg Turns' if row['total_user_conversation_length'] <= avg_conversation_length and row['user_turns'] > avg_turns else
+            'Below Avg Length & Turns'
+            ), axis=1
+        )
+
+        # Scatter plot of students in quadrants
+        scatter_plot = alt.Chart(self.user_stats).mark_circle(size=60).encode(
+            x=alt.X('total_user_conversation_length', title='Total Conversation Length'),
+            y=alt.Y('user_turns', title='Number of Turns'),
+            color=alt.Color('quadrant', title='Quadrant'),
+            tooltip=['user_id', 'total_user_conversation_length', 'user_turns']
+        ).properties(
+            width=600,
+            height=400
+        )
+
+        st.altair_chart(scatter_plot, use_container_width=True)
 
     def get_activity_graph(self):
         """
@@ -140,24 +178,6 @@ class ConversationStats():
                 elements["nodes"].append(user_node)
                 elements["edges"].append(edge)
 
-        # # Sample Data
-        # elements = {
-        #     "nodes": [
-        #         {"data": {"id": 1, "label": "PERSON", "name": "Streamlit"}},
-        #         {"data": {"id": 2, "label": "PERSON", "name": "Hello"}},
-        #         {"data": {"id": 3, "label": "PERSON", "name": "World"}},
-        #         {"data": {"id": 4, "label": "POST", "content": "x"}},
-        #         {"data": {"id": 5, "label": "POST", "content": "y"}},
-        #     ],
-        #     "edges": [
-        #         {"data": {"id": 6, "label": "FOLLOWS", "source": 1, "target": 2}},
-        #         {"data": {"id": 7, "label": "FOLLOWS", "source": 2, "target": 3}},
-        #         {"data": {"id": 8, "label": "POSTED", "source": 3, "target": 4}},
-        #         {"data": {"id": 9, "label": "POSTED", "source": 1, "target": 5}},
-        #         {"data": {"id": 10, "label": "QUOTES", "source": 5, "target": 4}},
-        #     ],
-        # }
-
         # Style node & edge groups
         node_styles = [
             NodeStyle("User", "#FF7F3E", "name", "person"),
@@ -166,8 +186,6 @@ class ConversationStats():
 
         edge_styles = [
             EdgeStyle("INTERACTS", caption='label', directed=False),
-            # EdgeStyle("POSTED", caption='label', directed=True),
-            # EdgeStyle("QUOTES", caption='label', directed=True),
         ]
 
         # Render the component
