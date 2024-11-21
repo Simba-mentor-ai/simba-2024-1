@@ -3,7 +3,7 @@ import pandas as pd
 import logging
 import gettext
 import options
-
+import database_manager as dbm
 from authentication import authenticate, initSession
 
 import plotly.figure_factory as ff
@@ -26,8 +26,9 @@ else:
         # Use full width of the page
         # st.set_page_config(layout="wide")
 
+        actIds = dbm.getActivities(st.session_state["username"])
         client = DataClient("https://simba.irit.fr")
-        data = client.get_data("conversations")
+        data = client.get_data("conversations",activities=actIds)
         df   = pd.DataFrame(data)
         df['course_id'] = 'thermo-2024-1'
         logging.info(f'loaded data: {df.shape[0]} rows')

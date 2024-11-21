@@ -13,7 +13,8 @@ class DataClient:
     def get_data(self,
                  endpoint='conversations', 
                  limit=1000,
-                 api_key='default'):
+                 api_key='default',
+                 activities=[]):
         
         headers = {
             'X-API-Key': api_key
