@@ -29,6 +29,7 @@ def loadTemplate(assistant):
 
     if not st.session_state["initialized"]:
         courses = dbm.getCourses(st.session_state["username"])
+        courses.insert(0,"New course")
 
     title = _("Create a new activity")
     if not new :
@@ -44,7 +45,7 @@ def loadTemplate(assistant):
     name = st.text_input(_("Activity's new name"), value = "" if new else assistant["name"], placeholder = _("New name..."))
 
     #Course name
-    selectedCourse = st.selectbox(_("Course"), ["New course"] + courses, index=0 if new else (courses.index(vals["courseName"])+1))
+    selectedCourse = st.selectbox(_("Course"), courses, index=0 if new else (courses.index(vals["courseName"])+1))
 
     if selectedCourse == "New course":
         writtenCourse = st.text_input(_("Enter the new course name"), value = "" if new else vals["courseName"], placeholder = _("New name..."))

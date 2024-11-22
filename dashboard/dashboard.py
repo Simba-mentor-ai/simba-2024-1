@@ -38,6 +38,9 @@ else:
             st.write("No data available.")
             st.stop()
         
+        courses = df["activity_course"].unique().tolist()
+        courses.insert(0,"All courses")
+        print(courses)
         classes = ['Greeting', 'Question', 'Answer', 'Feedback']
         # assign a random class to each message
         df['class'] = df['content'].apply(lambda x: classes[hash(x) % 4])
@@ -47,7 +50,26 @@ else:
             # Create two tabs
             tab1, tab2, tab3 = st.tabs(["Conversation Stats", "Student Stats", "Raw Data"])
             with tab1:
-                overview = dsh_overview_page.ConversationStats(df)
+                course,activity = st.columns([0.5,0.5])
+                with course :
+                    selectedCourse = st.selectbox("Course", courses, index=0)
+
+                if selectedCourse != "All courses":
+                    activityNames = df.loc[df["activity_course"] == selectedCourse]["activity_name"].unique().tolist()
+                else :
+                    activityNames = df["activity_name"].unique().tolist()
+
+                activityNames.insert(0,"All activities")
+                with activity :
+                    selectedActivity = st.selectbox("Activity", activityNames, index=0)
+                overviewDf = df
+
+                if selectedCourse != "All courses":
+                    overviewDf = overviewDf.loc[overviewDf["activity_course"] == selectedCourse]
+                if selectedActivity != "All activities":
+                    overviewDf = overviewDf.loc[overviewDf["activity_name"] == selectedActivity]
+
+                overview = dsh_overview_page.ConversationStats(overviewDf)
                 overview.create()
             with tab2:
                 students_tab = dsh_students_page.StudentStatsTab(df)
