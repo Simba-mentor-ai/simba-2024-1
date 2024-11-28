@@ -19,7 +19,10 @@ class DataClient:
         headers = {
             'X-API-Key': api_key
         }
-        response = requests.get(f'{self.base_url}/{endpoint}', headers=headers)
+        params = {}
+        if activities:
+            params['activities'] = activities
+        response = requests.get(f'{self.base_url}/{endpoint}', headers=headers, params=params)
 
         if response.status_code != 200:
             print('Failed to fetch data:', response.status_code)
