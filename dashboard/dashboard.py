@@ -46,7 +46,7 @@ else:
         else:
             logger.info(f'loaded data: {df.shape[0]} rows')
             
-        st.title("Student Interaction Dashboard")
+        st.title("SIMBA Interactions Dashboard")
         
         courses = df["activity_course"].sort_values().unique().tolist()
         courses.insert(0,"All courses")
@@ -82,7 +82,7 @@ else:
                 overview = dsh_overview_page.ConversationStats(overviewDf, df_features)
                 overview.create()
             with tab2:
-                students_tab = dsh_students_page.StudentStatsTab(overviewDf, df_features)
+                students_tab = dsh_students_page.StudentStatsTab(overviewDf, selectedActivity)
                 students_tab.create()
             with tab3:
                 raw_data = dsh_rawdata_page.RawDataTab(df, df_features)
