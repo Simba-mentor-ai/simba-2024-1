@@ -5,7 +5,7 @@ from openai import OpenAI
 import streamlit as st
 import logging
 import time
-import chatbot_eval as ce
+# import chatbot_eval as ce
 
 openai.api_key = st.secrets["OPENAI_API_KEY"]
 openai_client = OpenAI()
