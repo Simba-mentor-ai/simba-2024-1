@@ -30,13 +30,13 @@ else:
         # Use full width of the page
         # st.set_page_config(layout="wide")
 
-        actIds = dbm.getActivities(st.session_state["username"])
+        actIds = dbm.getActivitiesWorkshop(st.session_state["username"])
         client = DataClient("https://simba.irit.fr")
         logger.info(f'activities: {actIds}')
         
         data = client.get_data("conversations", activities=actIds)
 
-        df   = pd.DataFrame(data)
+        df = pd.DataFrame(data)
         df['course_id'] = df['activity_course'].apply(lambda x: hash(x) % 1000)
         df['timestamp'] = pd.to_datetime(df['timestamp'])
 

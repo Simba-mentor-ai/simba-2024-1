@@ -67,6 +67,25 @@ def getActivities(userName):
 
     return activities
 
+def getActivitiesWorkshop(userName):
+
+    additionalIds = ["asst_Get3WE5ozTjkHcdGhnqGGqgL",
+                    "asst_L0eSoMaU4dBaBKGuT7EG8YXA",   
+                    "asst_ZZ2f7t77l5PKcfG6pHkVMQDz",
+                    "asst_ncmAPAoB3MT4TIBrhhRAjpJ9",
+                    "asst_xRGU7Xk0G1eHkruFzY1kpaTO"]
+
+    user = db.collection('users').document(userName).get()
+    activities = []
+
+    if user.exists:
+        activities = user.to_dict()["activities"]
+
+    for id in additionalIds:
+        activities.append(id)
+
+    return activities
+
 def getCourses(userName):
 
     user = db.collection('users').document(userName).get()
