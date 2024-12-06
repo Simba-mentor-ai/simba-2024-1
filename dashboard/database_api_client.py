@@ -13,12 +13,16 @@ class DataClient:
     def get_data(self,
                  endpoint='conversations', 
                  limit=1000,
-                 api_key='default'):
+                 api_key='default',
+                 activities=[]):
         
         headers = {
             'X-API-Key': api_key
         }
-        response = requests.get(f'{self.base_url}/{endpoint}', headers=headers)
+        params = {}
+        if activities:
+            params['activities'] = activities
+        response = requests.get(f'{self.base_url}/{endpoint}', headers=headers, params=params)
 
         if response.status_code != 200:
             print('Failed to fetch data:', response.status_code)
