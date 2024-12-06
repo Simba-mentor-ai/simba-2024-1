@@ -3,6 +3,8 @@ import streamlit_authenticator as stauth
 import gettext
 import options
 import emails
+import random
+import string
 from sidebar_loading import clearSidebar, loadSidebar
 import database_manager as dbm
 
@@ -172,3 +174,20 @@ def initSession():
 
     else :
         st.session_state["authenticator"].logout(location='sidebar')
+
+def AIED_authenticate():
+
+    if 'authentication_status' not in st.session_state or st.session_state['authentication_status'] == False or "username" not in st.session_state :
+
+        letters = string.ascii_letters
+
+        userName = "AIED_"+"".join(random.choice(letters) for i in range(10))
+
+        dbm.createUser(userName, "teacher")
+        dbm.addToCourse(userName,"AIED")
+
+        st.session_state['authentication_status'] = True
+        st.session_state["UserRole"] = "teacher"
+        st.session_state["username"] = userName
+
+    return True
