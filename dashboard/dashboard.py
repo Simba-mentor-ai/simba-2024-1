@@ -8,11 +8,16 @@ import database_manager as dbm
 from authentication import authenticate, initSession
 
 import plotly.figure_factory as ff
+import nltk
 from dashboard.database_api_client import DataClient
 from dashboard.feature_extractor import ConversationFeatureExtractor
 from dashboard import dsh_students_page, dsh_rawdata_page, dsh_overview_page
 
 logger = logging.getLogger(__name__)
+
+nltk.download('vader_lexicon')
+nltk.download('punkt')
+
 
 _ = gettext.gettext
 

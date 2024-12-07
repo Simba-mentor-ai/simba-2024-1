@@ -1,9 +1,6 @@
 import pandas as pd
 import numpy as np
 import re
-from datetime import datetime
-from sklearn.feature_extraction.text import CountVectorizer
-from sklearn.feature_extraction.text import TfidfVectorizer
 import nltk
 from typing import List
 
