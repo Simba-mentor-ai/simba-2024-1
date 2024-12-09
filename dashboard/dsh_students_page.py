@@ -7,27 +7,65 @@ import pandas as pd
 import streamlit as st
 from streamlit_echarts import st_echarts
 from openai import OpenAI
+from langchain_core.prompts import PromptTemplate
+from langchain_openai import ChatOpenAI
+import plotly.graph_objects as go
 
 openai_client = OpenAI(api_key=st.secrets["OPENAI_API_KEY"])
 
+def prepare_conversation_context(student_id, activity_name, df_messages):
+    """Prepara o contexto da conversa para o RAG"""
+    # Filtrar mensagens do estudante para a atividade específica
+    df_activity = df_messages[
+        (df_messages['user_id'] == student_id) & 
+        (df_messages['activity_name'] == activity_name)
+    ]
+
+    messages = []
+    for _, row in df_activity.iterrows():
+        messages.append(f"{row['role']}: {row['content']}")
+    
+    return "\n".join(messages) 
+
+def generate_feedback(user_messages):
+    # Configurar embeddings e modelo
+    llm = ChatOpenAI(model="gpt-4o-mini", api_key=st.secrets["OPENAI_API_KEY"])
+
+    # Template para o prompt
+    template = """Based on the messages exchanged between the student and SIMBA tutor:
+
+    {context}
+
+    Please provide a concise (less than 200 words) personalized feedback that:
+    1. Summarizes the main points discussed and difficulties faced by the student
+    3. Identifies strengths and areas for improvement
+
+    Feedback:"""
+
+    PROMPT = PromptTemplate(template=template, input_variables=["context"])
+    chain = PROMPT | llm
+
+    return chain.invoke({"context": user_messages})
+
 # Create a class for the Student Stats tab
 class StudentStatsTab():
-    def __init__(self, df, user_stats: pd.DataFrame = None):
+    def __init__(self, df, selectedActivity: str = None):        
+        
         self.df = df
-        if user_stats is None:
-            cfe = ConversationFeatureExtractor(df, user_id_col='user_id')
-            cfe.preprocess_messages()
-            self.user_stats = cfe.extract_conversation_features().fillna(0)
-        else:
-            self.user_stats = user_stats
-    
-        self.filtered_df = None
-        self.student_filter = None
-        self.tab2_activity_filter = '--all--'
+        self.selectedActivity = selectedActivity
+        
+        self.student_filter = st.selectbox("Select Student ID", 
+                                            self.df['user_id'].sort_values().unique())
 
+        self.filtered_df = self.df[self.df['user_id'] == self.student_filter]
+        
+        
     def create(self):
-        # 1st Row - Filter by activity_id
-        self.filtered_df = self.create_filter()
+
+        # st.write(f'course: {self.df["activity_course"].unique()}')
+        # st.write(f'selectedActivity: {self.selectedActivity}')
+        # st.write(f'student_filter: {self.student_filter}')
+        # st.dataframe(self.filtered_df)
 
         # 2nd Row - Histograms
         self.get_histograms()
@@ -38,20 +76,9 @@ class StudentStatsTab():
     def create_filter(self):
         col1, col2 = st.columns(2)
         with col1:
-            self.student_filter = st.selectbox("Select Student ID", self.df['user_id'].sort_values().unique())
-        with col2:
-            activity_ids = self.df.loc[self.df['user_id'] == self.student_filter, 'activity_id'].sort_values().unique()
-            activity_ids = ['All Activities'] + list(activity_ids)
-            self.tab2_activity_filter = st.selectbox("Select Activity ID", 
-                                                activity_ids, 
-                                                key='tab2_activity_filter')
-        
-        filtered_df = self.df[self.df['user_id'] == self.student_filter]
-        if self.tab2_activity_filter != 'All Activities':
-            filtered_df = filtered_df[filtered_df['activity_id'] == self.tab2_activity_filter]
+            self.student_filter = st.selectbox("Select Student ID", 
+                                               self.df['user_id'].sort_values().unique())
             
-        return filtered_df
-
     def get_histograms(self):
         cols = st.columns(3)
         with cols[0]:
@@ -65,11 +92,11 @@ class StudentStatsTab():
 
             # Conversation length
             conversation_length = self.filtered_df['content'].str.len().sum()
-            st.metric("Conversation Length", conversation_length)
+            st.metric("Conversation Length", f"{conversation_length/1000:.1f}K")
 
-            # Mean messages per activity
-            mean_messages_per_activity = self.user_stats['mean_user_turns_per_activity'].mean()
-            st.metric("Mean Messages per Activity", mean_messages_per_activity)
+            # # Mean messages per activity
+            # mean_messages_per_activity = -1 #self.user_stats['mean_user_turns_per_activity'].mean()
+            # st.metric("Mean Messages per Activity", mean_messages_per_activity)
 
 
         with cols[1]:
@@ -82,7 +109,27 @@ class StudentStatsTab():
             # # Create mean messages per activity distribution plot
             # self.create_user_distribution_plot(self.df, self.filtered_df, metric='mean_messages_per_activity')
         with cols[2]:
-            st.write("#### Activity Engagement")
+            st.write("**Activity Engagement**")
+            st.write("(Number of messages per activity)")
+            # Criar gráfico de pizza com número de mensagens por atividade
+            messages_per_activity = self.filtered_df[self.filtered_df['role'] == 'user'].groupby('activity_name').size()
+            
+            if messages_per_activity.empty:
+                st.write("No messages sent for this activity")  
+            else:
+                fig = go.Figure(data=[go.Pie(
+                    labels=messages_per_activity.index,
+                    values=messages_per_activity.values,
+                    hole=.3
+                )])
+                
+                fig.update_layout(
+                    showlegend=False,
+                    margin=dict(l=0, r=0, t=0, b=0),
+                    height=200
+                )
+                
+                st.plotly_chart(fig, use_container_width=True)
 
     def create_user_distribution_plot(self, df, filtered_df, metric='chars'):
         if metric == 'chars':
@@ -132,7 +179,7 @@ class StudentStatsTab():
         cols = st.columns(2)
         with cols[0]:
             st.write("### User Conversation")
-            if self.tab2_activity_filter == '--all--':
+            if self.selectedActivity == 'All activities':
                 st.write("Please select an activity to view the conversation")
             else:
                 with st.container(height=500):
@@ -149,11 +196,14 @@ class StudentStatsTab():
                             )
         with cols[1]:
             st.write("#### Message Summary")
-            st.button("Generate!")
+            if self.selectedActivity == 'All activities':
+                st.write("Please select an activity to generate feedback")
+            else:
+                if st.button("Generate!"):
+                    messages = prepare_conversation_context(self.student_filter, self.selectedActivity, self.filtered_df)
+                    
+                    feedback = generate_feedback(messages)
 
-            st.write("#### Summary")
-            st.write("...")
-
-            st.write("#### Feedback")
-            st.write("...")
-            
+                    if feedback:
+                        st.write(feedback.content)
+                
