@@ -115,8 +115,10 @@ def getActivityCode(id):
 # Users
 def createUser(username, role, name, email):
 
-    values = {"role" : role, "name" : name, "email" : email, "activities" : []}
-    db.collection('users').document(username).create(values)
+    elem = db.collection('users').document(username).get()
+    if not elem.exists :
+        values = {"role" : role, "name" : name, "email" : email, "activities" : []}
+        db.collection('users').document(username).create(values)
 
 def modifyUser(username, role, name, email):
     

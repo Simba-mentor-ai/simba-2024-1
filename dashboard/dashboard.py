@@ -40,6 +40,8 @@ else:
         df['course_id'] = df['activity_course'].apply(lambda x: hash(x) % 1000)
         df['timestamp'] = pd.to_datetime(df['timestamp'])
 
+        df = df.loc[df["activity_id"].isin(actIds)]
+
         if df.empty:
             st.write("No data available.")
             st.stop()

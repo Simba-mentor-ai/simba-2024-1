@@ -18,24 +18,22 @@ def authenticate():
     name = st.text_input(_("Name"))
     if st.button(_("Submit")):
         workshop_authenticate(name)
+        st.rerun()
 
 def initSession():
-    if "session_initiated" not in st.session_state or not st.session_state["session_initiated"] or st.session_state["oldUser"] != st.session_state["username"]:
+    if "session_initiated" not in st.session_state or not st.session_state["session_initiated"] :
         st.session_state["UserRole"] = dbm.getRole(st.session_state["username"])
         loadSidebar()
         st.session_state["session_initiated"] = True
 
 def workshop_authenticate(name):
 
-    if 'authentication_status' not in st.session_state or st.session_state['authentication_status'] == False or "username" not in st.session_state :
+    userName = "WORKSHOP_"+name
 
-        userName = "AIED_"+name
+    dbm.createUser(userName, "teacher", name, "")
 
-
-        dbm.createUser(userName, "teacher")
-
-        st.session_state['authentication_status'] = True
-        st.session_state["UserRole"] = "teacher"
-        st.session_state["username"] = userName
+    st.session_state['authentication_status'] = True
+    st.session_state["UserRole"] = "teacher"
+    st.session_state["username"] = userName
 
     return True
