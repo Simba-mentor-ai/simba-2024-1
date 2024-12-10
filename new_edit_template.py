@@ -124,6 +124,9 @@ def loadTemplate(assistant):
 
             adj1 = st.selectbox(_("What attitude should the assistant have toward the students ?"), attitudes, index=0 if new else attInd)
 
+            # course subjects and restriction of the spoken subjects
+            subjects = st.text_area(_("You can list here the course or activity subjects to indicate them more precisely to the chatbot"), value="" if new else vals["subjects"],height=300)
+            restricted = st.checkbox(_("Restrict the assistant to only speaking of the listed course subjects and what is in the provided documents, if provided",  value=False if new else vals["restricted"]))
             #teaching type
             # teachtype = st.selectbox(_("What should be the assistant's approach to teaching ?"), teachtypes, index=0 if new else teachtypes.index(vals["teaching_adj"]))
             teachtype = _("socratic")
@@ -274,6 +277,7 @@ def loadTemplate(assistant):
                         adj1 = adj1, 
                         emojis = ef.emojiGen(useEmojis),
                         questions = ef.questionsGen(),
+                        subjects = ef.subjectsGen(subjects,restricted),
                         answers = ef.answersGen(giveAnswers),
                         teaching_type = ef.teachTypeGen(teachtype),
                         documents = ef.docsGen(mentiondocuments, url),
