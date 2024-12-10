@@ -27,9 +27,15 @@ def loadTemplate(assistant):
     if "initialized" not in st.session_state :
         st.session_state["initialized"] = False
 
+
     if not st.session_state["initialized"]:
         courses = dbm.getCourses(st.session_state["username"])
-        courses.insert(0,"New course")
+        if courses == []:
+            courses = ["New course"]
+        else:
+            courses.insert(0,"New course")
+
+        st.session_state["UserCourses"] = courses
 
     title = _("Create a new activity")
     if not new :
@@ -45,7 +51,7 @@ def loadTemplate(assistant):
     name = st.text_input(_("Activity's new name"), value = "" if new else assistant["name"], placeholder = _("New name..."))
 
     #Course name
-    selectedCourse = st.selectbox(_("Course"), courses, index=0 if new else (courses.index(vals["courseName"])+1))
+    selectedCourse = st.selectbox(_("Course"), st.session_state["UserCourses"], index=0 if new else (st.session_state["UserCourses"].index(vals["courseName"])))
 
     if selectedCourse == "New course":
         writtenCourse = st.text_input(_("Enter the new course name"), value = "" if new else vals["courseName"], placeholder = _("New name..."))
@@ -203,6 +209,7 @@ def loadTemplate(assistant):
                 status.update(label=_("File added to the activity!"),state="complete")
                 # st.session_state["assistants"] = ef.getAssistants()
                 st.session_state["assistants"] = ef.getUserAssistants()
+                st.session_state["UserCourses"] = dbm.getCourses(st.session_state["username"])
                 assistant = st.session_state["assistants"][st.session_state["selectedID"]]
 
             file = None

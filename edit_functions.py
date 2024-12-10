@@ -151,7 +151,7 @@ def subjectsGen(subjects, restricted):
     nstr = ""
 
     if subjects!="":
-        nstr += _("You should help the student to reflect in depth on the following course subjects :\n <Beggining of the course subjects>\n")
+        nstr += _("You should help the student to reflect in depth on the following course subjects :\n <Beginning of the course subjects>\n")
         nstr += subjects
         nstr += _("\n<end of the course subjects>\n")
     
@@ -228,9 +228,17 @@ def extractVals(prompt):
             vals["questions"].append(splitQ[i].partition('\n')[0])
     
     # subjects
-    if _("You should help the student to reflect in depth on the following course subjects :\n <Beggining of the course subjects>\n") in prompt:
-        result = re.search('<Beggining of the course subjects>\n(.*)\n<end of the course subjects>', prompt)
-        vals["subjects"] = result.group(1)
+    vals["subjects"] = ""
+    if _("You should help the student to reflect in depth on the following course subjects :\n <Beginning of the course subjects>\n") in prompt:
+        print(prompt)
+        first = "<Beginning of the course subjects>\n"
+        last = "\n<end of the course subjects>"
+        start = prompt.index(first) + len(first)
+        end = prompt.index(last, start)
+        vals["subjects"] = prompt[start:end]
+        # searchedLine = "<Beginning of the course subjects>(.*)<end of the course subjects>"
+        # result = re.search(searchedLine, prompt)
+        # vals["subjects"] = result.group(1)
 
     # restricted
     if _("You should only speak of those listed subjects") in prompt:
