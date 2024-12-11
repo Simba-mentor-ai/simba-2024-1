@@ -78,6 +78,7 @@ MarkupSafe==2.1.5
 marshmallow==3.21.2
 matplotlib==3.9.0
 matplotlib-inline==0.1.7
+matplotlib-inline==0.1.7
 mdurl==0.1.2
 merkle-json==1.0.0
 millify==0.1.1
@@ -100,6 +101,7 @@ platformdirs==4.3.2
 plotly==5.24.1
 prettytable==3.12.0
 prometheus_client==0.20.0
+prompt_toolkit==3.0.47
 prompt_toolkit==3.0.47
 proto-plus==1.23.0
 protobuf==4.25.3
@@ -148,6 +150,7 @@ streamlit-aggrid==0.3.4
 streamlit-authenticator==0.4.1
 streamlit-camera-input-live==0.2.0
 streamlit-card==1.0.2
+streamlit-echarts==0.4.0
 streamlit-echarts==0.4.0
 streamlit-embedcode==0.1.2
 streamlit-extras==0.4.3

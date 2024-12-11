@@ -91,12 +91,14 @@ def setSelectedid(i):
 
 full_template =_("""You are a {adj1} {teaching_adj} tutor for the course '{courseName}'.
 
-Your name is SIMBA 😸 (Sistema Inteligente de Medición, Bienestar y Apoyo) and you were created by the Núcleo Milenio de Educación Superior.
+Your name is SIMBA 😸 (Sistema Inteligente de Medición, Bienestar y Apoyo) and you were created by the Núcleo Milenio de Educación Superior and IRIT Talent team.
 Respond in a {adj1}, concise and proactive way{emojis}.
 
 Help the student answer the following questions:
 
 {questions}
+
+{subjects}
 
 {answers} {teaching_type}
 
@@ -145,6 +147,22 @@ def questionsGen():
 
     return nstr
 
+def subjectsGen(subjects, restricted):
+    nstr = ""
+
+    if subjects!="":
+        nstr += _("You should help the student to reflect in depth on the following course subjects :\n <Beginning of the course subjects>\n")
+        nstr += subjects
+        nstr += _("\n<end of the course subjects>\n")
+    
+    if restricted :
+        if len(st.session_state["files"])>0:
+            nstr += _("You should only speak of those listed subjects and the ones in your provided files. Avoid as much as possible speaking of other subjects, and steer back the student to the course subjects if he tries to deviate from them.")
+        else :
+            nstr += _("You should only speak of those listed subjects. Avoid as much as possible speaking of other subjects, and steer back the student to the course subjects if he tries to deviate from them.")
+    
+    return nstr
+
 def emojiGen(useEmojis):
     nstr = ""
     if useEmojis :
@@ -155,7 +173,7 @@ def emojiGen(useEmojis):
 
 def extractVals(prompt):
     vals = {}
-    checkstring = _("Your name is SIMBA 😸 (Sistema Inteligente de Medición, Bienestar y Apoyo) and you were created by the Núcleo Milenio de Educación Superior.")
+    checkstring = _("Your name is SIMBA 😸 (Sistema Inteligente de Medición, Bienestar y Apoyo) and you were created by the Núcleo Milenio de Educación Superior and IRIT Talent team.")
     
     # Adj
     vals["adj1"] = "friendly"
@@ -209,11 +227,30 @@ def extractVals(prompt):
         else :
             vals["questions"].append(splitQ[i].partition('\n')[0])
     
+    # subjects
+    vals["subjects"] = ""
+    if _("You should help the student to reflect in depth on the following course subjects :\n <Beginning of the course subjects>\n") in prompt:
+        print(prompt)
+        first = "<Beginning of the course subjects>\n"
+        last = "\n<end of the course subjects>"
+        start = prompt.index(first) + len(first)
+        end = prompt.index(last, start)
+        vals["subjects"] = prompt[start:end]
+        # searchedLine = "<Beginning of the course subjects>(.*)<end of the course subjects>"
+        # result = re.search(searchedLine, prompt)
+        # vals["subjects"] = result.group(1)
+
+    # restricted
+    if _("You should only speak of those listed subjects") in prompt:
+        vals["restricted"] = True
+    else :
+        vals["restricted"] = False
+
     # answering questions
     if _("You should not give the answer, but guide the student to answer.") in prompt:
-        vals["answers"] = True
-    else :
         vals["answers"] = False
+    else :
+        vals["answers"] = True
 
     # emojis
     if _(", using emojis where possible.") in prompt:
