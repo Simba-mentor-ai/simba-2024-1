@@ -129,6 +129,7 @@ class StudentStatsTab():
                 st.plotly_chart(fig, use_container_width=True)
 
     def create_user_distribution_plot(self, df, filtered_df, metric='chars'):
+                
         if metric == 'chars':
             # Distribution of characters per user
             user_values = df[df['role'] == 'user'].groupby('user_id')['content'].apply(lambda x: x.str.len().sum()).values
@@ -144,6 +145,11 @@ class StudentStatsTab():
             user_values = df[df['role'] == 'user'].groupby('user_id').apply(lambda x: len(x)/x['activity_id'].nunique().max()).values
             selected_user_value = len(filtered_df[filtered_df['role'] == 'user'])/filtered_df['activity_id'].nunique().max()
             title = "Mean Messages per Activity"
+
+        if len(user_values) < 2:
+            st.write(title)
+            st.write("No data to display")
+            return 
 
         fig = ff.create_distplot(
             [user_values],
