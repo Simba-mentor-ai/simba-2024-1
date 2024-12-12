@@ -146,6 +146,6 @@ zipp==3.17.0
 plotly==5.24.1
 scikit-learn==1.5.2
 streamlit_echarts
-st-link-analysis
+# st-link-analysis
 langchain-openai
-streamlit-dynamic-filters
+# streamlit-dynamic-filters
