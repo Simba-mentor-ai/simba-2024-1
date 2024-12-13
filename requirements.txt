@@ -170,7 +170,7 @@ tqdm==4.66.2
 traitlets==5.14.3
 trulens_eval==0.30.1
 typing-inspect==0.9.0
-typing_extensions==4.11.0
+typing_extensions==4.12.2
 tzdata==2024.1
 tzlocal==5.2
 urllib3==2.2.1
