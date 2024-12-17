@@ -1,11 +1,9 @@
 #######################
 # Import libraries
 import plotly.figure_factory as ff
-import plotly.express as px
 import pandas as pd
 
 import streamlit as st
-from streamlit_echarts import st_echarts
 from openai import OpenAI
 from langchain_core.prompts import PromptTemplate
 from langchain_openai import ChatOpenAI
@@ -32,15 +30,14 @@ def generate_feedback(user_messages):
     llm = ChatOpenAI(model="gpt-4o-mini", api_key=st.secrets["OPENAI_API_KEY"])
 
     # Template para o prompt
-    template = """Based on the messages exchanged between the student and SIMBA tutor:
+    template = """Based on the messages exchanged between the student and SIMBA tutor taking into consideration only the messages sent by the student:
 
     {context}
 
-    Please provide a concise (less than 200 words) personalized feedback that:
-    1. Summarizes the main points discussed and difficulties faced by the student
-    3. Identifies strengths and areas for improvement
-
-    Feedback:"""
+    Please provide a concise (less than 200 words) SUMMARY that:
+    1. Summarizes the main points discussed by the student in bullet points
+    2. Identifies the main difficulties or missconceptions presented by the student in bullet points
+    """
 
     PROMPT = PromptTemplate(template=template, input_variables=["context"])
     chain = PROMPT | llm
@@ -132,21 +129,27 @@ class StudentStatsTab():
                 st.plotly_chart(fig, use_container_width=True)
 
     def create_user_distribution_plot(self, df, filtered_df, metric='chars'):
+                
         if metric == 'chars':
             # Distribution of characters per user
             user_values = df[df['role'] == 'user'].groupby('user_id')['content'].apply(lambda x: x.str.len().sum()).values
             selected_user_value = filtered_df[filtered_df['role'] == 'user']['content'].str.len().sum()
-            title = "Message Length"
+            title = f"**{self.student_filter}**'s message length (compared with peers)"
         elif metric == 'messages':
             # Distribution of number of messages per user
             user_values = df[df['role'] == 'user'].groupby('user_id').size().values
             selected_user_value = filtered_df[filtered_df['role'] == 'user'].shape[0]
-            title = "Number of Messages"
+            title = f"**{self.student_filter}**'s number of messages compared with peers"
         else:
             # Distribution of mean messages per activity
             user_values = df[df['role'] == 'user'].groupby('user_id').apply(lambda x: len(x)/x['activity_id'].nunique().max()).values
             selected_user_value = len(filtered_df[filtered_df['role'] == 'user'])/filtered_df['activity_id'].nunique().max()
             title = "Mean Messages per Activity"
+
+        if len(user_values) < 2:
+            st.write(title)
+            st.write("No data to display")
+            return 
 
         fig = ff.create_distplot(
             [user_values],
@@ -178,7 +181,7 @@ class StudentStatsTab():
         # user conversation
         cols = st.columns(2)
         with cols[0]:
-            st.write("### User Conversation")
+            st.write("### Student Conversation")
             if self.selectedActivity == 'All activities':
                 st.write("Please select an activity to view the conversation")
             else:
