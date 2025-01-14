@@ -50,12 +50,12 @@ def languageSelector():
         st.selectbox(_("Language"), options=languages, on_change=selectLanguage(), key="SelectedLanguage", label_visibility="hidden")
 
 
-# languages = ["english 🇬🇧","español 🇪🇸","français 🇫🇷"]
-# langSymbols = ["en","es","fr"]
-# langCorrespondance = {"english 🇬🇧" : "en", "español 🇪🇸" : "es", "français 🇫🇷" : "fr"}
-languages = ["english 🇬🇧","español 🇪🇸"]
-langSymbols = ["en","es"]
-langCorrespondance = {"english 🇬🇧" : "en", "español 🇪🇸" : "es"}
+languages = ["english 🇬🇧","español 🇪🇸","français 🇫🇷"]
+langSymbols = ["en","es","fr"]
+langCorrespondance = {"english 🇬🇧" : "en", "español 🇪🇸" : "es", "français 🇫🇷" : "fr"}
+# languages = ["english 🇬🇧","español 🇪🇸"]
+# langSymbols = ["en","es"]
+# langCorrespondance = {"english 🇬🇧" : "en", "español 🇪🇸" : "es"}
 
 
 
