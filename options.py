@@ -26,15 +26,10 @@ def translate(basefunc):
     return func
 
 def selectLanguage() :
-    if "language" not in st.session_state:
-        if "username" in st.session_state:
-            selected = dbm.getLanguage(st.session_state["username"])
-            st.session_state["language"] = langCorrespondance[selected]
-        else : 
-            selected = languages[0]
-            st.session_state["language"] = langSymbols[0]
 
-    if "SelectedLanguage" in st.session_state and st.session_state["SelectedLanguage"] :
+    if "SelectedLanguage" not in st.session_state or not st.session_state["SelectedLanguage"]:
+        pass
+    else :
         selected = st.session_state["SelectedLanguage"]
         if langCorrespondance[selected] != st.session_state["language"]:
             st.session_state["language"] = langCorrespondance[selected]
@@ -47,7 +42,8 @@ def languageSelector():
     _ = translate(_)
     lang,stuff = st.columns([0.15,0.85])
     with lang:
-        st.selectbox(_("Language"), options=languages, on_change=selectLanguage(), key="SelectedLanguage", label_visibility="hidden")
+        st.selectbox(_("Language"), options=languages, index=0 if ("language" not in st.session_state or not st.session_state["language"]) else (langSymbols.index(st.session_state["language"])),
+                     on_change=selectLanguage(), key="SelectedLanguage", label_visibility="hidden")
 
 
 languages = ["english 🇬🇧","español 🇪🇸","français 🇫🇷"]

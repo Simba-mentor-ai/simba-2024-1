@@ -167,8 +167,18 @@ def initSession():
     if "session_initiated" not in st.session_state or not st.session_state["session_initiated"] or st.session_state["oldUser"] != st.session_state["username"]:
         st.session_state["UserRole"] = dbm.getRole(st.session_state["username"])
         loadSidebar()
-        st.session_state["authenticator"].logout(location='sidebar')
+        if "logout" not in st.session_state or not st.session_state["logout"]:
+            st.session_state["authenticator"].logout(location='sidebar')
         st.session_state["session_initiated"] = True
 
+    if "language" not in st.session_state:
+        if "username" in st.session_state:
+            selected = dbm.getLanguage(st.session_state["username"])
+            st.session_state["language"] = options.langCorrespondance[selected]
+        else : 
+            selected = options.languages[0]
+            st.session_state["language"] = options.langSymbols[0]
+
     else :
-        st.session_state["authenticator"].logout(location='sidebar')
+        if "logout" not in st.session_state or not st.session_state["logout"]:
+            st.session_state["authenticator"].logout(location='sidebar')
