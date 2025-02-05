@@ -3,15 +3,9 @@
 import altair as alt
 import pandas as pd
 import streamlit as st
-
 import logging
 
-# from dashboard import cluster_students
 from dashboard.feature_extractor import ConversationFeatureExtractor
-from scipy.stats import zscore
-from streamlit_echarts import st_echarts
-from st_link_analysis import st_link_analysis, NodeStyle, EdgeStyle
-
 
 logger = logging.getLogger(__name__)
 class ConversationStats():
@@ -69,10 +63,11 @@ class ConversationStats():
                     'email': 'Email'
                 }, inplace=True)
                 top_students.reset_index(inplace=True, drop=True)
-                top_students['Rank'] = top_students.index + 1
-                top_students = top_students.loc[:, ['Rank', 'Student ID', 'Email', 'Average Messages per Activity']]
-                st.write(f"#### Top {len(top_students)} Students (Longest Conversations) :clap:")
-                st.dataframe(top_students.sort_values(by='Average Messages per Activity', ascending=False), height=250, hide_index=True, use_container_width=True)
+                # top_students['Rank'] = top_students.index + 1
+                top_students = top_students.loc[:, ['Student ID', 'Email', 'Average Messages per Activity']]
+                st.write(f"#### Student's Engagement")
+                st.dataframe(top_students.sort_values(by='Average Messages per Activity', ascending=False), 
+                             height=250, hide_index=True, use_container_width=True)
 
             with col2:
                 self.get_activity_stats()

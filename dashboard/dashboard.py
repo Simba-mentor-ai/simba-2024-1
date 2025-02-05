@@ -8,11 +8,16 @@ import database_manager as dbm
 from authentication import authenticate, initSession
 
 import plotly.figure_factory as ff
+import nltk
 from dashboard.database_api_client import DataClient
 from dashboard.feature_extractor import ConversationFeatureExtractor
 from dashboard import dsh_students_page, dsh_rawdata_page, dsh_overview_page
 
 logger = logging.getLogger(__name__)
+
+nltk.download('vader_lexicon')
+nltk.download('punkt')
+
 
 _ = gettext.gettext
 
@@ -36,9 +41,11 @@ else:
         
         data = client.get_data("conversations", activities=actIds)
 
-        df   = pd.DataFrame(data)
+        df = pd.DataFrame(data)
         df['course_id'] = df['activity_course'].apply(lambda x: hash(x) % 1000)
         df['timestamp'] = pd.to_datetime(df['timestamp'])
+
+        df = df.loc[df["activity_id"].isin(actIds)]
 
         if df.empty:
             st.write("No data available.")
@@ -46,7 +53,7 @@ else:
         else:
             logger.info(f'loaded data: {df.shape[0]} rows')
             
-        st.title("Student Interaction Dashboard")
+        st.title("SIMBA Interactions Dashboard")
         
         courses = df["activity_course"].sort_values().unique().tolist()
         courses.insert(0,"All courses")
@@ -82,7 +89,7 @@ else:
                 overview = dsh_overview_page.ConversationStats(overviewDf, df_features)
                 overview.create()
             with tab2:
-                students_tab = dsh_students_page.StudentStatsTab(overviewDf, df_features)
+                students_tab = dsh_students_page.StudentStatsTab(overviewDf, selectedActivity)
                 students_tab.create()
             with tab3:
                 raw_data = dsh_rawdata_page.RawDataTab(df, df_features)
