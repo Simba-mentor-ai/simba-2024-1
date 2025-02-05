@@ -35,7 +35,7 @@ else:
         # Use full width of the page
         # st.set_page_config(layout="wide")
 
-        actIds = dbm.getActivitiesWorkshop(st.session_state["username"])
+        actIds = dbm.getActivities(st.session_state["username"])
         client = DataClient("https://simba.irit.fr")
         logger.info(f'activities: {actIds}')
         
