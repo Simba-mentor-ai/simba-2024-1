@@ -1,6 +1,6 @@
 import streamlit as st
 from streamlit_config_helper import set_streamlit_page_config_once
-from authentication import authenticate, updateUsr, resetPwd, initSession
+from authentication import authenticate, initSession
 import options
 import gettext
 import database_manager as dbm

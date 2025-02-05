@@ -13,7 +13,6 @@ def loadSidebar():
                     Page("sidebar/New_activity.py", "New activity", "➕"),
                     Page("sidebar/Edit_activities.py", "Edit activities", "⚙️"),
                     Page("sidebar/My_activities.py", "My activities", "📝"),
-                    Page("sidebar/Manage_account.py", "Manage my account", "👤"),
                     Page("dashboard/dashboard.py", "Dashboard", "📊"),
                     # Page("sidebar/Admin.py", "Admin")
         ])

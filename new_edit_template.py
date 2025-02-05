@@ -51,7 +51,7 @@ def loadTemplate(assistant):
     name = st.text_input(_("Activity's new name"), value = "" if new else assistant["name"], placeholder = _("New name..."))
 
     #Course name
-    selectedCourse = st.selectbox(_("Course"), st.session_state["UserCourses"], index=0 if new else (st.session_state["UserCourses"].index(vals["courseName"])))
+    selectedCourse = st.selectbox(_("Course"), st.session_state["UserCourses"], index=0 if (new or (vals["courseName"] not in st.session_state["UserCourses"])) else (st.session_state["UserCourses"].index(vals["courseName"])))
 
     if selectedCourse == "New course":
         writtenCourse = st.text_input(_("Enter the new course name"), value = "" if new else vals["courseName"], placeholder = _("New name..."))
