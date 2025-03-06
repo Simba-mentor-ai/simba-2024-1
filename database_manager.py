@@ -39,7 +39,7 @@ def delActivitiy(id):
         db.collection('utilities').document('activity_codes').update({"codes" : codes})
         activity.delete()
 
-def createActivity(activity):
+def createActivity(activity,course):
 
     codes = db.collection('utilities').document('activity_codes').get().to_dict()["codes"]
     code = ''.join(random.choice(string.ascii_letters + string.digits) for _ in range(10))
@@ -47,11 +47,15 @@ def createActivity(activity):
         code = ''.join(random.choice(string.ascii_letters + string.digits) for _ in range(10))
 
     codes[code] = activity.id
-    values = {"name" : activity.name, "users" : [st.session_state["username"]], "code" : code}
+    values = {"name" : activity.name, "users" : [st.session_state["username"]], "code" : code, "course":course}
 
     db.collection('activities').document(activity.id).create(values)
     db.collection('utilities').document('activity_codes').update({"codes" : codes})
     addUserToActivity(activity.id,st.session_state["username"])
+
+def updateActivity(activity,course):
+    values = {"name" : activity.name, "course":course}
+    db.collection('activities').document(activity.id).update(values)
 
 def getActivities(userName):
 
@@ -62,6 +66,40 @@ def getActivities(userName):
         activities = user.to_dict()["activities"]
 
     return activities
+
+def getActivitiesWorkshop(userName):
+
+    additionalIds = ["asst_Get3WE5ozTjkHcdGhnqGGqgL",
+                    "asst_L0eSoMaU4dBaBKGuT7EG8YXA",   
+                    "asst_ZZ2f7t77l5PKcfG6pHkVMQDz",
+                    "asst_ncmAPAoB3MT4TIBrhhRAjpJ9",
+                    "asst_xRGU7Xk0G1eHkruFzY1kpaTO"]
+
+    user = db.collection('users').document(userName).get()
+    activities = []
+
+    if user.exists:
+        activities = user.to_dict()["activities"]
+
+    for id in additionalIds:
+        activities.append(id)
+
+    return activities
+
+def getCourses(userName):
+
+    user = db.collection('users').document(userName).get()
+    activities = user.to_dict()["activities"]
+
+    courses = []
+    for actId in activities:
+        activity = db.collection('activities').document(actId).get()
+        course = activity.to_dict()["course"]
+
+        if course not in courses:
+            courses.append(course)
+    
+    return courses
 
 def getActivityCode(id):
 
@@ -77,8 +115,10 @@ def getActivityCode(id):
 # Users
 def createUser(username, role, name, email):
 
-    values = {"role" : role, "name" : name, "email" : email, "activities" : []}
-    db.collection('users').document(username).create(values)
+    elem = db.collection('users').document(username).get()
+    if not elem.exists :
+        values = {"role" : role, "name" : name, "email" : email, "activities" : []}
+        db.collection('users').document(username).create(values)
 
 def modifyUser(username, role, name, email):
     
@@ -157,6 +197,27 @@ def getRole(userName):
     
     return role
 
+def getLanguage(userName):
+
+    language = "en"
+    userDoc = db.collection('users').document(userName).get()
+    if userDoc.exists :
+        dic = userDoc.to_dict()
+        if "language" in dic.keys():
+            language = dic["language"]
+        else :
+            language = "en"
+            dic["language"] = language
+            db.collection('users').document(userName).update(dic)
+
+    return language
+
+def setLanguage(userName,language):
+    userDoc = db.collection('users').document(userName).get()
+    if userDoc.exists :
+        dic = userDoc.to_dict()
+        dic["language"] = language
+        db.collection('users').document(userName).update(dic)
 
 # Credentials
 def     getConfig():
@@ -176,39 +237,41 @@ def saveConfig(config):
 
 
 # Admin special functions
-def updateActivities():
+# def updateActivities():
     
-    activities = db.collection('activities').get()
+#     activities = db.collection('activities').get()
 
-    for activity in activities :
+#     for activity in activities :
         
-        dic = activity.to_dict()
+#         dic = activity.to_dict()
 
-        if "users" not in dic.keys() :
+#         if "users" not in dic.keys() :
 
-            if "name" in dic.keys():
-                values = {"name" : dic["name"], "users" : [st.session_state["username"]]}
-            else :
-                values = {"name" : "defaultName", "users" : [st.session_state["username"]]}
+#             if "name" in dic.keys():
+#                 values = {"name" : dic["name"], "users" : [st.session_state["username"]]}
+#             else :
+#                 values = {"name" : "defaultName", "users" : [st.session_state["username"]]}
 
-            db.collection('activities').document(activity.id).set(values)
+#             db.collection('activities').document(activity.id).set(values)
         
-    assistants = openai_client.beta.assistants.list()
+#     assistants = openai_client.beta.assistants.list()
 
-    assistantsids = []
+#     assistantsids = []
 
-    for assistant in assistants :
+#     for assistant in assistants :
 
-        assistantsids.append(assistant.id)
-        doc = db.collection('activities').document(assistant.id).get()
+#         assistantsids.append(assistant.id)
+#         doc = db.collection('activities').document(assistant.id).get()
 
-        if not doc.exists :
+#         if not doc.exists :
 
-            values = values = {"name" : assistant.name, "users" : ["gabartas"]}
+#             values = values = {"name" : assistant.name, "users" : ["gabartas"]}
 
-            db.collection('activities').document(assistant.id).create(values)
+#             db.collection('activities').document(assistant.id).create(values)
 
-    db.collection('users').document('gabartas').update({"activities" : assistantsids})
+#     db.collection('users').document('gabartas').update({"activities" : assistantsids})
+
+
 
 def generateCodes():
 
@@ -246,3 +309,21 @@ def delAIEDUsers():
             else :
                 print("deleting", teacher)
                 deleteAIEDUser(teacher)
+
+def delUser(id):
+    userdb = db.collection('users').document(id)
+    credentialsdb = db.collection('utilities').document('credentials')
+    user = userdb.get()
+
+    if user.exists :
+
+        activities = user.to_dict()["activities"]
+
+        for aid in activities:
+            activitydb = db.collection('activities').document(aid)
+            activitydic = activitydb.get().to_dict()
+            
+
+        credentials = credentialsdb.get().to_dict()
+        credentials["credentials"]["credentials"]["usernames"].pop(id)
+

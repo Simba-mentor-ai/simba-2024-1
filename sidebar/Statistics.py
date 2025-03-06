@@ -5,15 +5,16 @@ import gettext
 import datetime
 import options
 import database_manager as dbm
+import statistics_functions as sf
 from authentication import authenticate, initSession
 
 _ = gettext.gettext
+
 
 if "authentication_status" not in st.session_state or not st.session_state["authentication_status"]:
     authenticate()
 
 else:
-
     initSession()
     _ = options.translate(_)
     today = datetime.date.today()
@@ -51,18 +52,6 @@ else:
 
     st.write(_("# Activities"))
 
-    # textc,buttonc = st.columns([0.3,0.7])
-
-    # with textc :
-    #     code = st.text_input("Enter an activity code to add it to your activities")
-
-    # with buttonc :
-    #     st.container(height=13, border=False)
-    #     if st.button("Add activity"):
-    #         dbm.addUserFromCode(code,st.session_state["username"])
-    #         st.session_state["assistants"] = edit_functions.getUserAssistants()
-    #         st.rerun()
-
     st.selectbox(_("Select the activity you want to work on"), options=names, index=None, placeholder=_("select an activity..."), on_change=selectActivity(), key="SelectedName")
 
     activityContainer = st.container()
@@ -71,10 +60,5 @@ else:
             # if get_auth_status():
                 with st.spinner(_("Loading activity.")):
                     assistant = st.session_state["assistants"][st.session_state["selected activity"]]
-                    chatpage_template.load_template(
-                        activity_id=assistant["id"],
-                        assistant_id=assistant["id"],
-                        title=assistant["name"]
-                    )
-
+                    sf.loadDashboard(assistant["id"])
     

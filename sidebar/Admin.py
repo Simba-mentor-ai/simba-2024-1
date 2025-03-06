@@ -17,3 +17,7 @@ if st.button("test email"):
 
 if st.button("cleanupAIED"):
     dbm.delAIEDUsers()
+
+st.text_input("enter ID",key="idToDelete")
+if st.button("delete user"):
+    dbm.delUser(st.session_state["idToDelete"])

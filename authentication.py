@@ -13,7 +13,7 @@ _ = options.translate(_)
 def initAuth():
     st.session_state["auth_config"] = dbm.getConfig()
     
-    st.session_state["authenticator"]  = stauth.Authenticate(
+    st.session_state["authenticator"] = stauth.Authenticate(
         st.session_state["auth_config"]['credentials'],
         st.session_state["auth_config"]['cookie']['name'],
         st.session_state["auth_config"]['cookie']['key'],
@@ -167,8 +167,21 @@ def initSession():
     if "session_initiated" not in st.session_state or not st.session_state["session_initiated"] or st.session_state["oldUser"] != st.session_state["username"]:
         st.session_state["UserRole"] = dbm.getRole(st.session_state["username"])
         loadSidebar()
-        st.session_state["authenticator"].logout(location='sidebar')
+        if "logout" not in st.session_state :
+            st.session_state["authenticator"].logout(location='sidebar')
         st.session_state["session_initiated"] = True
 
+    if "language" not in st.session_state or "languagFetched" not in st.session_state:
+        if "username" in st.session_state:
+            selected = dbm.getLanguage(st.session_state["username"])
+            st.session_state["language"] = selected
+            print(st.session_state["language"])
+        else : 
+            selected = options.languages[0]
+            st.session_state["language"] = options.langSymbols[0]
+        
+        st.session_state["languagFetched"] = True
+
     else :
-        st.session_state["authenticator"].logout(location='sidebar')
+        if "logout" not in st.session_state :
+            st.session_state["authenticator"].logout(location='sidebar')

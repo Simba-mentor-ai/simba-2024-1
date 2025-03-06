@@ -27,6 +27,16 @@ def loadTemplate(assistant):
     if "initialized" not in st.session_state :
         st.session_state["initialized"] = False
 
+
+    if not st.session_state["initialized"]:
+        courses = dbm.getCourses(st.session_state["username"])
+        if courses == []:
+            courses = ["New course"]
+        else:
+            courses.insert(0,"New course")
+
+        st.session_state["UserCourses"] = courses
+
     title = _("Create a new activity")
     if not new :
         oldprompt = assistant["instructions"]
@@ -41,7 +51,10 @@ def loadTemplate(assistant):
     name = st.text_input(_("Activity's new name"), value = "" if new else assistant["name"], placeholder = _("New name..."))
 
     #Course name
-    course = st.text_input(_("Course name"), value = "" if new else vals["courseName"], placeholder = _("New name..."))
+    selectedCourse = st.selectbox(_("Course"), st.session_state["UserCourses"], index=0 if (new or (vals["courseName"] not in st.session_state["UserCourses"])) else (st.session_state["UserCourses"].index(vals["courseName"])))
+
+    if selectedCourse == "New course":
+        writtenCourse = st.text_input(_("Enter the new course name"), value = "" if new else vals["courseName"], placeholder = _("New name..."))
 
     #Description
     desc = st.text_input(_("Modify the description or enter a new one"), value = "" if new else assistant["description"], placeholder = _("New description..."))
@@ -117,6 +130,9 @@ def loadTemplate(assistant):
 
             adj1 = st.selectbox(_("What attitude should the assistant have toward the students ?"), attitudes, index=0 if new else attInd)
 
+            # course subjects and restriction of the spoken subjects
+            subjects = st.text_area(_("You can list here the course or activity subjects to indicate them more precisely to the chatbot"), value="" if new else vals["subjects"])
+            restricted = st.checkbox(_("Restrict the assistant to only speaking of the listed course subjects and what is in the provided documents, if provided"),  value=False if new else vals["restricted"])
             #teaching type
             # teachtype = st.selectbox(_("What should be the assistant's approach to teaching ?"), teachtypes, index=0 if new else teachtypes.index(vals["teaching_adj"]))
             teachtype = _("socratic")
@@ -193,6 +209,7 @@ def loadTemplate(assistant):
                 status.update(label=_("File added to the activity!"),state="complete")
                 # st.session_state["assistants"] = ef.getAssistants()
                 st.session_state["assistants"] = ef.getUserAssistants()
+                st.session_state["UserCourses"] = dbm.getCourses(st.session_state["username"])
                 assistant = st.session_state["assistants"][st.session_state["selectedID"]]
 
             file = None
@@ -238,6 +255,10 @@ def loadTemplate(assistant):
     with submit:
         if st.button(_("Submit")):
 
+            if selectedCourse == "New course":
+                course = writtenCourse
+            else :
+                course = selectedCourse
             emptyquestion = False
             emptyI = 0
             for i in range(0,st.session_state["nbQuestions"]):
@@ -263,6 +284,7 @@ def loadTemplate(assistant):
                         adj1 = adj1, 
                         emojis = ef.emojiGen(useEmojis),
                         questions = ef.questionsGen(),
+                        subjects = ef.subjectsGen(subjects,restricted),
                         answers = ef.answersGen(giveAnswers),
                         teaching_type = ef.teachTypeGen(teachtype),
                         documents = ef.docsGen(mentiondocuments, url),
@@ -291,7 +313,7 @@ def loadTemplate(assistant):
                     else :
                         tool_resources = {}
                     activity = openai_client.beta.assistants.create(name = name, description = desc, instructions = instructions, tools=[{"type": "file_search"}], model="gpt-4o-mini",tool_resources=tool_resources, metadata=metadata)
-                    dbm.createActivity(activity)
+                    dbm.createActivity(activity,course)
                     save_navigation(activity.id, "created")
                     st.session_state["nbQuestions"] = 1
                     st.session_state["questions"] = [""]
@@ -300,7 +322,7 @@ def loadTemplate(assistant):
                     
 
                 else :
-                    warning_edit(assistant,name,desc,instructions,metadata)
+                    warning_edit(assistant,name,desc,instructions,metadata,course)
                     # openai_client.beta.assistants.update(assistant["id"], name = name, description = desc, instructions = instructions)
                     # chatbot_helper.disable_activity_threads(assistant["id"])
                     # success("The activity have been successfully updated")
@@ -321,7 +343,7 @@ def error(line):
         st.rerun()      
 
 @st.experimental_dialog(_("warning"))
-def warning_edit(assistant,name,desc,instructions,metadata):
+def warning_edit(assistant,name,desc,instructions,metadata,course):
     st.write(_("Editing this activity will reset it for all students, If students are working with the current activity, they will have to start the activity over. If you want to keep it as it is, we recommend you create a new activity"))
     cancel,ok = st.columns([1,0.5])
     with cancel :
@@ -330,7 +352,8 @@ def warning_edit(assistant,name,desc,instructions,metadata):
     with ok :
         if st.button(_("ok")):
             status = st.status(_("Updating the activity"))
-            openai_client.beta.assistants.update(assistant["id"], name = name, description = desc, instructions = instructions, metadata=metadata)
+            activity = openai_client.beta.assistants.update(assistant["id"], name = name, description = desc, instructions = instructions, metadata=metadata)
+            dbm.updateActivity(activity,course)
             chatbot_helper.disable_activity_threads(assistant["id"])
             status.update(label=_("Activity successfully updated!"),state='complete')
             save_navigation(assistant["id"], "updated")
