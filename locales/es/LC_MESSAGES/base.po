@@ -1,8 +1,8 @@
 msgid ""
 msgstr ""
 "Project-Id-Version: \n"
-"POT-Creation-Date: 2025-03-06 15:57+0100\n"
-"PO-Revision-Date: 2025-03-06 16:04+0100\n"
+"POT-Creation-Date: 2025-03-06 16:16+0100\n"
+"PO-Revision-Date: 2025-03-06 16:16+0100\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "Language: es\n"
@@ -421,6 +421,18 @@ msgstr "tutor del curso '(.*)'."
 #: edit_functions.py:221
 msgid "Question . : "
 msgstr "Pregunta . : "
+
+#: edit_functions.py:234
+msgid "<Beginning of the course subjects>\n"
+msgstr "<Inicio de los temas del curso>\n"
+
+#: edit_functions.py:235
+msgid ""
+"\n"
+"<end of the course subjects>"
+msgstr ""
+"\n"
+"<final de los temas del curso>"
 
 #: edit_functions.py:244
 msgid "You should only speak of those listed subjects"
