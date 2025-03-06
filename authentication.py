@@ -175,7 +175,6 @@ def initSession():
         if "username" in st.session_state:
             selected = dbm.getLanguage(st.session_state["username"])
             st.session_state["language"] = selected
-            print(st.session_state["language"])
         else : 
             selected = options.languages[0]
             st.session_state["language"] = options.langSymbols[0]
