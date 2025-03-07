@@ -232,7 +232,7 @@ def extractVals(prompt):
     if _("You should help the student to reflect in depth on the following course subjects :\n <Beginning of the course subjects>\n") in prompt:
         first = _("<Beginning of the course subjects>\n")
         last = _("\n<end of the course subjects>")
-        if start in prompt and end in prompt:
+        if first in prompt and last in prompt:
             start = prompt.index(first) + len(first)
             end = prompt.index(last, start)
             vals["subjects"] = prompt[start:end]
