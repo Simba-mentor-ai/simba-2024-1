@@ -16,7 +16,7 @@ def loadSidebar():
                     Page("dashboard/dashboard.py", "Dashboard", "📊"),
                     # Page("sidebar/Admin.py", "Admin")
         ])
-        if st.session_state["UserRole"]=="student":
-            hide_pages(["New activity", "Edit activities","Dashboard"])
+    if st.session_state["UserRole"]=="student":
+        hide_pages(["New activity", "Edit activities","Dashboard"])
         
         st.session_state["sidebarLoaded"] = True
