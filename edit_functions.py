@@ -232,9 +232,14 @@ def extractVals(prompt):
     if _("You should help the student to reflect in depth on the following course subjects :\n <Beginning of the course subjects>\n") in prompt:
         first = _("<Beginning of the course subjects>\n")
         last = _("\n<end of the course subjects>")
-        start = prompt.index(first) + len(first)
-        end = prompt.index(last, start)
-        vals["subjects"] = prompt[start:end]
+        if start in prompt and end in prompt:
+            start = prompt.index(first) + len(first)
+            end = prompt.index(last, start)
+            vals["subjects"] = prompt[start:end]
+        else :
+            sub = prompt.split(">")[1]
+            sub = sub.split("<")[0]
+            vals["subjects"] = sub
         # searchedLine = "<Beginning of the course subjects>(.*)<end of the course subjects>"
         # result = re.search(searchedLine, prompt)
         # vals["subjects"] = result.group(1)
