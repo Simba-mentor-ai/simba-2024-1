@@ -86,7 +86,7 @@ else:
             # Create two tabs
             tab1, tab2, tab3 = st.tabs(["Conversation Stats", "Student Stats", "Raw Data"])
             with tab1:
-                overview = dsh_overview_page.ConversationStats(overviewDf, df_features)
+                overview = dsh_overview_page.ConversationStats(overviewDf, df_features, selectedActivity = selectedActivity)
                 overview.create()
             with tab2:
                 students_tab = dsh_students_page.StudentStatsTab(overviewDf, selectedActivity)

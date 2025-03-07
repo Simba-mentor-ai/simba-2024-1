@@ -4,13 +4,48 @@ import altair as alt
 import pandas as pd
 import streamlit as st
 import logging
+from langchain_core.prompts import PromptTemplate
+from langchain_openai import ChatOpenAI
 
 from dashboard.feature_extractor import ConversationFeatureExtractor
 
 logger = logging.getLogger(__name__)
+
+def prepare_conversation_context(activity_name, df_messages):
+    """Prepara o contexto da conversa para o RAG"""
+    # Filtrar mensagens do estudante para a atividade específica
+    df_activity = df_messages[
+        (df_messages['activity_name'] == activity_name)
+    ]
+
+    messages = []
+    for _, row in df_activity.iterrows():
+        messages.append(f"{row['role']}: {row['content']}")
+    
+    return "\n".join(messages) 
+
+def generate_feedback(user_messages):
+    # Configurar embeddings e modelo
+    llm = ChatOpenAI(model="gpt-4o-mini", api_key=st.secrets["OPENAI_API_KEY"])
+
+    # Template para o prompt
+    template = """Based on the messages exchanged between the students and SIMBA tutor taking into consideration only the messages sent by the student:
+
+    {context}
+
+    Please provide a concise (less than 200 words) SUMMARY that:
+    1. Summarizes the main points discussed by the students in bullet points
+    2. Identifies the main difficulties or missconceptions presented by the students in bullet points
+    """
+
+    PROMPT = PromptTemplate(template=template, input_variables=["context"])
+    chain = PROMPT | llm
+
+    return chain.invoke({"context": user_messages})
+
 class ConversationStats():
 
-    def __init__(self, df: pd.DataFrame, user_stats: pd.DataFrame = None):
+    def __init__(self, df: pd.DataFrame, user_stats: pd.DataFrame = None, selectedActivity = None):
         self.df = df
         self.all_students = df.loc[:, ['user_id', 'email']]\
             .drop_duplicates(subset='user_id')\
@@ -51,7 +86,20 @@ class ConversationStats():
         with st.container():
             self.get_overall_stats()
 
-        # 2nd row - Top 25%, Bottom 25%, and suggested chart
+        # 2nd row - summary generation
+        st.write("#### Message Summary")
+        if self.selectedActivity == 'All activities':
+            st.write("Please select an activity to generate feedback")
+        else:
+            if st.button("Generate!"):
+                messages = prepare_conversation_context(self.student_filter, self.selectedActivity, self.filtered_df)
+                
+                feedback = generate_feedback(messages)
+
+                if feedback:
+                    st.write(feedback.content)
+
+        # 3rd row - Top 25%, Bottom 25%, and suggested chart
         with st.container():
 
             col1, col2 = st.columns(2)
@@ -80,7 +128,7 @@ class ConversationStats():
         # with st.container():
         #     self.get_activity_stats()
 
-        # 3rd row - Conversation grid and tree
+        # 4th row - Conversation grid and tree
         with st.container():
             # col1, col2 = st.columns(2)
             # with col1:
