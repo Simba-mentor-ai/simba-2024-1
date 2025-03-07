@@ -164,9 +164,10 @@ def updateUsr():
         dbm.saveConfig(st.session_state["auth_config"])
 
 def initSession():
+    loadSidebar()
+    
     if "session_initiated" not in st.session_state or not st.session_state["session_initiated"] or st.session_state["oldUser"] != st.session_state["username"]:
         st.session_state["UserRole"] = dbm.getRole(st.session_state["username"])
-        loadSidebar()
         if "logout" not in st.session_state :
             st.session_state["authenticator"].logout(location='sidebar')
         st.session_state["session_initiated"] = True
