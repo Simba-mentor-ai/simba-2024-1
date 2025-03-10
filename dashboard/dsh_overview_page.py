@@ -101,9 +101,10 @@ class ConversationStats():
 
             if st.button("Generate!", key="generateSummaryBtn"):
                 # st.write(self.df["role"].head())
-                messages = prepare_conversation_context(self.selectedActivity, self.df)
-                
-                feedback = generate_feedback(messages)
+                with st.spinner("generating summary..."):
+                    messages = prepare_conversation_context(self.selectedActivity, self.df)
+                    
+                    feedback = generate_feedback(messages)
 
                 if feedback:
                     st.write(feedback.content)
