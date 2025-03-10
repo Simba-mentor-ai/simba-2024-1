@@ -13,40 +13,44 @@ logger = logging.getLogger(__name__)
 
 def prepare_conversation_context(activity_name, df_messages):
     """Prepara o contexto da conversa para o RAG"""
-    # Filtrar mensagens do estudante para a atividade específica
     df_activity = df_messages[
-        (df_messages['activity_name'] == activity_name)
+        (df_messages['activity_name'] == activity_name)&
+        (df_messages['role'] == "user")
     ]
-
     messages = []
     for _, row in df_activity.iterrows():
-        messages.append(f"{row['role']}: {row['content']}")
+        messages.append(f"{row['content']}")
     
     return "\n".join(messages) 
 
 def generate_feedback(user_messages):
     # Configurar embeddings e modelo
     llm = ChatOpenAI(model="gpt-4o-mini", api_key=st.secrets["OPENAI_API_KEY"])
-
     # Template para o prompt
-    template = """Based on the messages exchanged between the students and SIMBA tutor taking into consideration only the messages sent by the student:
+    template = """You are a teacher assistant. Based on the messages exchanged between the students and an online tutor, here are the messages sent by the student:
 
     {context}
 
-    Please provide a concise (less than 200 words) SUMMARY that:
-    1. Summarizes the main points discussed by the students in bullet points
-    2. Identifies the main difficulties or missconceptions presented by the students in bullet points
+    Please provide a concise (less than 300 words) summary that:
+    1. Summarizes the main points discussed by the students.
+    2. Identifies the main difficulties or missconceptions presented by the students.
+    for each point, give precise examples cited verbatim from the students messages.
     """
 
     PROMPT = PromptTemplate(template=template, input_variables=["context"])
     chain = PROMPT | llm
+    if len(user_messages)>44000:
+        messages = user_messages[0:44000]
+    else :
+        messages = user_messages
 
-    return chain.invoke({"context": user_messages})
+    return chain.invoke({"context": messages})
 
 class ConversationStats():
 
     def __init__(self, df: pd.DataFrame, user_stats: pd.DataFrame = None, selectedActivity = None):
         self.df = df
+        self.selectedActivity = selectedActivity
         self.all_students = df.loc[:, ['user_id', 'email']]\
             .drop_duplicates(subset='user_id')\
             .reset_index(drop=True)
@@ -91,8 +95,13 @@ class ConversationStats():
         if self.selectedActivity == 'All activities':
             st.write("Please select an activity to generate feedback")
         else:
-            if st.button("Generate!"):
-                messages = prepare_conversation_context(self.student_filter, self.selectedActivity, self.filtered_df)
+            # if st.button("get messages", key="getMsgBtn"):
+            #     messages = prepare_conversation_context(self.selectedActivity, self.df)
+            #     st.write(messages)
+
+            if st.button("Generate!", key="generateSummaryBtn"):
+                # st.write(self.df["role"].head())
+                messages = prepare_conversation_context(self.selectedActivity, self.df)
                 
                 feedback = generate_feedback(messages)
 
