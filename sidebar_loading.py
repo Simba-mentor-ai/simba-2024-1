@@ -14,6 +14,7 @@ def loadSidebar():
                     Page("sidebar/Edit_activities.py", "Edit activities", "⚙️"),
                     Page("sidebar/My_activities.py", "My activities", "📝"),
                     Page("dashboard/dashboard.py", "Dashboard", "📊"),
+                    Page("sidebar/Manage_account.py", "Manage my account", "👤"),
         ])
         st.session_state["sidebarLoaded"] = True
         
