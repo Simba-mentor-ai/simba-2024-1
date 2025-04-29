@@ -2,6 +2,7 @@ import streamlit as st
 import random
 import string
 import yaml
+import csv
 from yaml.loader import SafeLoader
 from google.oauth2 import service_account
 from google.cloud import firestore
@@ -220,7 +221,7 @@ def setLanguage(userName,language):
         db.collection('users').document(userName).update(dic)
 
 # Credentials
-def     getConfig():
+def getConfig():
 
     cred = db.collection("utilities").document("credentials").get().to_dict()
 
@@ -237,6 +238,29 @@ def saveConfig(config):
 
 
 # Admin special functions
+
+def createListOfUsers(filename):
+    config = getConfig()
+    with open(filename, encoding="utf-8") as f:
+        reader = csv.reader(f,delimiter=";")
+        data = list(reader)
+    users = config["credentials"]["usernames"]
+    for line in data[1:]:
+        user = {"email" : line[5],
+                "first_name" : line[3],
+                "last_name" : line[1],
+                "logged_in" : False,
+                "password" : line[-1]}
+         
+        users[line[-2]] = user
+        createUser(line[-2], "student", line[2], line[5])
+        
+    config["credentials"]["usernames"] = users
+    saveConfig(config)
+
+
+
+
 # def updateActivities():
     
 #     activities = db.collection('activities').get()
@@ -326,4 +350,3 @@ def delUser(id):
 
         credentials = credentialsdb.get().to_dict()
         credentials["credentials"]["credentials"]["usernames"].pop(id)
-
