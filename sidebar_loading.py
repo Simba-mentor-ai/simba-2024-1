@@ -3,7 +3,7 @@ import streamlit as st
 
 def clearSidebar():
     # show_pages([Page("SIMBA.py", _("SIMBA main page"), "😸")])
-    hide_pages(["SIMBA main page", "New activity", "Edit activities", "My activities", "Manage my account"])
+    hide_pages(["SIMBA main page", "New activity", "Edit activities", "My activities", "Manage my account","Dashboard"])
     st.session_state["sidebarLoaded"] = False
 
 def loadSidebar():
@@ -14,9 +14,11 @@ def loadSidebar():
                     Page("sidebar/Edit_activities.py", "Edit activities", "⚙️"),
                     Page("sidebar/My_activities.py", "My activities", "📝"),
                     Page("dashboard/dashboard.py", "Dashboard", "📊"),
-                    # Page("sidebar/Admin.py", "Admin")
+                    Page("sidebar/Manage_account.py", "Manage my account", "👤"),
         ])
-        if st.session_state["UserRole"]=="student":
-            hide_pages(["New activity", "Edit activities"])
-        
         st.session_state["sidebarLoaded"] = True
+        
+    if st.session_state["UserRole"]=="student":
+        hide_pages(["New activity", "Edit activities","Dashboard"])
+        
+        

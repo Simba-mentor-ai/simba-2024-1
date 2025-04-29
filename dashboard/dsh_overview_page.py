@@ -4,14 +4,53 @@ import altair as alt
 import pandas as pd
 import streamlit as st
 import logging
+from langchain_core.prompts import PromptTemplate
+from langchain_openai import ChatOpenAI
 
 from dashboard.feature_extractor import ConversationFeatureExtractor
 
 logger = logging.getLogger(__name__)
+
+def prepare_conversation_context(activity_name, df_messages):
+    """Prepara o contexto da conversa para o RAG"""
+    df_activity = df_messages[
+        (df_messages['activity_name'] == activity_name)&
+        (df_messages['role'] == "user")
+    ]
+    messages = []
+    for _, row in df_activity.iterrows():
+        messages.append(f"{row['content']}")
+    
+    return "\n".join(messages) 
+
+def generate_feedback(user_messages):
+    # Configurar embeddings e modelo
+    llm = ChatOpenAI(model="gpt-4o-mini", api_key=st.secrets["OPENAI_API_KEY"])
+    # Template para o prompt
+    template = """You are a teacher assistant. Based on the messages exchanged between the students and an online tutor, here are the messages sent by the student:
+
+    {context}
+
+    Please provide a concise (less than 300 words) summary that:
+    1. Summarizes the main points discussed by the students.
+    2. Identifies the main difficulties or missconceptions presented by the students.
+    for each point, give precise examples cited verbatim from the students messages.
+    """
+
+    PROMPT = PromptTemplate(template=template, input_variables=["context"])
+    chain = PROMPT | llm
+    if len(user_messages)>44000:
+        messages = user_messages[0:44000]
+    else :
+        messages = user_messages
+
+    return chain.invoke({"context": messages})
+
 class ConversationStats():
 
-    def __init__(self, df: pd.DataFrame, user_stats: pd.DataFrame = None):
+    def __init__(self, df: pd.DataFrame, user_stats: pd.DataFrame = None, selectedActivity = None):
         self.df = df
+        self.selectedActivity = selectedActivity
         self.all_students = df.loc[:, ['user_id', 'email']]\
             .drop_duplicates(subset='user_id')\
             .reset_index(drop=True)
@@ -51,7 +90,26 @@ class ConversationStats():
         with st.container():
             self.get_overall_stats()
 
-        # 2nd row - Top 25%, Bottom 25%, and suggested chart
+        # 2nd row - summary generation
+        st.write("#### Message Summary")
+        if self.selectedActivity == 'All activities':
+            st.write("Please select an activity to generate feedback")
+        else:
+            # if st.button("get messages", key="getMsgBtn"):
+            #     messages = prepare_conversation_context(self.selectedActivity, self.df)
+            #     st.write(messages)
+
+            if st.button("Generate!", key="generateSummaryBtn"):
+                # st.write(self.df["role"].head())
+                with st.spinner("generating summary..."):
+                    messages = prepare_conversation_context(self.selectedActivity, self.df)
+                    
+                    feedback = generate_feedback(messages)
+
+                if feedback:
+                    st.write(feedback.content)
+
+        # 3rd row - Top 25%, Bottom 25%, and suggested chart
         with st.container():
 
             col1, col2 = st.columns(2)
@@ -80,7 +138,7 @@ class ConversationStats():
         # with st.container():
         #     self.get_activity_stats()
 
-        # 3rd row - Conversation grid and tree
+        # 4th row - Conversation grid and tree
         with st.container():
             # col1, col2 = st.columns(2)
             # with col1:

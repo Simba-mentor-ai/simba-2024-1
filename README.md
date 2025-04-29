@@ -103,6 +103,21 @@ Here is a breakdown of the content of the files and folders :
 ### New_activity
     Page for creating a new activity. Accessible only to teachers.
 
+## dashboard
+    Contains the elements necessary to run the dashboard
+
+### dashboard
+    Main entry point for the dashboard, assembling the different necessary elements to constitute all the data to be shown.
+
+### database_api_client
+    Manages the communication with the mariadb database for fetching the dashboard info.
+
+### dsh_overview_page, dsh_students_page, dsh_rawdata_page
+    Each of these files creates one of the three tabs of the dashboard : overview, student and raw data. These files manage the front end.
+
+### feature_extractor, cluster_student
+    Data analysis files, extracting the refined data to be presented to the user.
+
 ## Locales
     contains the translations files. The internationalization of the app is managet via gettext, a detailed tutorial can be found here : https://phrase.com/blog/posts/translate-python-gnu-gettext/
     the translation file for a language must be stored in locales/[language code]/LC_MESSAGES/base.md. .po files are natural language translation files that need to be compiled with gettext or another tool like easypo or poedit.
