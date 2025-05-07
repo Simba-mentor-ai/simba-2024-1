@@ -1,4 +1,5 @@
 import streamlit as st
+import streamlit_authenticator as stauth
 import random
 import string
 import yaml
@@ -256,6 +257,26 @@ def createListOfUsers(filename):
         createUser(line[-2], "student", line[2], line[5])
         
     config["credentials"]["usernames"] = users
+    newcred = stauth.Hasher(["test"]).hash_passwords(config["credentials"])
+    config["credentials"] = newcred
+    saveConfig(config)
+
+def createNewUser(firstname,surname):
+    config = getConfig()
+
+    users = config["credentials"]["usernames"]
+    user = {"email" : f"{firstname}.{surname}@gmail.com",
+            "first_name" : firstname,
+            "last_name" : surname,
+            "logged_in" : False,
+            "password" : "@Changer"}
+         
+    users[f"{firstname}.{surname}"] = user
+    createUser(f"{firstname}.{surname}", "student", f"{firstname} {surname}", f"{firstname}.{surname}@gmail.com")
+    
+    config["credentials"]["usernames"] = users
+    newcred = stauth.Hasher(["test"]).hash_passwords(config["credentials"])
+    config["credentials"] = newcred
     saveConfig(config)
 
 
